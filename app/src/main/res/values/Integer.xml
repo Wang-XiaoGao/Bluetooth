@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name = "iDeviceStatus">0</integer>
+    <integer name = "iSystemInfo">1</integer>
+    <integer name = "iEngineeringMode">2</integer>
+
+
+    <integer name = "Measure30">30</integer>
+    <integer name = "Measure60">60</integer>
+    <integer name = "Measure180">180</integer>
+
+    <integer name = "Pan_Xmin">0</integer>
+    <integer name = "Pan_Xmax">1000</integer>
+    <integer name = "Pan_Ymin">0</integer>
+    <integer name = "Pan_Ymax">40</integer>
+
+
+</resources>
