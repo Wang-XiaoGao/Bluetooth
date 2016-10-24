@@ -35,8 +35,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     //cause error during building APK
-    compile files('libs/fontbox-2.0.0-RC3.jar')
-    compile files('libs/pdfbox-2.0.0-RC3.jar')
     compile 'com.android.support:appcompat-v7:15'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }
