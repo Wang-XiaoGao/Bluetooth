@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="版本：0.1.1"
+        android:id="@+id/VersionInfo"
+        android:layout_alignParentLeft = "true"
+        android:layout_alignParentStart = "true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="更新日期：2016-Oct-07"
+        android:id="@+id/UpdateDate"
+        android:layout_alignParentLeft = "true"
+        android:layout_alignParentStart = "true"
+        android:layout_below="@id/VersionInfo"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="更新内容：整理系统信息内容。"
+        android:id="@+id/UpdateContent"
+        android:layout_alignParentLeft = "true"
+        android:layout_alignParentStart = "true"
+        android:layout_below="@id/UpdateDate"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询最新版本"
+        android:id="@+id/button"
+        android:layout_gravity="center_vertical"
+        android:onClick="QueryLatestVersion"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"/>
+
+
+</RelativeLayout>

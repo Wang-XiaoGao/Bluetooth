@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="wxg.otdr.MainActivity">
+    <item
+        android:id="@+id/Standard_Mode"
+        android:orderInCategory="100"
+        android:title="@string/Simple_Mode"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/Engineering_Mode"
+        android:orderInCategory="100"
+        android:title="@string/Standard_Mode"
+        app:showAsAction="never" />
+</menu>

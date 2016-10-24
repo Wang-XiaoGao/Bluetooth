@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">羿弓力创</string>
+    <string name="main_Title">羿弓力创：智能手环设定平台</string>
+    <string name="Simple_Mode">标准模式</string>
+    <string name="Standard_Mode">工程模式</string>
+    <string name="SaveAsDefault">默认保存</string>
+    <string name="SaveAs">保存为...</string>
+
+    <string name="section_format">Hello World from section: %1$d</string>
+
+
+    <string name="TabTitle_DeviceStauts">手环状态信息</string>
+    <string name="TabTitle_EngineeringMode">工程模式</string>
+    <string name="TabTitle_SystemInfo">系统信息</string>
+
+
+    <string name="Bluetooth_Title">请连接手环</string>
+    <string name="Bluetooth_Guide">默认蓝牙配对密码0000</string>
+    <string name="Bluetooth_Scan">扫 描</string>
+    <string name="Bluetooth_Not_Connected">手环未连接，请确认。</string>
+    <string name="Bluetooth_Connected">手环已连接,执行下一步操作。</string>
+
+    <string name="Document_Title">请 选 择 文 件  ----》</string>
+    <string name="Battery_Remain">电池当前电量:</string>
+
+    <string name="Log_Info">Log_Info</string>
+    <string name="Log_Error">Log_Error</string>
+
+    <string name="BT_Name_Pre">羿弓力创</string>
+    <string name="title_activity_display">DisplayActivity</string>
+    <string name="BT_TurnOn">蓝牙功能已开启</string>
+
+
+
+    <string name="device">Device:</string>
+    <string name="no_device">&lt;Select a device&gt;</string>
+    <string name="select_device">选 择 连 接 设 备</string>
+    <string name="status">Status</string>
+    <string name="llsWrite">LinkLossAlert</string>
+    <string name="iasWrite">ImmediateAlert</string>
+    <string name="scanning">正在扫描蓝牙设备...</string>
+    <string name="no_ble_devices">No LE devices found.</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Not connected</string>
+    <string name="ready">Ready</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="connect">connect</string>
+    <string name="unpair">unpair</string>
+    <string name="pair">pair</string>
+    <string name="RadioButton1">Alert level high</string>
+    <string name="RadioButton2">Alert level mid</string>
+    <string name="RadioButton3">Stop alerting</string>
+    <string name="SystemId">SystemId</string>
+    <string name="ModelNumber">ModelNumber</string>
+    <string name="SerialNumber">SerialNumber</string>
+    <string name="FirmwareRevision">FirmwareRevision</string>
+    <string name="HardwareRevision">HardwareRevision</string>
+    <string name="SoftwareRevision">SoftwareRevision</string>
+    <string name="ManufactureName">ManufactureName</string>
+    <string name="RegCertDataList">RegCertDataList</string>
+    <string name="ManufactureId">    ManufactureId</string>
+    <string name="BatteryLevel">    Battery Level</string>
+    <string name="OrgId">    OrganizationId</string>
+    <string name="Txpower">    Txpower Level</string>
+    <string name="Noupdate">    No Update</string>
+    <string name="ReadTxPower">ReadTxPower</string>
+    <string name="high_alert">HIGH Alert triggered!</string>
+    <string name="low_alert">LOW Alert triggered!</string>
+    <string name="writeTxnoti">TxNoti</string>
+    <string name="readRssi">Read Rssi Value</string>
+    <string name="Readdummy">D Read</string>
+    <string name="removeBond">Remove Bond</string>
+    <string name="paired">paired</string>
+    <string name="popup_title">Quit nRF UART?</string>
+    <string name="popup_message">Do you want to quit this Application?</string>
+    <string name="popup_yes">YES</string>
+    <string name="popup_no">NO</string>
+    <string name="ble_not_supported">Bluetooth Low Energy not supported</string>
+    <string name="scan">扫 描</string>
+    <string name="cancel">取 消</string>
+</resources>
