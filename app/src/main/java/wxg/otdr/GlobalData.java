@@ -14,6 +14,9 @@ public class GlobalData extends Application{
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
 
 
+
+
+
     @Override
     public void onCreate(){
         super.onCreate();

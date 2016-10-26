@@ -47,6 +47,10 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.util.Date;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     private static MainActivity Myinstance;
+    private BluetoothService mBluetoothService = null;
     private BluetoothReceiver mBroadcastReceiver = null;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     TabLayout.Tab EngineeringTab; // To add and remove for Standard & Engineering mode.
 
-
+    public static int[]iBattery = {0x68, 0x01, 0x3C, 0xA5};
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -109,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         // To offer system service in BluetoothService.
         Myinstance = this;
         mBroadcastReceiver = new BluetoothReceiver();
+        mBluetoothService = new BluetoothService();
 
         Log.i("MainActivity::OnCreate", "MainActivity::onCreate");
 
@@ -220,7 +226,8 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(mBroadcastReceiver);
 
         mBroadcastReceiver = null;
-        BluetoothService.startActionClose(this.getApplicationContext());
+        mBluetoothService.startActionClose(this.getApplicationContext());
+        mBluetoothService = null;
 
         Log.e(this.getString(R.string.Log_Info), "MainActivity::onDestroy");
     }
@@ -403,105 +410,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void OpenBluetoothSettings(View v) {
-        //startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-        int iBTTem = BluetoothService.getBTConnectStatus();
-
-
-        if (!mBtAdapter.isEnabled()) {
-            Log.i(TAG, "onClick - BT not enabled yet");
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        }
-        else {
-            // ToDo not implement disconnect now.
-            if (iBTTem == BluetoothProfile.STATE_DISCONNECTED){
-                Log.d(TAG, "Current bluetooth service status is: " + iBTTem);
-                Log.i(TAG, "onClick - BT will be connected.");
-                //Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
-
-                Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
-                startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
-            }
-            else if ((iBTTem == BluetoothProfile.STATE_CONNECTING)||(iBTTem == BluetoothProfile.STATE_CONNECTED)){
-                //Disconnect button pressed
-                Log.d(TAG, "Current bluetooth service status is: " + iBTTem);
-                Log.i(TAG, "onClick - BT will be disconnected.");
-                BluetoothService.startActionDisconnect(this.getApplicationContext());
-            }
-        }
-
-    }
-
-    public void OpenFile(View v) {
-        Log.i("MainActivity", "OpenFile");
-
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        //Set intent Action property.
-        intent.setType("*/*");
-        //Set category of file.
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        //intent.putExtra("Title", "选择文件");
-
-        try {
-            //startActivity(intent);
-            startActivityForResult(intent, READ_REQUEST_CODE);
-        } catch (Exception e) {
-            Toast.makeText(this, "没有正确打开文件管理器", 1).show();
-        }
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-        Log.i(TAG, "onActivityResult");
-        switch (requestCode) {
-
-            case REQUEST_SELECT_DEVICE:
-                //When the DeviceListActivity return, with the selected device address
-                if (resultCode == Activity.RESULT_OK && resultData != null) {
-                    String deviceAddress = resultData.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-                    mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-
-                    Log.i(TAG, "REQUEST_SELECT_DEVICE: " + deviceAddress);
-                    //Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
-                    //((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName()+ " - connecting");
-                    // ToDo add device name.
-                    BluetoothService.startActionConnection(this.getApplicationContext(), null, deviceAddress);
-                }
-                break;
-            case REQUEST_ENABLE_BT:
-                // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(this, getResources().getText(R.string.BT_TurnOn), Toast.LENGTH_SHORT).show();
-
-                } else {
-                    // User did not enable Bluetooth or an error occurred
-                    Log.d(TAG, "BT not enabled");
-                    Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
-            default:
-                Log.e(TAG, "wrong request code");
-                break;
-        }
-    }
-
-
-    public void StartSelfCheck(View v) {
-        //BluetoothService.startActionFoo(this.getApplicationContext(), null, null);
-
-    }
-
-    // Try QueryLatestVersion.
-    public void QueryLatestVersion(View v) {
-        BluetoothService.startActionConnection(this.getApplicationContext(), null, null);
-
-    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -539,6 +447,140 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        Log.i(TAG, "onActivityResult");
+        switch (requestCode) {
+
+            case REQUEST_SELECT_DEVICE:
+                //When the DeviceListActivity return, with the selected device address
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+                    String deviceAddress = resultData.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+                    mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
+
+                    Log.i(TAG, "REQUEST_SELECT_DEVICE: " + deviceAddress);
+                    //Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
+                    //((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName()+ " - connecting");
+                    // ToDo add device name.
+                    mBluetoothService.startActionConnection(this.getApplicationContext(), null, deviceAddress);
+                }
+                break;
+            case REQUEST_ENABLE_BT:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(this, getResources().getText(R.string.BT_TurnOn), Toast.LENGTH_SHORT).show();
+
+                } else {
+                    // User did not enable Bluetooth or an error occurred
+                    Log.d(TAG, "BT not enabled");
+                    Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            default:
+                Log.e(TAG, "wrong request code");
+                break;
+        }
+    }
+
+    public void OpenBluetoothSettings(View v) {
+        //startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+        int iBTTem = mBluetoothService.getBTConnectStatus();
+
+
+        if (!mBtAdapter.isEnabled()) {
+            Log.i(TAG, "onClick - BT not enabled yet");
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        }
+        else {
+            // ToDo not implement disconnect now.
+            if (iBTTem == BluetoothProfile.STATE_DISCONNECTED){
+                Log.d(TAG, "Current bluetooth service status is: " + iBTTem);
+                Log.i(TAG, "onClick - BT will be connected.");
+                //Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
+
+                Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
+                startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+            }
+            else if ((iBTTem == BluetoothProfile.STATE_CONNECTING)||(iBTTem == BluetoothProfile.STATE_CONNECTED)){
+                //Disconnect button pressed
+                Log.d(TAG, "Current bluetooth service status is: " + iBTTem);
+                Log.i(TAG, "onClick - BT will be disconnected.");
+                mBluetoothService.startActionDisconnect(this.getApplicationContext());
+            }
+        }
+
+    }
+
+    public void OpenFile(View v) {
+        Log.i("MainActivity", "OpenFile");
+
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        //Set intent Action property.
+        intent.setType("*/*");
+        //Set category of file.
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        //intent.putExtra("Title", "选择文件");
+
+        try {
+            //startActivity(intent);
+            startActivityForResult(intent, READ_REQUEST_CODE);
+        } catch (Exception e) {
+            Toast.makeText(this, "没有正确打开文件管理器", 1).show();
+        }
+
+    }
+
+    public void QueryBattery(View v) {
+
+        Log.i(TAG, "Call QueryBattery.");
+
+        int iBTTem = mBluetoothService.getBTConnectStatus();
+
+        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
+            //send data to service
+            String strValue = iBattery.toString();
+            //0x68, 0x01, 0x3C, 0xA5
+
+
+            Log.e(TAG, "Data to send: " + strValue);
+
+            if (mBluetoothService != null) {
+                mBluetoothService.writeRXCharacteristic(iBattery.toString());
+            }else{
+                Log.e(TAG, "Exception: mBluetoothService is null.");
+            }
+        }else{
+            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
+
+            Toast.makeText(v.getContext(),
+                    "Bluetooth not connected yet, could not read battery info:",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+
+
+    }
+
+
+    public void StartSelfCheck(View v) {
+        //BluetoothService.startActionFoo(this.getApplicationContext(), null, null);
+
+    }
+
+    // Try QueryLatestVersion.
+    public void QueryLatestVersion(View v) {
+        BluetoothService.startActionConnection(this.getApplicationContext(), null, null);
+
+    }
+
+
 
 }
 
