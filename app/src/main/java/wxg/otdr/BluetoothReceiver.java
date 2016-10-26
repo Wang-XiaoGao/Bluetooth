@@ -37,6 +37,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
         TextView mTextVew = (TextView) MainActivity.getInstance().findViewById(R.id.id_MakeSure_Connection);
         ImageButton mImageBT = (ImageButton) MainActivity.getInstance().findViewById(R.id.imageViewBT);
         ImageButton mImageDeviceCheck = (ImageButton) MainActivity.getInstance().findViewById(R.id.id_SelfCheck_Image);
+        ImageButton mImageBattery = (ImageButton) MainActivity.getInstance().findViewById(R.id.id_Battery_Image);
+
 
         //*********************//
         if (strAction.equals(BluetoothService.ACTION_GATT_CONNECTED)) {
@@ -45,6 +47,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
             mTextVew.setText(StrShowText);
             mImageBT.setBackgroundResource(R.drawable.bluetooth56);
             mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
+            mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
             //mTextVew.notify();
         }else if (strAction.equals(BluetoothService.ACTION_GATT_DISCONNECTED)){
 
@@ -53,6 +56,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
             mTextVew.setText(R.string.Bluetooth_Not_Connected);
             mImageBT.setBackgroundResource(R.drawable.bluetooth56_gray);
             mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56gray);
+            mImageBattery.setBackgroundResource(R.drawable.battery_56px_gray);
 
         }else if (strAction.equals(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED)) {
 

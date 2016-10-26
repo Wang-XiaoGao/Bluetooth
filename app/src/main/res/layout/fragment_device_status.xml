@@ -44,23 +44,23 @@
             android:layout_toEndOf="@+id/imageViewBT" />
     </RelativeLayout>
 
-    <!--
-        <RelativeLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:id="@+id/id_Battery_Frame"
-            android:layout_below="@+id/ConfigBTLayout"
-            android:layout_marginTop="16dp"
-            android:layout_centerHorizontal="true"
-            android:background="@color/GrayWhite">
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:id="@+id/id_Battery_Frame"
+        android:layout_below="@+id/ConfigBTLayout"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/GrayWhite"
+        android:onClick="QueryBattery">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/id_Battery_Image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/battery_64px_green"
+                android:background="@drawable/battery_56px_gray"
                 android:layout_alignParentLeft="true"
 
                 android:layout_centerVertical="true" />
@@ -73,6 +73,7 @@
                 android:layout_toRightOf="@id/id_Battery_Image"
                 android:textStyle="bold"
                 android:textSize="20sp"
+                android:layout_marginLeft="20dp"
 
                 android:layout_gravity="center_vertical"
                 android:layout_centerVertical="true"/>
@@ -101,21 +102,20 @@
                 android:layout_toRightOf="@id/id_Battery_Remain_Value"
                 android:layout_centerVertical="true" />
 
-        </RelativeLayout>
-    -->
+    </RelativeLayout>
 
 
-        <RelativeLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:id="@+id/id_Status_Frame"
-            android:layout_below="@id/ConfigBTLayout"
-            android:layout_marginTop="16dp"
-            android:layout_centerHorizontal="true"
-            android:background="@color/GrayWhite"
-            android:onClick="StartSelfCheck">
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:id="@+id/id_Status_Frame"
+        android:layout_below="@id/id_Battery_Frame"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/GrayWhite"
+        android:onClick="StartSelfCheck">
 
             <ImageButton
                 android:id="@+id/id_SelfCheck_Image"
