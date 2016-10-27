@@ -249,6 +249,16 @@
 
         </RelativeLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Bluetooth readback info here..."
+        android:id="@+id/id_DebugText_View"
+        android:layout_below="@+id/id_Status_Frame"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true" />
+
     <!--
     <LinearLayout
         android:id="@+id/id_Start_Meas_Frame"
