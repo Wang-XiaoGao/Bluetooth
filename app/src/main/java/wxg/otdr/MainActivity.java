@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     TabLayout.Tab EngineeringTab; // To add and remove for Standard & Engineering mode.
 
-    public static int[]iBattery = {0x68, 0x01, 0x3C, 0xA5};
+    public static char[]cBattery = {0x68, 0x01, 0x3C, 0xA5};
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -543,14 +543,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
             //send data to service
-            String strValue = iBattery.toString();
-            //0x68, 0x01, 0x3C, 0xA5
 
+            String strValue = new String(cBattery);
 
             Log.e(TAG, "Data to send: " + strValue);
 
             if (mBluetoothService != null) {
-                mBluetoothService.writeRXCharacteristic(iBattery.toString());
+                mBluetoothService.writeRXCharacteristic(strValue);
             }else{
                 Log.e(TAG, "Exception: mBluetoothService is null.");
             }
@@ -570,7 +569,46 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void StartSelfCheck(View v) {
-        //BluetoothService.startActionFoo(this.getApplicationContext(), null, null);
+        Log.i(TAG, "Call StartSelfCheck.");
+        boolean bCheck = false;
+
+        int iBTTem = mBluetoothService.getBTConnectStatus();
+
+        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
+            //send data to service
+
+            if (mBluetoothService != null) {
+                bCheck = mBluetoothService.AssignGATTService(BluetoothService.TEST_Name_SERVICE_UUID);
+                if (!bCheck){
+                    Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
+                    return;
+                }
+
+                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.TEST_Name_CHAR_UUID);
+                if (!bCheck){
+                    Log.e(TAG, "StartSelfCheck: Characteristics is null.");
+                    return;
+                }
+
+                mBluetoothService.readCharacteristic();
+                if (!bCheck){
+                    Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
+                    return;
+                }
+
+
+
+            }else{
+                Log.e(TAG, "Exception: mBluetoothService is null.");
+            }
+        }else{
+            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
+
+            Toast.makeText(v.getContext(),
+                    "Bluetooth not connected yet, could not read battery info:",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
     }
 

@@ -30,19 +30,29 @@ public class BluetoothReceiver extends BroadcastReceiver {
         String strAction = intent.getAction();
 
         final Intent mIntent = intent;
-        final String StrDeviceName = intent.getStringExtra(BluetoothService.mStrDeviceName);
-        final String StrDeviceAdd = intent.getStringExtra(BluetoothService.mStrDeviceAdd);
-        String StrShowText = StrDeviceName + "\n" + StrDeviceAdd;
+
+
+
+
+
 
         TextView mTextVew = (TextView) MainActivity.getInstance().findViewById(R.id.id_MakeSure_Connection);
         ImageButton mImageBT = (ImageButton) MainActivity.getInstance().findViewById(R.id.imageViewBT);
         ImageButton mImageDeviceCheck = (ImageButton) MainActivity.getInstance().findViewById(R.id.id_SelfCheck_Image);
         ImageButton mImageBattery = (ImageButton) MainActivity.getInstance().findViewById(R.id.id_Battery_Image);
+        // Todo, this test view is for debug.
+        TextView mDebugTextVew = (TextView) MainActivity.getInstance().findViewById(R.id.id_DebugText_View);
 
 
         //*********************//
         if (strAction.equals(BluetoothService.ACTION_GATT_CONNECTED)) {
             Log.d(TAG, "ACTION_GATT_CONNECTED");
+
+            // if it's not for connection action, the below two string may not be initiated.
+            final String StrDeviceName = intent.getStringExtra(BluetoothService.mStrDeviceName);
+            final String StrDeviceAdd = intent.getStringExtra(BluetoothService.mStrDeviceAdd);
+            String StrShowText = StrDeviceName + "\n" + StrDeviceAdd;
+
             Log.i(TAG, StrShowText);
             mTextVew.setText(StrShowText);
             mImageBT.setBackgroundResource(R.drawable.bluetooth56);
@@ -52,7 +62,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
         }else if (strAction.equals(BluetoothService.ACTION_GATT_DISCONNECTED)){
 
             Log.d(TAG, "Bluetooth Disconnected");
-            Log.i(TAG, StrShowText);
+
             mTextVew.setText(R.string.Bluetooth_Not_Connected);
             mImageBT.setBackgroundResource(R.drawable.bluetooth56_gray);
             mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56gray);
@@ -64,7 +74,16 @@ public class BluetoothReceiver extends BroadcastReceiver {
             //BluetoothService.startActionenableTXNotification(MainActivity.getInstance().getBaseContext());
 
         }else if (strAction.equals(BluetoothService.ACTION_DATA_AVAILABLE)) {
-            Log.e(TAG, "ACTION_DATA_AVAILABLE");/*
+            Log.d(TAG, "ACTION_DATA_AVAILABLE");
+            //final String StrEXTRA_DATA = intent.getStringExtra(BluetoothService.EXTRA_DATA);
+
+            final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
+
+            String strEXTRA = txValue.toString();
+            mDebugTextVew.setText(strEXTRA);
+
+
+            /*
             final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
             runOnUiThread(new Runnable() {
                 public void run() {
