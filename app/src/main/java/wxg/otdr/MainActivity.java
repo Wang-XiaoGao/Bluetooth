@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     private static MainActivity Myinstance;
+    public static GlobalData mGlobalData = null;
+
     private BluetoothService mBluetoothService = null;
     private BluetoothReceiver mBroadcastReceiver = null;
 
@@ -88,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
 
     TabLayout.Tab EngineeringTab; // To add and remove for Standard & Engineering mode.
 
-    public static char[]cBattery = {0x68, 0x01, 0x3C, 0xA5};
+    public static byte[] mCharBattery = {0x68, 0x01, 0x3C, -91};
+
+    public static char[]mCharBattery1 = {0x1, 0x2, 0x3, 0x4, 0x5};
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -115,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         Myinstance = this;
         mBroadcastReceiver = new BluetoothReceiver();
         mBluetoothService = new BluetoothService();
+        mGlobalData = new GlobalData();
 
         Log.i("MainActivity::OnCreate", "MainActivity::onCreate");
 
@@ -228,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
         mBroadcastReceiver = null;
         mBluetoothService.startActionClose(this.getApplicationContext());
         mBluetoothService = null;
+        mGlobalData = null;
 
         Log.e(this.getString(R.string.Log_Info), "MainActivity::onDestroy");
     }
@@ -246,8 +252,9 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        final GlobalData Data = (GlobalData) getApplication();
-        boolean bInEngineeringMode = Data.getInEngineeringMode();
+        //final GlobalData Data = (GlobalData) getApplication();
+
+        boolean bInEngineeringMode = mGlobalData.getInEngineeringMode();
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
@@ -255,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
         int iTemCount = 0;
         //Make a switch and avoid trigger same action again.
         if (id == R.id.Standard_Mode & bInEngineeringMode) {
-            Data.setEngineeringMode(false);
+            mGlobalData.setEngineeringMode(false);
 
             //Return to OTDR fragment and then hide tablayout.
             if (tabLayout.getTabCount() == iTabCount) {
@@ -277,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
             //tabLayout.setVisibility(View.GONE);
 
         } else if (id == R.id.Engineering_Mode & !bInEngineeringMode) {
-            Data.setEngineeringMode(true);
+            mGlobalData.setEngineeringMode(true);
 
             tabLayout.addTab(EngineeringTab, iEngineeringMode);
             iTabCount++;
@@ -538,18 +545,52 @@ public class MainActivity extends AppCompatActivity {
     public void QueryBattery(View v) {
 
         Log.i(TAG, "Call QueryBattery.");
+        boolean bCheck = false;
 
         int iBTTem = mBluetoothService.getBTConnectStatus();
 
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
             //send data to service
+            //String strValue = new String(mCharBattery1);
 
-            String strValue = new String(cBattery);
+            //Log.e(TAG, "Data to send: " + strValue);
+            //Log.e(TAG, "Data to send: " + mCharBattery);
+            //String strValueData = GlobalData.Char2String(mCharBattery);
+            //String strValueDataInLog =  GlobalData.Char2Int2String(mCharBattery);
 
-            Log.e(TAG, "Data to send: " + strValue);
+            //String strValueData = GlobalData.Int2String(mCharBattery);
+            //String strValueDataInLog = GlobalData.Int2StringLog(mCharBattery);
+            //String strValueData = GlobalData.Int2String(mCharBattery);
+            //String strValueDataInLog = GlobalData.Int2StringLog(mCharBattery);
 
+            byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBatter);
+
+            int[] iValues = mGlobalData.getReturn(bCommand);
+
+            boolean btrue = mGlobalData.Checksum(bCommand);
+
+            Log.e(TAG, "Data to send: " + bCommand.toString());
+//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
             if (mBluetoothService != null) {
-                mBluetoothService.writeRXCharacteristic(strValue);
+                bCheck = mBluetoothService.AssignGATTService(BluetoothService.TEST_TX_SERVICE_UUID);
+                if (!bCheck){
+                    Log.e(TAG, "QueryBattery: mBluetoothService is null.");
+                    return;
+                }
+//TEST_TX_CHAR_UUID, RX_CHAR_UUID
+                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.TEST_TX_CHAR_UUID);
+                if (!bCheck){
+                    Log.e(TAG, "QueryBattery: Characteristics is null.");
+                    return;
+                }
+
+               // bCheck = mBluetoothService.writeRXCharacteristic(mCharBattery);
+                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
+                if (!bCheck){
+                    Log.e(TAG, "QueryBattery: writeRXCharacteristic failed.");
+                    return;
+                }
+
             }else{
                 Log.e(TAG, "Exception: mBluetoothService is null.");
             }
@@ -562,9 +603,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
-
-
     }
 
 
@@ -573,6 +611,12 @@ public class MainActivity extends AppCompatActivity {
         boolean bCheck = false;
 
         int iBTTem = mBluetoothService.getBTConnectStatus();
+
+        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSelfCheck);
+
+        int[] iValues = mGlobalData.getReturn(bCommand);
+
+        boolean btrue = mGlobalData.Checksum(bCommand);
 
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
             //send data to service

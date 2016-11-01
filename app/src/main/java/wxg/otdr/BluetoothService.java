@@ -58,8 +58,6 @@ public class BluetoothService extends IntentService {
     private static final String ACTION_Connection = "BluetoothService.action.Connection";
     private static final String ACTION_Init = "BluetoothService.action.Init";
     private static final String ACTION_Close = "BluetoothService.action.Close";
-    private static final String ACTION_enableTXNotification = "BluetoothService.action.enableTXNotification";
-
 
     // TODO: Rename parameters
     private static final String EXTRA_PARAM1 = "wxg.otdr.extra.PARAM1";
@@ -170,10 +168,11 @@ public class BluetoothService extends IntentService {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.w(TAG, "mBluetoothGatt = " + mBluetoothGatt);
+                Log.w(TAG, "onServicesDiscovered::mBluetoothGatt = " + mBluetoothGatt);
 
                 //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
                 enableTXNotification();
+
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
@@ -192,11 +191,12 @@ public class BluetoothService extends IntentService {
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+
         }
     };
 
     private void broadcastUpdate(final String action) {
-        Log.i(TAG, "broadcastUpdate");
+        Log.i(TAG, "broadcastUpdate: final String action");
 
         final Intent intent = new Intent(action);
         //sendBroadcast(intent);
@@ -223,10 +223,10 @@ public class BluetoothService extends IntentService {
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
 
-
         if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
 
             // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
+
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
         } else {
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
@@ -329,14 +329,6 @@ public class BluetoothService extends IntentService {
         context.startService(intent);
     }
 
-    public static void  startActionenableTXNotification(Context context) {
-        Intent intent = new Intent(context, BluetoothService.class);
-        intent.setAction(ACTION_enableTXNotification);
-        context.startService(intent);
-    }
-
-
-
     /**
      * Starts this service to perform action Foo with the given parameters. If
      * the service is already performing a task this action will be queued.
@@ -385,8 +377,6 @@ public class BluetoothService extends IntentService {
                 initialize();
             }else if (ACTION_Close.equals(action)) {
                 close();
-            }else if (ACTION_enableTXNotification.equals(action)) {
-                enableTXNotification();
             }
         }
     }
@@ -511,12 +501,12 @@ public class BluetoothService extends IntentService {
      */
     public void enableTXNotification()
     {
-        Log.d(TAG, "call enableTXNotification.");
+        Log.i(TAG, "call enableTXNotification.");
         if (mBluetoothGatt == null) {
-        Log.d(TAG, "mBluetoothGatt null" + mBluetoothGatt);
-        broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-        return;
-    }
+            Log.e(TAG, "enableTXNotification::mBluetoothGatt is null.");
+            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            return;
+        }
 
         // To collect all services info, for debug.
         // Closed.
@@ -527,8 +517,6 @@ public class BluetoothService extends IntentService {
             Log.d(TAG, "call getAllServicesInfo failed.");
         }
         */
-
-        // Todo comment for debug.
 
         BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
         if (RxService == null) {
@@ -548,23 +536,7 @@ public class BluetoothService extends IntentService {
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
-
-        // Todo debug code.
-        /*
-        BluetoothGattService RxService = mBluetoothGatt.getService(TEST_TX_CHAR_UUID);
-        if (RxService == null) {
-            Log.d(TAG, "enableTXNotification::Rx service not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
-        }
-        BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TEST_TX_CHAR_UUID);
-        if (TxChar == null) {
-            showMessage("Tx charateristic not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
-        }
-        mBluetoothGatt.setCharacteristicNotification(TxChar, true);*/
-
+        Log.i(TAG, "call enableTXNotification executed.");
     }
 
     /**
@@ -573,57 +545,51 @@ public class BluetoothService extends IntentService {
      * callback.
      *
      */
-    public void readCharacteristic() {
+    public boolean readCharacteristic() {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.e(TAG, "BluetoothAdapter not initialized");
-            return;
+            return false;
         }
 
         if (mBluetoothGattCharacteristic == null) {
             Log.e(TAG, "mBluetoothGattCharacteristic is null");
-            return;
+            return false;
         }
 
         if (mBluetoothGatt.readCharacteristic(mBluetoothGattCharacteristic)){
             Log.d(TAG, "readCharacteristic successfully:" + mBluetoothGattCharacteristic.getUuid().toString());
-        }else
+            return true;
+        }else {
             Log.e(TAG, "readCharacteristic failed:" + mBluetoothGattCharacteristic.getUuid().toString());
+            return false;
+        }
 
     }
 
-    public void writeRXCharacteristic(String strValue)
+    public boolean writeRXCharacteristic(byte[] strValue)
     {
         Log.d(TAG, "writeRXCharacteristic: " + strValue);
-        BluetoothGattService RxService = null;
 
-        if (mBluetoothGatt == null) {
-            Log.d(TAG, "writeRXCharacteristic: mBluetoothGatt is null.");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.e(TAG, "BluetoothAdapter not initialized");
+            return false;
+        }
+
+        if (mBluetoothGattCharacteristic == null) {
+            Log.e(TAG, "mBluetoothGattCharacteristic is null");
+            return false;
+        }
+
+        mBluetoothGattCharacteristic.setValue(strValue);
+
+        if (mBluetoothGatt.writeCharacteristic(mBluetoothGattCharacteristic)){
+            Log.d(TAG, "writeRXCharacteristic successfully:" + mBluetoothGattCharacteristic.getUuid().toString());
+
+            return true;
         }else {
-            // todo comment for debug.
-            RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-            //RxService = mBluetoothGatt.getService(TEST_TX_SERVICE_UUID);
+            Log.e(TAG, "writeRXCharacteristic failed:" + mBluetoothGattCharacteristic.getUuid().toString());
+            return false;
         }
-
-        if (RxService == null) {
-            Log.d(TAG, "writeRXCharacteristic: RxService not found.");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
-        }
-        // todo comment for debug.
-        BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
-        //BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(TEST_TX_CHAR_UUID);
-        if (RxChar == null) {
-            Log.d(TAG, "writeRXCharacteristic: Rx charateristic not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
-        }
-        RxChar.setValue(strValue);
-
-        boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
-
-        Log.d(TAG, "write TXchar - status=" + status);
 
     }
 

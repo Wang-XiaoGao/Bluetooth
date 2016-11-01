@@ -79,7 +79,14 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
             final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
 
-            String strEXTRA = txValue.toString();
+            //String strEXTRA = txValue.toString();
+            //mDebugTextVew.setText(strEXTRA);
+
+            String strEXTRA = "";
+            for (int iTem = 0; iTem < txValue.length; iTem ++){
+                //String str = String.valueOf(txValue[iTem]);
+                strEXTRA += String.format("%02x ", txValue[iTem]);
+            }
             mDebugTextVew.setText(strEXTRA);
 
 
