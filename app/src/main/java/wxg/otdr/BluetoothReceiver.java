@@ -31,17 +31,13 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
         final Intent mIntent = intent;
 
-
-
-
-
-
         TextView mTextVew = (TextView) MainActivity.getInstance().findViewById(R.id.id_MakeSure_Connection);
         ImageButton mImageBT = (ImageButton) MainActivity.getInstance().findViewById(R.id.imageViewBT);
         ImageButton mImageDeviceCheck = (ImageButton) MainActivity.getInstance().findViewById(R.id.id_SelfCheck_Image);
         ImageButton mImageBattery = (ImageButton) MainActivity.getInstance().findViewById(R.id.id_Battery_Image);
         // Todo, this test view is for debug.
         TextView mDebugTextVew = (TextView) MainActivity.getInstance().findViewById(R.id.id_DebugText_View);
+        TextView mDebugTextVew_1 = (TextView) MainActivity.getInstance().findViewById(R.id.id_DebugText_View_1);
 
 
         //*********************//
@@ -58,6 +54,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
             mImageBT.setBackgroundResource(R.drawable.bluetooth56);
             mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
             mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
+
             //mTextVew.notify();
         }else if (strAction.equals(BluetoothService.ACTION_GATT_DISCONNECTED)){
 
@@ -73,21 +70,38 @@ public class BluetoothReceiver extends BroadcastReceiver {
             Log.e(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
             //BluetoothService.startActionenableTXNotification(MainActivity.getInstance().getBaseContext());
 
-        }else if (strAction.equals(BluetoothService.ACTION_DATA_AVAILABLE)) {
+        }else if (strAction.equals(BluetoothService.ACTION_FEEDBACK_AVAILABLE)) {
+            Log.d(TAG, "ACTION_FEEDBACK_AVAILABLE");
+            //final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
+
+            final String StrDeviceName1 = intent.getStringExtra(BluetoothService.mStrDeviceName);
+            final String StrDeviceAdd1 = intent.getStringExtra(BluetoothService.mStrDeviceAdd);
+            String StrShowText = StrDeviceName1 + "\n" + StrDeviceAdd1;
+
+
+            String strEXTRA = "Text 1: Register Char successfully.";
+            //for (int iTem = 0; iTem < txValue.length; iTem ++){
+                //String str = String.valueOf(txValue[iTem]);
+            //    strEXTRA += String.format("%02x ", txValue[iTem]);
+            //}
+            mDebugTextVew.setText(StrShowText);
+
+        }else if (strAction.equals(BluetoothService.ACTION_DATA_AVAILABLE)){
             Log.d(TAG, "ACTION_DATA_AVAILABLE");
             //final String StrEXTRA_DATA = intent.getStringExtra(BluetoothService.EXTRA_DATA);
 
             final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
 
+
             //String strEXTRA = txValue.toString();
             //mDebugTextVew.setText(strEXTRA);
 
-            String strEXTRA = "";
+            String strEXTRA = "Text 2: Show Bluetooth Data: ";
             for (int iTem = 0; iTem < txValue.length; iTem ++){
                 //String str = String.valueOf(txValue[iTem]);
                 strEXTRA += String.format("%02x ", txValue[iTem]);
             }
-            mDebugTextVew.setText(strEXTRA);
+            mDebugTextVew_1.setText(strEXTRA);
 
 
             /*

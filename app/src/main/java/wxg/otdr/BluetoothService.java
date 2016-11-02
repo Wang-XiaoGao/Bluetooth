@@ -26,6 +26,7 @@ import android.util.Xml;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -90,6 +91,8 @@ public class BluetoothService extends IntentService {
             "wxg.otdr.ACTION_GATT_DISCONNECTED";
     public final static String ACTION_GATT_SERVICES_DISCOVERED =
             "wxg.otdr.ACTION_GATT_SERVICES_DISCOVERED";
+    public final static String ACTION_FEEDBACK_AVAILABLE =
+            "wxg.otdr.ACTION_FEEDBACK_AVAILABLE";
     public final static String ACTION_DATA_AVAILABLE =
             "wxg.otdr.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
@@ -170,7 +173,9 @@ public class BluetoothService extends IntentService {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.w(TAG, "onServicesDiscovered::mBluetoothGatt = " + mBluetoothGatt);
 
-                //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+
+                // Todo should be open.
                 enableTXNotification();
 
             } else {
@@ -200,7 +205,6 @@ public class BluetoothService extends IntentService {
 
         final Intent intent = new Intent(action);
         //sendBroadcast(intent);
-        //Context.sendBroadcast(intent);
         MainActivity.getInstance().sendBroadcast(intent);
 
     }
@@ -216,6 +220,7 @@ public class BluetoothService extends IntentService {
 
         //sendBroadcast(intent);
         MainActivity.getInstance().sendBroadcast(intent);
+
     }
 
 
@@ -228,8 +233,8 @@ public class BluetoothService extends IntentService {
             // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
 
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
-        } else {
-            intent.putExtra(EXTRA_DATA, characteristic.getValue());
+        } else{
+
         }
 
         //sendBroadcast(intent);
@@ -502,9 +507,14 @@ public class BluetoothService extends IntentService {
     public void enableTXNotification()
     {
         Log.i(TAG, "call enableTXNotification.");
+
+        String str1 = "enableTXNotification: ";
+        String str2 = "failed";
+
         if (mBluetoothGatt == null) {
             Log.e(TAG, "enableTXNotification::mBluetoothGatt is null.");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            broadcastUpdate(ACTION_FEEDBACK_AVAILABLE, str1, str2);
             return;
         }
 
@@ -521,14 +531,16 @@ public class BluetoothService extends IntentService {
         BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
         if (RxService == null) {
             Log.d(TAG, "enableTXNotification::Rx service not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            broadcastUpdate(ACTION_FEEDBACK_AVAILABLE, str1, str2);
             return;
         }
 
         BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
         if (TxChar == null) {
             Log.d(TAG, "Tx charateristic not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            broadcastUpdate(ACTION_FEEDBACK_AVAILABLE, str1, str2);
             return;
         }
         mBluetoothGatt.setCharacteristicNotification(TxChar, true);
@@ -537,6 +549,10 @@ public class BluetoothService extends IntentService {
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
         Log.i(TAG, "call enableTXNotification executed.");
+
+        str2 = "successfully";
+        broadcastUpdate(ACTION_FEEDBACK_AVAILABLE, str1, str2);
+
     }
 
     /**

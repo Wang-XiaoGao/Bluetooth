@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(BluetoothService.ACTION_GATT_CONNECTED);
         intentFilter.addAction(BluetoothService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothService.ACTION_FEEDBACK_AVAILABLE);
         intentFilter.addAction(BluetoothService.ACTION_DATA_AVAILABLE);
         intentFilter.addAction(BluetoothService.DEVICE_DOES_NOT_SUPPORT_UART);
         //Just for debug, to receive info from system
@@ -565,20 +566,20 @@ public class MainActivity extends AppCompatActivity {
 
             byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBatter);
 
-            int[] iValues = mGlobalData.getReturn(bCommand);
+            int[] iValues = mGlobalData.getIntReturn(bCommand);
 
             boolean btrue = mGlobalData.Checksum(bCommand);
 
-            Log.e(TAG, "Data to send: " + bCommand.toString());
+            Log.e(TAG, "Qurey Battery, Data to send: " + mGlobalData.Int2String(iValues));
 //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
             if (mBluetoothService != null) {
-                bCheck = mBluetoothService.AssignGATTService(BluetoothService.TEST_TX_SERVICE_UUID);
+                bCheck = mBluetoothService.AssignGATTService(BluetoothService.RX_SERVICE_UUID);
                 if (!bCheck){
                     Log.e(TAG, "QueryBattery: mBluetoothService is null.");
                     return;
                 }
 //TEST_TX_CHAR_UUID, RX_CHAR_UUID
-                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.TEST_TX_CHAR_UUID);
+                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
                 if (!bCheck){
                     Log.e(TAG, "QueryBattery: Characteristics is null.");
                     return;
@@ -614,21 +615,22 @@ public class MainActivity extends AppCompatActivity {
 
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSelfCheck);
 
-        int[] iValues = mGlobalData.getReturn(bCommand);
+        int[] iValues = mGlobalData.getIntReturn(bCommand);
 
         boolean btrue = mGlobalData.Checksum(bCommand);
 
+        Log.e(TAG, "StartSelfCheck, Data to send: " + mGlobalData.Int2String(iValues));
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
             //send data to service
-
+//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
             if (mBluetoothService != null) {
-                bCheck = mBluetoothService.AssignGATTService(BluetoothService.TEST_Name_SERVICE_UUID);
+                bCheck = mBluetoothService.AssignGATTService(BluetoothService.RX_SERVICE_UUID);
                 if (!bCheck){
                     Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
                     return;
                 }
-
-                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.TEST_Name_CHAR_UUID);
+//TEST_TX_CHAR_UUID, RX_CHAR_UUID
+                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
                 if (!bCheck){
                     Log.e(TAG, "StartSelfCheck: Characteristics is null.");
                     return;

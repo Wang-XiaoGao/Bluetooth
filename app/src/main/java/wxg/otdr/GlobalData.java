@@ -20,6 +20,9 @@ public class GlobalData extends Application{
     public static int[] iQueryBatter = {0x68, 0x01, 0x3C, 0xA5};
     public static int[] iSelfCheck = {0x68, 0x02, 0x69, 0x06, 0xD9};
 
+    private final static int cCommand_Index = 0;
+    private final static int cDataLenth_Index = 1;
+
     enum eCommandIndex {eQueryBatter, eSelfCheck};
 
     @Override
@@ -75,7 +78,7 @@ public class GlobalData extends Application{
         for (int iTem = 0; iTem < iCount; iTem++){
 
             String strTem = String.valueOf(IntSerial[iTem]);
-            str = str + strTem;
+            str = str + String.format(strTem, "%02x") + ";";
         }
         return str;
     }
@@ -112,7 +115,7 @@ public class GlobalData extends Application{
     // The correct command code should be [0, 255];
     // If [0, 127], it's belong to byte [-128, 127], no need to convert.
     // if [128, 255], it's needed to convert.
-    private byte[] Int2Byte(int[] iValues){
+    public byte[] Int2Byte(int[] iValues){
 
         byte[] bValues = new byte[iValues.length];
         byte bValue = 0;
@@ -138,7 +141,7 @@ public class GlobalData extends Application{
 
     }
 
-    public int[] getReturn(byte[] bValues){
+    public int[] getIntReturn(byte[] bValues){
 
         int[] iValues = null;
         iValues = Byte2Int(bValues);
@@ -149,7 +152,7 @@ public class GlobalData extends Application{
     // The correct command code should be [0, 255];
     // byte [-128, 127]; Int[-2,147,483,648 to 2,147,483,647].
     // So if byteValue smaller than 0, it's needed to convert.
-    private int[] Byte2Int(byte[] bValues){
+    public int[] Byte2Int(byte[] bValues){
 
         int[] iValues = new int[bValues.length];
         int iValue = 0;
@@ -199,5 +202,27 @@ public class GlobalData extends Application{
             Log.d(TAG, "Checksum is wrong.");
         }
         return bCheck;
+    }
+
+    public int[] getDataReturn(int[] iReturnValues){
+        Log.i(TAG, "AnalyzeData");
+
+        int iLenth = iReturnValues[cDataLenth_Index];
+
+        int[] iValues = new int[iLenth];
+
+        for (int iCount = 0; iCount < iLenth; iCount ++){
+            iValues[iCount] = iReturnValues[cDataLenth_Index + iCount];
+        }
+
+        return iValues;
+    }
+
+    public int getCommandTypeReturn(int[] iReturnValues){
+        Log.i(TAG, "AnalyzeData");
+
+        int iCommand = iReturnValues[cCommand_Index];
+
+        return iCommand;
     }
 }

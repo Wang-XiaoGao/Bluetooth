@@ -252,12 +252,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Bluetooth readback info here..."
+        android:text="Text 1: Show Bluetooth feedback: "
         android:id="@+id/id_DebugText_View"
         android:layout_below="@+id/id_Status_Frame"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Text 2: Show Bluetooth Data: "
+        android:id="@+id/id_DebugText_View_1"
+        android:layout_below="@+id/id_DebugText_View"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="26dp" />
 
     <!--
     <LinearLayout
