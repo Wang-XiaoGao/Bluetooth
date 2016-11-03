@@ -60,6 +60,11 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
             Log.d(TAG, "Bluetooth Disconnected");
 
+            // Tobe deleted.
+            GlobalData.strLog = null;
+            mDebugTextVew.setText(GlobalData.strLog);
+            mDebugTextVew_1.setText(GlobalData.strLog);
+
             mTextVew.setText(R.string.Bluetooth_Not_Connected);
             mImageBT.setBackgroundResource(R.drawable.bluetooth56_gray);
             mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56gray);
@@ -96,12 +101,17 @@ public class BluetoothReceiver extends BroadcastReceiver {
             //String strEXTRA = txValue.toString();
             //mDebugTextVew.setText(strEXTRA);
 
+            // Todo, show all log;
+
             String strEXTRA = "Text 2: Show Bluetooth Data: ";
             for (int iTem = 0; iTem < txValue.length; iTem ++){
                 //String str = String.valueOf(txValue[iTem]);
                 strEXTRA += String.format("%02x ", txValue[iTem]);
+                GlobalData.strLog += String.format("%02x ", txValue[iTem]);
             }
-            mDebugTextVew_1.setText(strEXTRA);
+            GlobalData.strLog += "\n";
+
+            mDebugTextVew_1.setText(GlobalData.strLog);
 
 
             /*

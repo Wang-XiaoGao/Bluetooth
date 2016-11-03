@@ -234,7 +234,8 @@ public class BluetoothService extends IntentService {
 
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
         } else{
-
+            //Todo, just for debug.
+            intent.putExtra(EXTRA_DATA, characteristic.getValue());
         }
 
         //sendBroadcast(intent);
