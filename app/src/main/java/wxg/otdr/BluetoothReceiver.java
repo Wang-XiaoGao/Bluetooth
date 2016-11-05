@@ -62,6 +62,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
             // Tobe deleted.
             GlobalData.strLog = null;
+            GlobalData.strLogRead = null;
             mDebugTextVew.setText(GlobalData.strLog);
             mDebugTextVew_1.setText(GlobalData.strLog);
 
@@ -79,17 +80,28 @@ public class BluetoothReceiver extends BroadcastReceiver {
             Log.d(TAG, "ACTION_FEEDBACK_AVAILABLE");
             //final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
 
-            final String StrDeviceName1 = intent.getStringExtra(BluetoothService.mStrDeviceName);
-            final String StrDeviceAdd1 = intent.getStringExtra(BluetoothService.mStrDeviceAdd);
-            String StrShowText = StrDeviceName1 + "\n" + StrDeviceAdd1;
+            final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
 
+            GlobalData.strLogRead += intent.getStringExtra(BluetoothService.mStrDeviceName);
+            GlobalData.strLogRead += ": ";
 
-            String strEXTRA = "Text 1: Register Char successfully.";
-            //for (int iTem = 0; iTem < txValue.length; iTem ++){
-                //String str = String.valueOf(txValue[iTem]);
-            //    strEXTRA += String.format("%02x ", txValue[iTem]);
-            //}
-            mDebugTextVew.setText(StrShowText);
+            //String strEXTRA = txValue.toString();
+            //mDebugTextVew.setText(strEXTRA);
+
+            // Todo, show all log;
+
+            String strEXTRA = "Text 1: Show Bluetooth Data: ";
+            if (txValue != null){
+                for (int iTem = 0; iTem < txValue.length; iTem ++){
+                    //String str = String.valueOf(txValue[iTem]);
+                    strEXTRA += String.format("%02x ", txValue[iTem]);
+                    GlobalData.strLogRead += String.format("%02x ", txValue[iTem]);
+                }
+            }
+            GlobalData.strLogRead += "。";
+
+            mDebugTextVew.setText(GlobalData.strLogRead);
+
 
         }else if (strAction.equals(BluetoothService.ACTION_DATA_AVAILABLE)){
             Log.d(TAG, "ACTION_DATA_AVAILABLE");
@@ -97,6 +109,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
             final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
 
+            GlobalData.strLog += intent.getStringExtra(BluetoothService.mStrDeviceName);
+            GlobalData.strLog += ": ";
 
             //String strEXTRA = txValue.toString();
             //mDebugTextVew.setText(strEXTRA);
@@ -109,7 +123,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 strEXTRA += String.format("%02x ", txValue[iTem]);
                 GlobalData.strLog += String.format("%02x ", txValue[iTem]);
             }
-            GlobalData.strLog += "\n";
+            GlobalData.strLog += "。";
 
             mDebugTextVew_1.setText(GlobalData.strLog);
 

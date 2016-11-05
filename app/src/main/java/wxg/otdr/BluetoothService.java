@@ -188,7 +188,7 @@ public class BluetoothService extends IntentService {
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+                broadcastUpdate(ACTION_FEEDBACK_AVAILABLE, characteristic);
             }
         }
 
@@ -233,9 +233,13 @@ public class BluetoothService extends IntentService {
             // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
 
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
-        } else{
+            String strName = "TX_CHAR";
+            intent.putExtra(mStrDeviceName, strName);
+        } else if (RX_CHAR_UUID.equals(characteristic.getUuid())){
             //Todo, just for debug.
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
+            String strName = "RX_CHAR";
+            intent.putExtra(mStrDeviceName, strName);
         }
 
         //sendBroadcast(intent);
@@ -528,7 +532,7 @@ public class BluetoothService extends IntentService {
             Log.d(TAG, "call getAllServicesInfo failed.");
         }
         */
-
+//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
         BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
         if (RxService == null) {
             Log.d(TAG, "enableTXNotification::Rx service not found!");
@@ -536,7 +540,7 @@ public class BluetoothService extends IntentService {
             broadcastUpdate(ACTION_FEEDBACK_AVAILABLE, str1, str2);
             return;
         }
-
+//TEST_TX_CHAR_UUID, TX_CHAR_UUID
         BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
         if (TxChar == null) {
             Log.d(TAG, "Tx charateristic not found!");

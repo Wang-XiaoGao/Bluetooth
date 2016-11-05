@@ -26,6 +26,7 @@ public class GlobalData extends Application{
     enum eCommandIndex {eQueryBatter, eSelfCheck};
 
     public static String strLog = null;
+    public static String strLogRead = null;
 
     @Override
     public void onCreate(){

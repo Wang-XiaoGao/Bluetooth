@@ -563,8 +563,8 @@ public class MainActivity extends AppCompatActivity {
             //String strValueDataInLog = GlobalData.Int2StringLog(mCharBattery);
             //String strValueData = GlobalData.Int2String(mCharBattery);
             //String strValueDataInLog = GlobalData.Int2StringLog(mCharBattery);
-
-            byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBatter);
+//eSelfCheck, eQueryBatter
+            byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSelfCheck);
 
             int[] iValues = mGlobalData.getIntReturn(bCommand);
 
@@ -573,13 +573,13 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Qurey Battery, Data to send: " + mGlobalData.Int2String(iValues));
 //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
             if (mBluetoothService != null) {
-                bCheck = mBluetoothService.AssignGATTService(BluetoothService.TEST_TX_SERVICE_UUID);
+                bCheck = mBluetoothService.AssignGATTService(BluetoothService.RX_SERVICE_UUID);
                 if (!bCheck){
                     Log.e(TAG, "QueryBattery: mBluetoothService is null.");
                     return;
                 }
 //TEST_TX_CHAR_UUID, RX_CHAR_UUID
-                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.TEST_TX_CHAR_UUID);
+                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
                 if (!bCheck){
                     Log.e(TAG, "QueryBattery: Characteristics is null.");
                     return;
@@ -634,13 +634,13 @@ public class MainActivity extends AppCompatActivity {
             //send data to service
 //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
             if (mBluetoothService != null) {
-                bCheck = mBluetoothService.AssignGATTService(BluetoothService.TEST_TX_SERVICE_UUID);
+                bCheck = mBluetoothService.AssignGATTService(BluetoothService.RX_SERVICE_UUID);
                 if (!bCheck){
                     Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
                     return;
                 }
 //TEST_TX_CHAR_UUID, RX_CHAR_UUID
-                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.TEST_TX_CHAR_UUID);
+                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.TX_CHAR_UUID);
                 if (!bCheck){
                     Log.e(TAG, "StartSelfCheck: Characteristics is null.");
                     return;
