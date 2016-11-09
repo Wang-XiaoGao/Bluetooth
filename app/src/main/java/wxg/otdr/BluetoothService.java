@@ -67,6 +67,7 @@ public class BluetoothService extends IntentService {
     public static final String mStrDeviceName = "Device Name";
     public static final String mStrDeviceAdd = "Device Address";
 
+
     private final static String TAG = BluetoothService.class.getSimpleName();
 
     private static BluetoothManager mBluetoothManager = null;
@@ -99,6 +100,11 @@ public class BluetoothService extends IntentService {
             "wxg.otdr.EXTRA_DATA";
     public final static String DEVICE_DOES_NOT_SUPPORT_UART =
             "wxg.otdr.DEVICE_DOES_NOT_SUPPORT_UART";
+    public static final String RETURN_COMMAND = "wxg.otdr.extra.COMMAND";
+    public static final String RETURN_DATA = "wxg.otdr.extra.DATA";
+
+
+
 
     public static final UUID TX_POWER_UUID = UUID.fromString("00001804-0000-1000-8000-00805f9b34fb");
     public static final UUID TX_POWER_LEVEL_UUID = UUID.fromString("00002a07-0000-1000-8000-00805f9b34fb");
@@ -227,19 +233,36 @@ public class BluetoothService extends IntentService {
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
-
+//TX_CHAR_UUID, TEST_TX_CHAR_UUID
         if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
+            Log.d(TAG, String.format("Received data modified: ",characteristic.getValue() ));
 
-            // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
+            GlobalData gData = new GlobalData();
+            byte[] bValues = characteristic.getValue();
+            if (bValues != null){
+                int[] iValues = gData.Byte2Int(bValues);
 
-            intent.putExtra(EXTRA_DATA, characteristic.getValue());
-            String strName = "TX_CHAR";
-            intent.putExtra(mStrDeviceName, strName);
-        } else if (RX_CHAR_UUID.equals(characteristic.getUuid())){
-            //Todo, just for debug.
-            intent.putExtra(EXTRA_DATA, characteristic.getValue());
-            String strName = "RX_CHAR";
-            intent.putExtra(mStrDeviceName, strName);
+                if (iValues != null){
+                    int iCommand_Type = gData.getCommandTypeReturn(iValues);
+                    intent.putExtra(RETURN_COMMAND, iCommand_Type);
+
+
+                    int[] iData_Return = gData.getDataReturn(iValues);
+                    if (iData_Return == null){
+                        Log.d(TAG, "iData_Return is null.");
+                        return;
+                    }else{
+                        intent.putExtra(RETURN_DATA, iData_Return);
+                    }
+                }else{
+                    Log.d(TAG, "iValue is null.");
+                    return;
+                }
+            }else{
+                Log.d(TAG, "bValue is null.");
+                return;
+            }
+
         }
 
         //sendBroadcast(intent);

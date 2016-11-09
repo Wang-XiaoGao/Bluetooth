@@ -35,6 +35,16 @@ public class BluetoothReceiver extends BroadcastReceiver {
         ImageButton mImageBT = (ImageButton) MainActivity.getInstance().findViewById(R.id.imageViewBT);
         ImageButton mImageDeviceCheck = (ImageButton) MainActivity.getInstance().findViewById(R.id.id_SelfCheck_Image);
         ImageButton mImageBattery = (ImageButton) MainActivity.getInstance().findViewById(R.id.id_Battery_Image);
+        TextView mBatteryValue = (TextView) MainActivity.getInstance().findViewById(R.id.id_Battery_Remain_Value);
+        TextView mMaterialNumValue = (TextView) MainActivity.getInstance().findViewById(R.id.id_MaterialNum_Value);
+        TextView mVoltageValue = (TextView) MainActivity.getInstance().findViewById(R.id.id_Voltage_Value);
+        TextView mPressureValue = (TextView) MainActivity.getInstance().findViewById(R.id.id_Pressure_Value);
+
+
+
+
+
+
         // Todo, this test view is for debug.
         TextView mDebugTextVew = (TextView) MainActivity.getInstance().findViewById(R.id.id_DebugText_View);
         TextView mDebugTextVew_1 = (TextView) MainActivity.getInstance().findViewById(R.id.id_DebugText_View_1);
@@ -106,6 +116,39 @@ public class BluetoothReceiver extends BroadcastReceiver {
         }else if (strAction.equals(BluetoothService.ACTION_DATA_AVAILABLE)){
             Log.d(TAG, "ACTION_DATA_AVAILABLE");
             //final String StrEXTRA_DATA = intent.getStringExtra(BluetoothService.EXTRA_DATA);
+            int iDefault = 0;
+
+
+            int iCommandType = intent.getIntExtra(BluetoothService.RETURN_COMMAND, iDefault);
+            int[] iReturnData = intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+            if (iReturnData == null){
+                Log.e(TAG, "iReturnData is null.");
+                return;
+            }
+
+            switch (iCommandType){
+                case GlobalData.cCommand_BatteryRemain:
+                    mBatteryValue.setText(String.format("%d", iReturnData[GlobalData.cBattery_Index]));
+                    break;
+                case GlobalData.cCommand_Selfcheck:
+                    if (iReturnData.length < GlobalData.cMaterialHigh_Index + 1){
+                        Log.e(TAG, "iReturnData is less than expected.");
+                        return;
+                    }
+                    mVoltageValue.setText(String.format("%d", iReturnData[GlobalData.cVoltage_Index]));
+                    mPressureValue.setText(String.format("%d", iReturnData[GlobalData.cPressure_Index]));
+
+                    int iTem = iReturnData[GlobalData.cMaterialHigh_Index]<<8 +
+                            iReturnData[GlobalData.cMaterialLow_Index];
+                    mPressureValue.setText(String.format("%d", iTem));
+
+                    break;
+                default:
+                    break;
+
+            }
+
+            // To do, delete, just for debug.
 
             final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
 
@@ -146,6 +189,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
             //showMessage("Device doesn't support UART. Disconnecting");
             //mService.disconnect();
             Log.e(TAG, "DEVICE_DOES_NOT_SUPPORT_UART");
+
         }else {
             Log.e(TAG, "Wrong intnet: " + strAction);
         }

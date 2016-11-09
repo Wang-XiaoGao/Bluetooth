@@ -17,11 +17,27 @@ public class GlobalData extends Application{
     enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
 
-    public static int[] iQueryBatter = {0x68, 0x01, 0x3C, 0xA5};
-    public static int[] iSelfCheck = {0x68, 0x02, 0x69, 0x06, 0xD9};
+    public static int[] iQueryBatter = {0x68, 0x01, 0x3C};
+    public static int[] iSelfCheck = {0x68, 0x02, 0x69};
 
-    private final static int cCommand_Index = 0;
-    private final static int cDataLenth_Index = 1;
+    public final static int cCommand_Head = 0x68;
+    public final static int cCommand_BatteryRemain = 0x3C;
+    public final static int cCommand_Selfcheck = 0x69;
+
+
+    // Index in byte[], e.g. 0x68, 0x01, 0x3C
+    public final static int cCommandHead_Index = 0;
+    public final static int cCommandLength_Index = 1;
+    public final static int cCommandType_Index = 2;
+
+
+    // Each byte for return value, in different command type.
+    public final static int cBattery_Index = 0;
+    public final static int cVoltage_Index = 0;
+    public final static int cPressure_Index = 1;
+    public final static int cMaterialLow_Index = 2;
+    public final static int cMaterialHigh_Index = 3;
+
 
     enum eCommandIndex {eQueryBatter, eSelfCheck};
 
@@ -157,6 +173,14 @@ public class GlobalData extends Application{
     // So if byteValue smaller than 0, it's needed to convert.
     public int[] Byte2Int(byte[] bValues){
 
+        if (bValues == null){
+            Log.e(TAG, "bValues is null.");
+            return null;
+        }else if (bValues[cCommandHead_Index] != cCommand_Head){
+            Log.e(TAG, "Command head is not right, no 0X68.");
+            return null;
+        }
+
         int[] iValues = new int[bValues.length];
         int iValue = 0;
 
@@ -180,7 +204,32 @@ public class GlobalData extends Application{
         return iValues;
     }
 
+    public int getCommandTypeReturn(int[] iReturnValues){
+        Log.i(TAG, "AnalyzeData");
+
+        int iCommand = iReturnValues[cCommandType_Index];
+
+        return iCommand;
+    }
+
+    // Also for battery reading, this case, int[] only got length = 1;
+    public int[] getDataReturn(int[] iReturnValues){
+        Log.i(TAG, "AnalyzeData");
+
+        int iLength = iReturnValues[cCommandLength_Index];
+
+        int[] iValues = new int[iLength];
+
+        for (int iCount = 0; iCount < iLength; iCount ++){
+            iValues[iCount] = iReturnValues[cCommandLength_Index + iCount];
+        }
+
+        return iValues;
+    }
+
     // Only need to check the checksum from returned result.
+    // Cancel checksum.
+    /*
     public boolean Checksum(byte[] bValues){
 
         Log.i(TAG, "Checksum");
@@ -205,27 +254,6 @@ public class GlobalData extends Application{
             Log.d(TAG, "Checksum is wrong.");
         }
         return bCheck;
-    }
+    }*/
 
-    public int[] getDataReturn(int[] iReturnValues){
-        Log.i(TAG, "AnalyzeData");
-
-        int iLenth = iReturnValues[cDataLenth_Index];
-
-        int[] iValues = new int[iLenth];
-
-        for (int iCount = 0; iCount < iLenth; iCount ++){
-            iValues[iCount] = iReturnValues[cDataLenth_Index + iCount];
-        }
-
-        return iValues;
-    }
-
-    public int getCommandTypeReturn(int[] iReturnValues){
-        Log.i(TAG, "AnalyzeData");
-
-        int iCommand = iReturnValues[cCommand_Index];
-
-        return iCommand;
-    }
 }

@@ -483,7 +483,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // User did not enable Bluetooth or an error occurred
                     Log.d(TAG, "BT not enabled");
-                    Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getText(R.string.BT_Not_TurnOn), Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 break;
@@ -551,24 +551,10 @@ public class MainActivity extends AppCompatActivity {
         int iBTTem = mBluetoothService.getBTConnectStatus();
 
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
-            //send data to service
-            //String strValue = new String(mCharBattery1);
-
-            //Log.e(TAG, "Data to send: " + strValue);
-            //Log.e(TAG, "Data to send: " + mCharBattery);
-            //String strValueData = GlobalData.Char2String(mCharBattery);
-            //String strValueDataInLog =  GlobalData.Char2Int2String(mCharBattery);
-
-            //String strValueData = GlobalData.Int2String(mCharBattery);
-            //String strValueDataInLog = GlobalData.Int2StringLog(mCharBattery);
-            //String strValueData = GlobalData.Int2String(mCharBattery);
-            //String strValueDataInLog = GlobalData.Int2StringLog(mCharBattery);
-//eSelfCheck, eQueryBatter
+ //eSelfCheck, eQueryBatter
             byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSelfCheck);
 
             int[] iValues = mGlobalData.getIntReturn(bCommand);
-
-            boolean btrue = mGlobalData.Checksum(bCommand);
 
             Log.e(TAG, "Qurey Battery, Data to send: " + mGlobalData.Int2String(iValues));
 //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
@@ -585,21 +571,16 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-               // bCheck = mBluetoothService.writeRXCharacteristic(mCharBattery);
                 bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
                 if (!bCheck){
                     Log.e(TAG, "QueryBattery: writeRXCharacteristic failed.");
-                    Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
-                    byte[] bValues = {0x9, 0x9};
-                    intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
-
-                    sendBroadcast(intent);
+                    //Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
+                    //byte[] bValues = {0x9, 0x9};
+                    //intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
+                    //sendBroadcast(intent);
+                    Toast.makeText(this, getResources().getText(R.string.Command_Send_Failed),
+                            Toast.LENGTH_SHORT).show();
                     return;
-                }else{
-                    Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
-                    byte[] bValues = {0x1, 0x1};
-                    intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
-                    sendBroadcast(intent);
                 }
 
             }else{
@@ -627,8 +608,6 @@ public class MainActivity extends AppCompatActivity {
 
         int[] iValues = mGlobalData.getIntReturn(bCommand);
 
-        boolean btrue = mGlobalData.Checksum(bCommand);
-
         Log.e(TAG, "StartSelfCheck, Data to send: " + mGlobalData.Int2String(iValues));
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
             //send data to service
@@ -640,25 +619,23 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 //TEST_TX_CHAR_UUID, RX_CHAR_UUID
-                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.TX_CHAR_UUID);
+                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
                 if (!bCheck){
                     Log.e(TAG, "StartSelfCheck: Characteristics is null.");
                     return;
                 }
 
-                bCheck = mBluetoothService.readCharacteristic();
+                //bCheck = mBluetoothService.readCharacteristic();
+                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
                 if (!bCheck){
                     Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
-                    Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
-                    byte[] bValues = {0x9, 0x9};
-                    intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
-                    sendBroadcast(intent);
+                    //Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
+                    //byte[] bValues = {0x9, 0x9};
+                    //intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
+                    //sendBroadcast(intent);
+                    Toast.makeText(this, getResources().getText(R.string.Command_Send_Failed),
+                            Toast.LENGTH_SHORT).show();
                     return;
-                }else{
-                    Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
-                    byte[] bValues = {0x1, 0x1};
-                    intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
-                    sendBroadcast(intent);
                 }
 
             }else{

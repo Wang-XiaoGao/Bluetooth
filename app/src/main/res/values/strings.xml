@@ -29,7 +29,8 @@
     <string name="BT_Name_Pre">羿弓力创</string>
     <string name="title_activity_display">DisplayActivity</string>
     <string name="BT_TurnOn">蓝牙功能已开启</string>
-
+    <string name="BT_Not_TurnOn">蓝牙功能未开启</string>
+    <string name="Command_Send_Failed">命令发送失败！</string>
 
 
     <string name="device">Device:</string>
