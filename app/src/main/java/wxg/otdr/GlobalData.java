@@ -18,11 +18,13 @@ public class GlobalData extends Application{
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
 
     public static int[] iQueryBatter = {0x68, 0x01, 0x3C};
-    public static int[] iSelfCheck = {0x68, 0x02, 0x69};
+    public static int[] iSelfCheck = {0x68, 0x02, 0x69, 0x07};
+    public static int[] iReset = {0x68, 0x01, 0xD2};
 
     public final static int cCommand_Head = 0x68;
     public final static int cCommand_BatteryRemain = 0x3C;
     public final static int cCommand_Selfcheck = 0x69;
+    public final static int cCommand_Reset = 0xD2;
 
 
     // Index in byte[], e.g. 0x68, 0x01, 0x3C
@@ -30,19 +32,24 @@ public class GlobalData extends Application{
     public final static int cCommandLength_Index = 1;
     public final static int cCommandType_Index = 2;
 
+    public final static int cDataStart_Index = 3;
+
 
     // Each byte for return value, in different command type.
     public final static int cBattery_Index = 0;
     public final static int cVoltage_Index = 0;
+    public final static int cReset_Index = 0;
     public final static int cPressure_Index = 1;
     public final static int cMaterialLow_Index = 2;
     public final static int cMaterialHigh_Index = 3;
 
 
-    enum eCommandIndex {eQueryBatter, eSelfCheck};
+    enum eCommandIndex {eQueryBatter, eSelfCheck, eReset};
 
     public static String strLog = null;
-    public static String strLogRead = null;
+    public static String strNewLog = null;
+    public static String strTitle = "Log: ";
+
 
     @Override
     public void onCreate(){
@@ -123,6 +130,9 @@ public class GlobalData extends Application{
                 break;
             case eSelfCheck:
                 bCommand = Int2Byte(iSelfCheck);
+                break;
+            case eReset:
+                bCommand = Int2Byte(iReset);
                 break;
             default:
                 break;
@@ -216,12 +226,21 @@ public class GlobalData extends Application{
     public int[] getDataReturn(int[] iReturnValues){
         Log.i(TAG, "AnalyzeData");
 
+        /*
         int iLength = iReturnValues[cCommandLength_Index];
 
         int[] iValues = new int[iLength];
 
         for (int iCount = 0; iCount < iLength; iCount ++){
             iValues[iCount] = iReturnValues[cCommandLength_Index + iCount];
+        }*/
+
+        int iLength = iReturnValues[cCommandLength_Index]-1;
+
+        int[] iValues = new int[iLength];
+
+        for (int iCount = 0; iCount < iLength; iCount ++){
+            iValues[iCount] = iReturnValues[cDataStart_Index + iCount];
         }
 
         return iValues;

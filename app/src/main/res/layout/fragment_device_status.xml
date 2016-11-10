@@ -159,22 +159,6 @@
                 android:layout_alignBottom="@id/id_MaterialNum_Chinese"
                 />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_MaterialNum_Percent"
-                android:text="%"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_toRightOf="@id/id_MaterialNum_Value"
-                android:layout_alignBottom="@id/id_MaterialNum_Chinese"
-                />
-
-
-
-
-
-
 
             <TextView
                 android:id="@+id/id_Voltage_Chinese"
@@ -241,7 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Pressure_Percent"
-                android:text="%"
+                android:text="m"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:layout_toRightOf="@+id/id_Pressure_Value"
@@ -252,21 +236,36 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Text 1: Show Bluetooth feedback: "
+        android:text="Text: Log View"
         android:id="@+id/id_DebugText_View"
         android:layout_below="@+id/id_Status_Frame"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:layout_alignParentEnd="true" />
 
+
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Text 2: Show Bluetooth Data: "
-        android:id="@+id/id_DebugText_View_1"
-        android:layout_below="@+id/id_DebugText_View"
+        android:text="请先链接蓝牙然后才能执行其他操作。\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。"
+        android:id="@+id/DescriptionTextView"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="26dp" />
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Command_Reset"
+        android:id="@+id/id_Reset_button"
+        android:layout_above="@id/DescriptionTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="33dp"
+        android:clickable="true"
+        android:onClick="onButtonReset"
+        />
 
     <!--
     <LinearLayout

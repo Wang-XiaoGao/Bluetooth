@@ -552,7 +552,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
  //eSelfCheck, eQueryBatter
-            byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSelfCheck);
+            byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBatter);
 
             int[] iValues = mGlobalData.getIntReturn(bCommand);
 
@@ -650,6 +650,57 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+    }
+
+    public void onButtonReset(View v) {
+        Log.i(TAG, "Call onButtonReset.");
+        boolean bCheck = false;
+
+        int iBTTem = mBluetoothService.getBTConnectStatus();
+
+        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eReset);
+        int[] iValues = mGlobalData.getIntReturn(bCommand);
+
+        Log.e(TAG, "onButtonReset, Data to send: " + mGlobalData.Int2String(iValues));
+        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
+            //send data to service
+//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
+            if (mBluetoothService != null) {
+                bCheck = mBluetoothService.AssignGATTService(BluetoothService.RX_SERVICE_UUID);
+                if (!bCheck){
+                    Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
+                    return;
+                }
+//TEST_TX_CHAR_UUID, RX_CHAR_UUID
+                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
+                if (!bCheck){
+                    Log.e(TAG, "StartSelfCheck: Characteristics is null.");
+                    return;
+                }
+
+                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
+                if (!bCheck){
+                    Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
+                    //Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
+                    //byte[] bValues = {0x9, 0x9};
+                    //intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
+                    //sendBroadcast(intent);
+                    Toast.makeText(this, getResources().getText(R.string.Command_Send_Failed),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+            }else{
+                Log.e(TAG, "Exception: mBluetoothService is null.");
+            }
+        }else{
+            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
+
+            Toast.makeText(v.getContext(),
+                    "Bluetooth not connected yet, could not read battery info:",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 
     // Try QueryLatestVersion.
