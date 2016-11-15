@@ -236,11 +236,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Text: Log View"
+        android:hint="Log info:"
         android:id="@+id/id_DebugText_View"
         android:layout_below="@+id/id_Status_Frame"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
+        android:inputType="textMultiLine"
+        android:maxLines="8"
         android:layout_alignParentEnd="true" />
 
 
@@ -268,12 +270,15 @@
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/id_Reset_button"
-        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/BTStatusLayout"
+        android:textSize="20sp"
+        android:background="@color/GrayWhite"
         android:layout_below="@+id/id_DebugText_View"
-        android:id="@+id/BTStatusLayout">
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="39dp"
+        android:layout_alignEnd="@+id/id_DebugText_View">
 
 
         <TextView
@@ -282,7 +287,8 @@
             android:text="@string/BT_Status"
             android:id="@+id/id_BTStatus_TextView"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -290,16 +296,18 @@
             android:text="@string/Send_Times"
             android:id="@+id/id_SendTimes_textView"
             android:layout_below="@+id/id_BTStatus_TextView"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="0"
+            android:text="01"
             android:id="@+id/id_SendTime_Nub"
             android:layout_below="@+id/id_BTStatus_TextView"
-            android:layout_toEndOf="@+id/id_SendTimes_textView" />
+            android:layout_toEndOf="@+id/id_SendTimes_textView"
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -308,8 +316,121 @@
             android:id="@+id/id_Time_textView"
             android:layout_below="@+id/id_BTStatus_TextView"
             android:layout_toEndOf="@+id/id_BTStatus_TextView"
-            android:layout_marginStart="52dp" />
+            android:layout_marginStart="16dp"
+            android:textSize="20sp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0000"
+            android:id="@+id/id_SendTime_0"
+            android:layout_below="@id/id_SendTimes_textView"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:editable="false"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0001"
+            android:id="@+id/id_SendTime_1"
+            android:layout_below="@id/id_SendTimes_textView"
+            android:layout_toEndOf="@id/id_SendTime_0"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0002"
+            android:id="@+id/id_SendTime_2"
+            android:layout_below="@id/id_SendTimes_textView"
+            android:layout_toEndOf="@id/id_SendTime_1"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0003"
+            android:id="@+id/id_SendTime_3"
+            android:layout_below="@id/id_SendTimes_textView"
+            android:layout_toEndOf="@id/id_SendTime_2"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0004"
+            android:id="@+id/id_SendTime_4"
+            android:layout_below="@id/id_SendTimes_textView"
+            android:layout_toEndOf="@id/id_SendTime_3"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0005"
+            android:id="@+id/id_SendTime_5"
+            android:layout_below="@id/id_SendTime_0"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0006"
+            android:id="@+id/id_SendTime_6"
+            android:layout_below="@id/id_SendTime_0"
+            android:layout_toEndOf="@id/id_SendTime_5"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0007"
+            android:id="@+id/id_SendTime_7"
+            android:layout_below="@id/id_SendTime_0"
+            android:layout_toEndOf="@id/id_SendTime_6"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0008"
+            android:id="@+id/id_SendTime_8"
+            android:layout_below="@id/id_SendTime_0"
+            android:layout_toEndOf="@id/id_SendTime_7"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0009"
+            android:id="@+id/id_SendTime_9"
+            android:layout_below="@id/id_SendTime_0"
+            android:layout_toEndOf="@id/id_SendTime_8"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"/>
 
     </RelativeLayout>
 
