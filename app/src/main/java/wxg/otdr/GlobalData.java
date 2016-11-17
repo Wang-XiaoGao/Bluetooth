@@ -12,7 +12,7 @@ import java.io.InputStream;
 public class GlobalData extends Application{
     public static final String TAG = GlobalData.class.getSimpleName();
 
-    private static boolean bInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016
+    private static boolean bIsInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016
 
     enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
@@ -60,17 +60,17 @@ public class GlobalData extends Application{
     }
 
     public boolean getInEngineeringMode(){
-        return this.bInEngineeringMode;
+        return bIsInEngineeringMode;
     }
     public void setEngineeringMode(boolean bStatus){
-        this.bInEngineeringMode = bStatus;
+        bIsInEngineeringMode = bStatus;
     }
 
     public BTStatus getBTStatus(){
-        return this.eBTStatus;
+        return eBTStatus;
     }
     public void setBTStatus(BTStatus eStatus){
-        this.eBTStatus = eStatus;
+        eBTStatus = eStatus;
     }
 
     public String Char2String(char[] chars){

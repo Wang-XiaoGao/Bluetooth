@@ -32,7 +32,8 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:layout_marginTop="1dp"
-            android:fillViewport="false" />
+            android:fillViewport="false"
+            />
 
     </android.support.design.widget.AppBarLayout>
 

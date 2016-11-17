@@ -35,6 +35,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     public String TabTitle_Engineering_Mode;
 
     public int iTabCount = 3;
+    public static boolean bIsInEngineeringMode = false;
 
     public static final int iDeviceStatus = 0;
     public static final int iSystemInfo = 1;
@@ -88,7 +90,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
 
-    TabLayout.Tab EngineeringTab; // To add and remove for Standard & Engineering mode.
+    private static TabLayout.Tab mEngineeringTab; // To add and remove for Standard & Engineering mode.
+    private static TabLayout.Tab mSystemInfoTab;
+    private static TabLayout.Tab mDeviceStatusTab;
+    private static TabLayout mtabLayout;
 
     public static byte[] mCharBattery = {0x68, 0x01, 0x3C, -91};
 
@@ -157,31 +162,24 @@ public class MainActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
-        //mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager = (CustomerViewPager) findViewById(R.id.container);
-
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.isShown();
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        mtabLayout = (TabLayout) findViewById(R.id.tabs);
+        mtabLayout.setupWithViewPager(mViewPager);
+        mtabLayout.setTabsFromPagerAdapter(mSectionsPagerAdapter);
 
         // This app set standard mode to be default mode.
 
-        EngineeringTab = tabLayout.getTabAt(iEngineeringMode);
-        tabLayout.removeTabAt(iEngineeringMode);
+        mEngineeringTab = mtabLayout.getTabAt(iEngineeringMode);
+        mtabLayout.removeTabAt(iEngineeringMode);
         iTabCount--;
         mSectionsPagerAdapter.notifyDataSetChanged();
 
-        //mViewPager.setOnScrollChangeListener();
-        TabLayout.Tab MyTab = tabLayout.getTabAt(iDeviceStatus);
-        MyTab.select();
-
-        //tabLayout.setVisibility(View.GONE);
-        final GlobalData Data = (GlobalData) getApplication();
-        Data.setEngineeringMode(false);
-
-
+        bIsInEngineeringMode = false;
+        // For debug, don't know why this have to be true, or else tab view could not be scrolled.
+        mGlobalData.setEngineeringMode(true);
 
         //Email function will be deferred. By WXG 12-Jan-2016
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -257,40 +255,37 @@ public class MainActivity extends AppCompatActivity {
 
         boolean bInEngineeringMode = mGlobalData.getInEngineeringMode();
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
         // To Be delete
         int iTemCount = 0;
         //Make a switch and avoid trigger same action again.
-        if (id == R.id.Standard_Mode & bInEngineeringMode) {
-            mGlobalData.setEngineeringMode(false);
+        if (id == R.id.Standard_Mode & bIsInEngineeringMode) {
+            // For debug, don't know why this have to be true, or else tab view could not be scrolled.
+            mGlobalData.setEngineeringMode(true);
+            bIsInEngineeringMode = false;
 
             //Return to OTDR fragment and then hide tablayout.
-            if (tabLayout.getTabCount() == iTabCount) {
-                tabLayout.removeTabAt(iEngineeringMode);
+            if (mtabLayout.getTabCount() == iTabCount) {
+                mtabLayout.removeTabAt(iEngineeringMode);
                 iTabCount--;
                 mSectionsPagerAdapter.notifyDataSetChanged();
                 //ToDo
                 iTemCount = mSectionsPagerAdapter.getCount();
-                //tabLayout.getTabCount();
+                //mtabLayout.getTabCount();
             } else {
                 Log.e("onOptionsItemSelected", "Wrong Tab number.");
                 //// TODO: 2016/10/7
 
             }
-
-            //TabLayout.Tab MyTab=tabLayout.getTabAt(iDeviceStatus);
-            //MyTab.select();
-
-            //tabLayout.setVisibility(View.GONE);
-
-        } else if (id == R.id.Engineering_Mode & !bInEngineeringMode) {
+// & !bInEngineeringMode
+        } else if (id == R.id.Engineering_Mode & !bIsInEngineeringMode) {
+            // For debug, don't know why this have to be true, or else tab view could not be scrolled.
             mGlobalData.setEngineeringMode(true);
+            bIsInEngineeringMode = true;
 
-            tabLayout.addTab(EngineeringTab, iEngineeringMode);
+            mtabLayout.addTab(mEngineeringTab, iEngineeringMode);
             iTabCount++;
             mSectionsPagerAdapter.notifyDataSetChanged();
-            //tabLayout.setVisibility(View.VISIBLE);
+            //mtabLayout.setVisibility(View.VISIBLE);
             iTemCount = mSectionsPagerAdapter.getCount();
         }
 
@@ -346,9 +341,6 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        static final int iDeviceStatus = 0;
-        static final int iSystemInfo = 1;
-        static final int iEngineeringMode = 2;
 
         public PlaceholderFragment() {
         }
@@ -379,13 +371,13 @@ public class MainActivity extends AppCompatActivity {
             View rootView = null;
 
             switch (iSectionNumber) {
-                case iDeviceStatus:
+                case MainActivity.iDeviceStatus:
                     rootView = ReadDeviceStatus(inflater, container);
                     break;
-                case iSystemInfo:
+                case MainActivity.iSystemInfo:
                     rootView = ShowSystemInfo(inflater, container);
                     break;
-                case iEngineeringMode:
+                case MainActivity.iEngineeringMode:
                     rootView = EnterEngineeringMode(inflater, container);
                     break;
                 default:
@@ -454,6 +446,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
     }
 
     @Override
