@@ -3,32 +3,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:text="版本：0.1.1"
+        android:text="@string/App_Info"
         android:id="@+id/VersionInfo"
-        android:layout_alignParentLeft = "true"
-        android:layout_alignParentStart = "true"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="更新日期：2016-Oct-07"
-        android:id="@+id/UpdateDate"
-        android:layout_alignParentLeft = "true"
+        android:inputType="textMultiLine"
+        android:focusable="false"
         android:layout_alignParentStart = "true"
-        android:layout_below="@id/VersionInfo"/>
-    <TextView
+        android:layout_alignParentEnd="true" />
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:text="更新内容：整理系统信息内容。"
+        android:text="@string/Delivery_Date"
+        android:id="@+id/DeliveryDate"
+        android:inputType="textMultiLine"
+        android:focusable="false"
+        android:layout_alignParentStart = "true"
+        android:layout_below="@id/VersionInfo"
+        android:layout_alignParentEnd="true" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="@string/Update_Info"
         android:id="@+id/UpdateContent"
-        android:layout_alignParentLeft = "true"
+        android:inputType="textMultiLine"
+        android:focusable="false"
         android:layout_alignParentStart = "true"
-        android:layout_below="@id/UpdateDate"/>
+        android:layout_below="@id/DeliveryDate"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Help_Info"
+        android:id="@+id/DescriptionTextView"
+        android:inputType="textMultiLine"
+        android:focusable="false"
+        android:layout_below="@+id/UpdateContent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"

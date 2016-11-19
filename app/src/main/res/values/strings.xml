@@ -37,6 +37,12 @@
     <string name="Send_Time">发射时间（时：分）:</string>
 
 
+    <string name="App_Info">版本：0.2.1</string>
+    <string name="Delivery_Date">更新日期：2016-Nov-19</string>
+    <string name="Update_Info">更新内容：\n1，纠正滑动错误；\n2，增添系统信息内容；\n.....</string>
+    <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
+
+
     <string name="device">Device:</string>
     <string name="no_device">&lt;Select a device&gt;</string>
     <string name="select_device">选 择 连 接 设 备</string>

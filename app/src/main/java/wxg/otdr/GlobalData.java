@@ -18,7 +18,7 @@ public class GlobalData extends Application{
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
 
     public static int[] iQueryBatter = {0x68, 0x01, 0x3C};
-    public static int[] iSelfCheck = {0x68, 0x02, 0x69, 0x07};
+    public static int[] iSelfCheck = {0x68, 0x02, 0x69};
     public static int[] iReset = {0x68, 0x01, 0xD2};
 
     public final static int cCommand_Head = 0x68;

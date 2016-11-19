@@ -248,15 +248,6 @@
 
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。"
-        android:id="@+id/DescriptionTextView"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -264,7 +255,7 @@
         android:id="@+id/id_Reset_button"
         android:clickable="true"
         android:onClick="onButtonReset"
-        android:layout_above="@+id/DescriptionTextView"
+        android:layout_below="@+id/BTStatusLayout"
         android:layout_centerHorizontal="true" />
 
 
