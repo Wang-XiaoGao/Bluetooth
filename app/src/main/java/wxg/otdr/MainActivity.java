@@ -50,7 +50,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -116,6 +118,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> listAdapter;
     private Button btnConnectDisconnect,btnSend;
 
+    // It's for listview in EngineeringMode frame.
+    private static final int DATA_CAPACITY = 8;
+    private ListView mListView;
+    private List<String> mList = new ArrayList<String>(DATA_CAPACITY);
+    private Engineering_Adapter mAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +134,13 @@ public class MainActivity extends AppCompatActivity {
         mBroadcastReceiver = new BluetoothReceiver();
         mBluetoothService = new BluetoothService();
         mGlobalData = new GlobalData();
+
+
+        // To get mListView, need to find it's container...
+        View ContainerView = findViewById(R.id.container);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View rootView = inflater.inflate(R.layout.fragment_engineering_mode, (ViewGroup) ContainerView);
+        mListView = (ListView) rootView.findViewById(R.id.Engineering_listView);
 
         Log.i("MainActivity::OnCreate", "MainActivity::onCreate");
 
@@ -206,6 +222,21 @@ public class MainActivity extends AppCompatActivity {
                 // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        // Fill in data in Engineering frame.
+        for(int i = 0; i < 4; i++) {
+            mList.add("Item" + i);
+        }
+        //设置Adapter
+        //mAdapter = new Engineering_Adapter(this, mList);
+        mAdapter = new Engineering_Adapter(mListView.getContext(), mList);
+
+        if (mListView != null){
+            mListView.setAdapter(mAdapter);
+        }else{
+            Log.e(TAG, "mListView is null.");
+        }
+
     }
 
     public static MainActivity getInstance() {
@@ -233,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
         mBluetoothService.startActionClose(this.getApplicationContext());
         mBluetoothService = null;
         mGlobalData = null;
+        mAdapter = null;
 
         Log.e(this.getString(R.string.Log_Info), "MainActivity::onDestroy");
     }
