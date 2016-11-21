@@ -18,13 +18,17 @@ public class GlobalData extends Application{
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
 
     public static int[] iQueryBatter = {0x68, 0x01, 0x3C};
-    public static int[] iSelfCheck = {0x68, 0x02, 0x69};
-    public static int[] iReset = {0x68, 0x01, 0xD2};
+    public static int[] iSelfCheck = {0x68, 0x01, 0x69};
+    public static int[] iReset = {0x68, 0x01, 0x4B};
+    public static int[] iSetTime = {0x68, 0x01, 0xC8};
+    public static int[] iReadTime = {0x68, 0x01, 0xD7};
 
     public final static int cCommand_Head = 0x68;
     public final static int cCommand_BatteryRemain = 0x3C;
     public final static int cCommand_Selfcheck = 0x69;
     public final static int cCommand_Reset = 0xD2;
+    public final static int cCommand_SetTime = 0xC8;
+    public final static int cCommand_ReadTime = 0xD7;
 
 
     // Index in byte[], e.g. 0x68, 0x01, 0x3C

@@ -51,7 +51,7 @@
         android:weightSum="1"
         android:id="@+id/id_Battery_Frame"
         android:layout_below="@+id/ConfigBTLayout"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:layout_centerHorizontal="true"
         android:background="@color/GrayWhite"
         android:onClick="QueryBattery">
@@ -112,7 +112,7 @@
         android:weightSum="1"
         android:id="@+id/id_Status_Frame"
         android:layout_below="@id/id_Battery_Frame"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:layout_centerHorizontal="true"
         android:background="@color/GrayWhite"
         android:onClick="StartSelfCheck">
@@ -146,7 +146,7 @@
                 android:layout_toRightOf="@id/id_SelfCheck_Image"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"/>
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -303,7 +303,7 @@
             android:id="@+id/id_SendTime_0"
             android:layout_below="@id/id_SendTimes_textView"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"
             android:editable="false"
 
@@ -317,7 +317,7 @@
             android:layout_below="@id/id_SendTimes_textView"
             android:layout_toEndOf="@id/id_SendTime_0"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"/>
 
         <TextView
@@ -328,7 +328,7 @@
             android:layout_below="@id/id_SendTimes_textView"
             android:layout_toEndOf="@id/id_SendTime_1"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"
             />
         <TextView
@@ -339,7 +339,7 @@
             android:layout_below="@id/id_SendTimes_textView"
             android:layout_toEndOf="@id/id_SendTime_2"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"
             />
 
@@ -351,7 +351,7 @@
             android:layout_below="@id/id_SendTimes_textView"
             android:layout_toEndOf="@id/id_SendTime_3"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"
             />
 
@@ -362,7 +362,7 @@
             android:id="@+id/id_SendTime_5"
             android:layout_below="@id/id_SendTime_0"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"/>
 
         <TextView
@@ -373,7 +373,7 @@
             android:layout_below="@id/id_SendTime_0"
             android:layout_toEndOf="@id/id_SendTime_5"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"/>
 
         <TextView
@@ -384,7 +384,7 @@
             android:layout_below="@id/id_SendTime_0"
             android:layout_toEndOf="@id/id_SendTime_6"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"/>
 
         <TextView
@@ -395,7 +395,7 @@
             android:layout_below="@id/id_SendTime_0"
             android:layout_toEndOf="@id/id_SendTime_7"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"/>
 
         <TextView
@@ -406,47 +406,177 @@
             android:layout_below="@id/id_SendTime_0"
             android:layout_toEndOf="@id/id_SendTime_8"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:textSize="20sp"/>
 
     </RelativeLayout>
 
-    <!--
-    <LinearLayout
-        android:id="@+id/id_Start_Meas_Frame"
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/GrayWhite"
-        android:layout_below="@id/id_Status_Frame"
-        android:layout_marginTop="16dp">
+        android:id="@+id/id_Time_Frame"
+
+        android:layout_below="@id/BTStatusLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:background="@color/GrayWhite">
+
+
 
         <TextView
-            android:id="@+id/id_Start_Meas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="启 动 自 检"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center_horizontal" />
+            android:id="@+id/id_Time_TextView"
+            android:textSize="20sp"
+            android:text="@string/Device_Time_Settings"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            />
 
-        <ImageButton
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Time_Year_Up"
+                android:text="@string/Device_Year_Up"
+                android:textSize="20sp"
+                android:layout_below="@id/id_Time_TextView"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Edit_Year"
+                android:textSize="20sp"
+                android:text="16"
+                android:maxLength="2"
+                android:layout_toEndOf="@id/id_Time_Year_Up"
+                android:layout_below="@id/id_Time_TextView"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Separator_1"
+                android:text="@string/Separator_2"
+                android:textSize="20sp"
+                android:layout_below="@id/id_Time_TextView"
+                android:layout_toEndOf="@id/id_Edit_Year"
+                android:layout_alignTop="@id/id_Time_Year_Up"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Edit_Month"
+                android:textSize="20sp"
+                android:maxLength="2"
+                android:text="11"
+                android:layout_toEndOf="@id/id_Separator_1"
+                android:layout_below="@id/id_Time_TextView"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Separator_2"
+                android:text="@string/Separator_2"
+                android:textSize="20sp"
+                android:layout_toEndOf="@id/id_Edit_Month"
+                android:layout_below="@id/id_Time_TextView"
+                android:layout_alignTop="@id/id_Time_Year_Up"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Edit_Day"
+                android:textSize="20sp"
+                android:text="21"
+                android:maxLength="2"
+                android:layout_toEndOf="@id/id_Separator_2"
+                android:layout_below="@id/id_Time_TextView"
+
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Edit_Hour"
+                android:textSize="20sp"
+                android:text="23"
+                android:layout_marginStart="30dp"
+                android:layout_toEndOf="@id/id_Edit_Day"
+                android:layout_below="@id/id_Time_TextView"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Separator_3"
+                android:text="@string/Separator_1"
+                android:textSize="20sp"
+                android:layout_alignTop="@id/id_Time_Year_Up"
+                android:layout_toEndOf="@id/id_Edit_Hour"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Edit_Minutes"
+                android:textSize="20sp"
+                android:text="52"
+                android:maxLength="2"
+                android:layout_toEndOf="@id/id_Separator_3"
+                android:layout_below="@id/id_Time_TextView"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Separator_4"
+                android:text="@string/Separator_1"
+                android:textSize="20sp"
+                android:layout_alignTop="@id/id_Time_Year_Up"
+                android:layout_toEndOf="@id/id_Edit_Minutes"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Edit_Seconds"
+                android:textSize="20sp"
+                android:text="52"
+                android:maxLength="2"
+                android:layout_toEndOf="@id/id_Separator_4"
+                android:layout_below="@id/id_Time_TextView"
+                />
+
+
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
-            android:paddingBottom="@dimen/actionBarSize"
-            android:background="@drawable/start_here72"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/id_Start_Meas"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal"
-            android:onClick="StartMeasure"/>
+            android:layout_height="40dp"
+            android:text="读取"
+            android:id="@+id/id_Read_Button"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/id_Set_Button" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="设置"
+            android:id="@+id/id_Set_Button"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
 
 
-    </LinearLayout>-->
 
 
 

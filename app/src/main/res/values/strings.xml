@@ -34,7 +34,11 @@
     <string name="Command_Reset">复位</string>
     <string name="BT_Status">工作状态信息:</string>
     <string name="Send_Times">发射次数:</string>
-    <string name="Send_Time">发射时间（时：分）:</string>
+    <string name="Send_Time">发射时间（时：分）</string>
+    <string name="Device_Time_Settings">系统时间设置</string>
+    <string name="Device_Year_Up">20</string>
+    <string name="Separator_1"> : </string>
+    <string name="Separator_2"> / </string>
 
 
     <string name="App_Info">版本：0.2.1</string>

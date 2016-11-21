@@ -189,11 +189,12 @@ public class MainActivity extends AppCompatActivity {
         // This app set standard mode to be default mode.
 
         mEngineeringTab = mtabLayout.getTabAt(iEngineeringMode);
-        mtabLayout.removeTabAt(iEngineeringMode);
-        iTabCount--;
-        mSectionsPagerAdapter.notifyDataSetChanged();
-
-        bIsInEngineeringMode = false;
+        // For development, default mode change to be engineering mode.
+        //mtabLayout.removeTabAt(iEngineeringMode);
+        //iTabCount--;
+        //mSectionsPagerAdapter.notifyDataSetChanged();
+        //bIsInEngineeringMode = false;
+        bIsInEngineeringMode = true;
         // For debug, don't know why this have to be true, or else tab view could not be scrolled.
         mGlobalData.setEngineeringMode(true);
 
