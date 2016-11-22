@@ -77,6 +77,18 @@ public class GlobalData extends Application{
         eBTStatus = eStatus;
     }
 
+    public String set02dMode (int iNum){
+        String strNum;
+
+        if (iNum < 10){
+            strNum = "0" + String.valueOf(iNum);
+        }else{
+            strNum = String.valueOf(iNum);
+        }
+
+        return strNum;
+    }
+
     public String Char2String(char[] chars){
 
         int iCount = chars.length;

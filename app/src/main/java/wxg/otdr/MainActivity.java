@@ -1,11 +1,14 @@
 package wxg.otdr;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -26,6 +29,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,10 +42,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -51,6 +58,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -97,9 +105,16 @@ public class MainActivity extends AppCompatActivity {
     private static TabLayout.Tab mDeviceStatusTab;
     private static TabLayout mtabLayout;
 
-    public static byte[] mCharBattery = {0x68, 0x01, 0x3C, -91};
 
-    public static char[]mCharBattery1 = {0x1, 0x2, 0x3, 0x4, 0x5};
+    private static EditText mDateEdit;
+    private static EditText mTimeEdit;
+    private static Calendar mCalendar; // Read system time through Calendar
+    private static int mYear;
+    private static int mMonth;
+    private static int mDay;
+    private static int mHour;
+    private static int mMinute;
+    private static int mSecond;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -417,12 +432,77 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("PlaceholderFragment", "Unexpected tab position.");
             }
 
+
+
+
+
             return rootView;
         }
 
         public View ReadDeviceStatus(LayoutInflater inflater, ViewGroup container) {
             Log.i("PlaceholderFragment", "Draw DeviceStatus");
             View rootView = inflater.inflate(R.layout.fragment_device_status, container, false);
+
+            mDateEdit = (EditText) rootView.findViewById(R.id.id_Edit_Date);
+            mTimeEdit = (EditText) rootView.findViewById(R.id.id_Edit_Time);
+            mCalendar = Calendar.getInstance();
+            mYear = mCalendar.get(Calendar.YEAR);
+            mMonth = mCalendar.get(Calendar.MONTH);
+            mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+            mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
+            mMinute = mCalendar.get(Calendar.MINUTE);
+            mSecond = mCalendar.get(Calendar.SECOND);
+
+            String srtDate = String.format(mYear + "-" + mGlobalData.set02dMode(mMonth)
+                    + "-" + mGlobalData.set02dMode(mDay));
+            mDateEdit.setText(srtDate);
+
+            String srtTime = String.format(mGlobalData.set02dMode(mHour) + ":" +
+                    mGlobalData.set02dMode(mMinute) + ":" + mGlobalData.set02dMode(mSecond));
+            mTimeEdit.setText(srtTime);
+
+            mDateEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new DatePickerDialog(getContext(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int month, int day) {
+                                    // TODO Auto-generated method stub
+                                    mYear = year;
+                                    mMonth = month;
+                                    mDay = day;
+
+                                    String srtDate = String.format(mYear + "-" + mGlobalData.set02dMode(mMonth)
+                                            + "-" + mGlobalData.set02dMode(mDay));
+                                    mDateEdit.setText(srtDate);
+                                }
+                            }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+
+            mTimeEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new TimePickerDialog(getContext(),
+                            new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker view, int hour, int minute) {
+                                    // TODO Auto-generated method stub
+                                    mHour = hour;
+                                    mMinute = minute;
+                                    mSecond = 0;
+
+                                    String srtTime = String.format(mGlobalData.set02dMode(mHour) + ":" +
+                                            mGlobalData.set02dMode(mMinute) + ":" + mGlobalData.set02dMode(mSecond));
+                                    mTimeEdit.setText(srtTime);
+                                }
+                            }, mCalendar.get(Calendar.HOUR_OF_DAY),
+                            mCalendar.get(Calendar.MINUTE), true).show();
+                }
+            });
 
             return rootView;
         }
@@ -727,6 +807,13 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
+    }
+
+
+    // Try onButtonReadTime.
+    public void onButtonReadTime(View v) {
+
+
     }
 
     // Try QueryLatestVersion.

@@ -242,7 +242,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:inputType="textMultiLine"
-        android:maxLines="8"
+        android:maxLines="3"
         android:layout_alignParentEnd="true" />
 
 
@@ -254,7 +254,7 @@
         android:background="@color/GrayWhite"
         android:layout_below="@+id/id_DebugText_View"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="8dp"
         android:layout_alignEnd="@+id/id_DebugText_View">
 
 
@@ -434,125 +434,33 @@
             android:layout_marginTop="3dp"
             />
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/id_Time_Year_Up"
-                android:text="@string/Device_Year_Up"
+                android:id="@+id/id_Edit_Date"
                 android:textSize="20sp"
+                android:text="2000-11-05"
+                android:maxLength="10"
+                android:layout_alignParentLeft="true"
                 android:layout_below="@id/id_Time_TextView"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:focusable="false"
                 />
+
+
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/id_Edit_Year"
+                android:id="@+id/id_Edit_Time"
                 android:textSize="20sp"
-                android:text="16"
-                android:maxLength="2"
-                android:layout_toEndOf="@id/id_Time_Year_Up"
-                android:layout_below="@id/id_Time_TextView"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Separator_1"
-                android:text="@string/Separator_2"
-                android:textSize="20sp"
-                android:layout_below="@id/id_Time_TextView"
-                android:layout_toEndOf="@id/id_Edit_Year"
-                android:layout_alignTop="@id/id_Time_Year_Up"
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Edit_Month"
-                android:textSize="20sp"
-                android:maxLength="2"
-                android:text="11"
-                android:layout_toEndOf="@id/id_Separator_1"
-                android:layout_below="@id/id_Time_TextView"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Separator_2"
-                android:text="@string/Separator_2"
-                android:textSize="20sp"
-                android:layout_toEndOf="@id/id_Edit_Month"
-                android:layout_below="@id/id_Time_TextView"
-                android:layout_alignTop="@id/id_Time_Year_Up"
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Edit_Day"
-                android:textSize="20sp"
-                android:text="21"
-                android:maxLength="2"
-                android:layout_toEndOf="@id/id_Separator_2"
-                android:layout_below="@id/id_Time_TextView"
-
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Edit_Hour"
-                android:textSize="20sp"
-                android:text="23"
+                android:maxLength="8"
+                android:text="22:00:00"
                 android:layout_marginStart="30dp"
-                android:layout_toEndOf="@id/id_Edit_Day"
+                android:layout_toEndOf="@id/id_Edit_Date"
                 android:layout_below="@id/id_Time_TextView"
+                android:focusable="false"
                 />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Separator_3"
-                android:text="@string/Separator_1"
-                android:textSize="20sp"
-                android:layout_alignTop="@id/id_Time_Year_Up"
-                android:layout_toEndOf="@id/id_Edit_Hour"
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Edit_Minutes"
-                android:textSize="20sp"
-                android:text="52"
-                android:maxLength="2"
-                android:layout_toEndOf="@id/id_Separator_3"
-                android:layout_below="@id/id_Time_TextView"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Separator_4"
-                android:text="@string/Separator_1"
-                android:textSize="20sp"
-                android:layout_alignTop="@id/id_Time_Year_Up"
-                android:layout_toEndOf="@id/id_Edit_Minutes"
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Edit_Seconds"
-                android:textSize="20sp"
-                android:text="52"
-                android:maxLength="2"
-                android:layout_toEndOf="@id/id_Separator_4"
-                android:layout_below="@id/id_Time_TextView"
-                />
 
 
 
@@ -563,6 +471,7 @@
             android:text="读取"
             android:id="@+id/id_Read_Button"
             android:layout_alignParentTop="true"
+            android:onClick="onButtonReadTime"
             android:layout_toStartOf="@+id/id_Set_Button" />
 
         <Button
