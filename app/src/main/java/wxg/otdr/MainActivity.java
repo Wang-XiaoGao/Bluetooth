@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -135,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
 
     // It's for listview in EngineeringMode frame.
     private static final int DATA_CAPACITY = 8;
-    private ListView mListView;
-    private List<String> mList = new ArrayList<String>(DATA_CAPACITY);
-    private Engineering_Adapter mAdapter;
+    private static ListView mListView = null;
+    private static List<String> mList = new ArrayList<String>(DATA_CAPACITY);
+    private static Engineering_Adapter mAdapter = null;
 
 
     @Override
@@ -152,10 +153,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         // To get mListView, need to find it's container...
-        View ContainerView = findViewById(R.id.container);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View rootView = inflater.inflate(R.layout.fragment_engineering_mode, (ViewGroup) ContainerView);
-        mListView = (ListView) rootView.findViewById(R.id.Engineering_listView);
+        //View ContainerView = findViewById(R.id.container);
+        //LayoutInflater inflater = LayoutInflater.from(this);
+        //View rootView = inflater.inflate(R.layout.fragment_engineering_mode, (ViewGroup) ContainerView);
+        //mListView = (ListView) rootView.findViewById(R.id.Engineering_listView);
 
         Log.i("MainActivity::OnCreate", "MainActivity::onCreate");
 
@@ -239,19 +240,7 @@ public class MainActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        // Fill in data in Engineering frame.
-        for(int i = 0; i < 4; i++) {
-            mList.add("Item" + i);
-        }
-        //设置Adapter
-        //mAdapter = new Engineering_Adapter(this, mList);
-        mAdapter = new Engineering_Adapter(mListView.getContext(), mList);
 
-        if (mListView != null){
-            mListView.setAdapter(mAdapter);
-        }else{
-            Log.e(TAG, "mListView is null.");
-        }
 
     }
 
@@ -447,7 +436,8 @@ public class MainActivity extends AppCompatActivity {
             mTimeEdit = (EditText) rootView.findViewById(R.id.id_Edit_Time);
             mCalendar = Calendar.getInstance();
             mYear = mCalendar.get(Calendar.YEAR);
-            mMonth = mCalendar.get(Calendar.MONTH);
+            //JANUARY = 0; month from 0~11.
+            mMonth = mCalendar.get(Calendar.MONTH) + 1;
             mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
             mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
             mMinute = mCalendar.get(Calendar.MINUTE);
@@ -471,7 +461,8 @@ public class MainActivity extends AppCompatActivity {
                                                       int month, int day) {
                                     // TODO Auto-generated method stub
                                     mYear = year;
-                                    mMonth = month;
+                                    //JANUARY = 0; month from 0~11.
+                                    mMonth = month + 1;
                                     mDay = day;
 
                                     String srtDate = String.format(mYear + "-" + mGlobalData.set02dMode(mMonth)
@@ -511,12 +502,29 @@ public class MainActivity extends AppCompatActivity {
             Log.i("PlaceholderFragment", "ShowSystemInfo");
             View rootView = inflater.inflate(R.layout.fragment_system_info, container, false);
 
+
             return rootView;
         }
 
         public View EnterEngineeringMode(LayoutInflater inflater, ViewGroup container) {
             Log.i("PlaceholderFragment", "Draw Engineering Mode");
             View rootView = inflater.inflate(R.layout.fragment_engineering_mode, container, false);
+
+            mListView = (ListView) rootView.findViewById(R.id.Engineering_listView);
+            // Fill in data in Engineering frame.
+            for(int i = 0; i < 8; i++) {
+                mList.add("Item" + i);
+            }
+            //设置Adapter
+            //mAdapter = new Engineering_Adapter(this, mList);
+            if (mList != null && mAdapter == null){
+                mAdapter = new Engineering_Adapter(mListView.getContext(), mList);
+            }
+            if (mListView != null){
+                mListView.setAdapter(mAdapter);
+            }else{
+                Log.e(TAG, "mListView is null.");
+            }
 
             return rootView;
         }
@@ -603,7 +611,6 @@ public class MainActivity extends AppCompatActivity {
         //startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
         int iBTTem = mBluetoothService.getBTConnectStatus();
 
-
         if (!mBtAdapter.isEnabled()) {
             Log.i(TAG, "onClick - BT not enabled yet");
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -650,57 +657,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void QueryBattery(View v) {
-
         Log.i(TAG, "Call QueryBattery.");
         boolean bCheck = false;
+        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBatter);
 
-        int iBTTem = mBluetoothService.getBTConnectStatus();
+        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
-        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
- //eSelfCheck, eQueryBatter
-            byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBatter);
-
-            int[] iValues = mGlobalData.getIntReturn(bCommand);
-
-            Log.e(TAG, "Qurey Battery, Data to send: " + mGlobalData.Int2String(iValues));
-//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
-            if (mBluetoothService != null) {
-                bCheck = mBluetoothService.AssignGATTService(BluetoothService.RX_SERVICE_UUID);
-                if (!bCheck){
-                    Log.e(TAG, "QueryBattery: mBluetoothService is null.");
-                    return;
-                }
-//TEST_TX_CHAR_UUID, RX_CHAR_UUID
-                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
-                if (!bCheck){
-                    Log.e(TAG, "QueryBattery: Characteristics is null.");
-                    return;
-                }
-
-                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
-                if (!bCheck){
-                    Log.e(TAG, "QueryBattery: writeRXCharacteristic failed.");
-                    //Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
-                    //byte[] bValues = {0x9, 0x9};
-                    //intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
-                    //sendBroadcast(intent);
-                    Toast.makeText(this, getResources().getText(R.string.Command_Send_Failed),
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-            }else{
-                Log.e(TAG, "Exception: mBluetoothService is null.");
-            }
-        }else{
-            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
-
-            Toast.makeText(v.getContext(),
-                    "Bluetooth not connected yet, could not read battery info:",
-                    Toast.LENGTH_SHORT).show();
-            return;
+        if (!bCheck){
+            Log.e(TAG, "QueryBattery: Send Command failed.");
         }
-
     }
 
 
@@ -708,52 +673,12 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Call StartSelfCheck.");
         boolean bCheck = false;
 
-        int iBTTem = mBluetoothService.getBTConnectStatus();
-
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSelfCheck);
 
-        int[] iValues = mGlobalData.getIntReturn(bCommand);
+        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
-        Log.e(TAG, "StartSelfCheck, Data to send: " + mGlobalData.Int2String(iValues));
-        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
-            //send data to service
-//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
-            if (mBluetoothService != null) {
-                bCheck = mBluetoothService.AssignGATTService(BluetoothService.RX_SERVICE_UUID);
-                if (!bCheck){
-                    Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
-                    return;
-                }
-//TEST_TX_CHAR_UUID, RX_CHAR_UUID
-                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
-                if (!bCheck){
-                    Log.e(TAG, "StartSelfCheck: Characteristics is null.");
-                    return;
-                }
-
-                //bCheck = mBluetoothService.readCharacteristic();
-                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
-                if (!bCheck){
-                    Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
-                    //Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
-                    //byte[] bValues = {0x9, 0x9};
-                    //intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
-                    //sendBroadcast(intent);
-                    Toast.makeText(this, getResources().getText(R.string.Command_Send_Failed),
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-            }else{
-                Log.e(TAG, "Exception: mBluetoothService is null.");
-            }
-        }else{
-            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
-
-            Toast.makeText(v.getContext(),
-                    "Bluetooth not connected yet, could not read battery info:",
-                    Toast.LENGTH_SHORT).show();
-            return;
+        if (!bCheck){
+            Log.e(TAG, "StartSelfCheck: Send Command failed.");
         }
 
     }
@@ -812,7 +737,38 @@ public class MainActivity extends AppCompatActivity {
 
     // Try onButtonReadTime.
     public void onButtonReadTime(View v) {
+        Log.i(TAG, "Call onButtonReadTime.");
+        boolean bCheck = false;
+        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eReadTime);
 
+        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+
+        if (!bCheck){
+            Log.e(TAG, "onButtonReadTime: Send Command failed.");
+        }
+
+    }
+
+    // Try onButtonSetTime.
+    public void onButtonSetTime(View v) {
+        Log.i(TAG, "Call onButtonSetTime.");
+        boolean bCheck = false;
+
+        // Only take lower part of year, e.g. 2016-->16.
+        mGlobalData.iSetTime[GlobalData.cSetYearLow_Index] =  mYear - 2000;
+        mGlobalData.iSetTime[GlobalData.cSetMonth_Index] =  mMonth;
+        mGlobalData.iSetTime[GlobalData.cSetDay_Index] =  mDay;
+        mGlobalData.iSetTime[GlobalData.cSetHour_Index] =  mHour;
+        mGlobalData.iSetTime[GlobalData.cSetMinute_Index] =  mMinute;
+        mGlobalData.iSetTime[GlobalData.cSetSecond_Index] =  mSecond;
+
+        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSetTime);
+
+        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+
+        if (!bCheck){
+            Log.e(TAG, "onButtonSetTime: Send Command failed.");
+        }
 
     }
 
@@ -822,6 +778,54 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public boolean SendCommand(View v, UUID ServiceUUID, UUID CharUUID, byte[] bCommand){
+        int iBTTem = mBluetoothService.getBTConnectStatus();
+        boolean bCheck = false;
+
+        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
+            //eSelfCheck, eQueryBatter
+            int[] iValues = mGlobalData.getIntReturn(bCommand);
+
+            Log.e(TAG, "Qurey Battery, Data to send: " + mGlobalData.Int2String(iValues));
+//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
+            if (mBluetoothService != null) {
+                bCheck = mBluetoothService.AssignGATTService(ServiceUUID);
+                if (!bCheck){
+                    Log.e(TAG, "mBluetoothService is null.");
+                    return false;
+                }
+//TEST_TX_CHAR_UUID, RX_CHAR_UUID
+                bCheck = mBluetoothService.AssignGATTCharacteristics(CharUUID);
+                if (!bCheck){
+                    Log.e(TAG, "Characteristics is null.");
+                    return false;
+                }
+
+                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
+                if (!bCheck){
+                    Log.e(TAG, "QueryBattery: writeRXCharacteristic failed.");
+                    //Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
+                    //byte[] bValues = {0x9, 0x9};
+                    //intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
+                    //sendBroadcast(intent);
+                    Toast.makeText(this, getResources().getText(R.string.Command_Send_Failed),
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+            }else{
+                Log.e(TAG, "Exception: mBluetoothService is null.");
+            }
+        }else{
+            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
+
+            Toast.makeText(getBaseContext(),
+                    "Bluetooth not connected yet!",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
 
 
 }

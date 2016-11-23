@@ -20,35 +20,62 @@ public class GlobalData extends Application{
     public static int[] iQueryBatter = {0x68, 0x01, 0x3C};
     public static int[] iSelfCheck = {0x68, 0x01, 0x69};
     public static int[] iReset = {0x68, 0x01, 0x4B};
-    public static int[] iSetTime = {0x68, 0x01, 0xC8};
+    //iSetTime, for date and time need to renew, so just take 0x0 as default.
+    public static int[] iSetTime = {0x68, 0x07, 0xC8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
     public static int[] iReadTime = {0x68, 0x01, 0xD7};
+    //iSendMessageTimes
+    public static int[] iSendMessageTimes = {0x68, 0x01, 0x40};
+    //RequestMessageTime, 0x41, 0x42...0x4a, for ten times, 0x00 just as default value, need renew.
+    public static int[] iRequestMessageTimes = {0x68, 0x01, 0x00};
 
     public final static int cCommand_Head = 0x68;
     public final static int cCommand_BatteryRemain = 0x3C;
     public final static int cCommand_Selfcheck = 0x69;
     public final static int cCommand_Reset = 0xD2;
-    public final static int cCommand_SetTime = 0xC8;
+    //public final static int cCommand_SetTime = 0xC8;// It's just for send not receive, not used.
+    public final static int cCommand_SendMessageTimes = 0x40;
     public final static int cCommand_ReadTime = 0xD7;
 
 
     // Index in byte[], e.g. 0x68, 0x01, 0x3C
-    public final static int cCommandHead_Index = 0;
-    public final static int cCommandLength_Index = 1;
-    public final static int cCommandType_Index = 2;
+    public final static int cCommandHead_Index = 0; //0x68, head of every return data.
+    public final static int cCommandLength_Index = 1; //0x01, length of return data, including command type.
+    public final static int cCommandType_Index = 2; //0x3C, command type.
 
-    public final static int cDataStart_Index = 3;
-
+    public final static int cDataStart_Index = 3; // Used to analyzed data and remove command type.
 
     // Each byte for return value, in different command type.
     public final static int cBattery_Index = 0;
+    // For self-Check items.
     public final static int cVoltage_Index = 0;
+    public final static int cPressure_Integer_Index = 1;
+    public final static int cPressure_Decimal_Index = 2;
+    public final static int cMaterialLow_Index = 3;
+    public final static int cMaterialHigh_Index = 4;
+    // To Read Date and Time.{0x68, 0x07, 0xD7, YearLow, month, day, hour, minute, second}
+    public final static int cYearLow_Index = 0;
+    public final static int cMonth_Index = 1;
+    public final static int cDay_Index = 2;
+    public final static int cHour_Index = 3;
+    public final static int cMinute_Index = 4;
+    public final static int cSecond_Index = 5;
+    // To set Date and Time. {0x68, 0x07, 0xC8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+    public final static int cSetYearLow_Index = 3;
+    public final static int cSetMonth_Index = 4;
+    public final static int cSetDay_Index = 5;
+    public final static int cSetHour_Index = 6;
+    public final static int cSetMinute_Index = 7;
+    public final static int cSetSecond_Index = 8;
+    // To get times of sending message.
+    public final static int cSendTimes_Index = 0;
+    // To send which message want to read. {0x68, 0x01, 0x00}; renew 0x00 to be 0x41 or ...0x4a
+    public final static int cSetMessageTimes_Index = 2;
+
     public final static int cReset_Index = 0;
-    public final static int cPressure_Index = 1;
-    public final static int cMaterialLow_Index = 2;
-    public final static int cMaterialHigh_Index = 3;
 
 
-    enum eCommandIndex {eQueryBatter, eSelfCheck, eReset};
+    enum eCommandIndex {eQueryBatter, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
+        eRequestTimes};
 
     public static String strLog = null;
     public static String strNewLog = null;
@@ -150,6 +177,19 @@ public class GlobalData extends Application{
             case eReset:
                 bCommand = Int2Byte(iReset);
                 break;
+            case eReadTime:
+                bCommand = Int2Byte(iReadTime);
+                break;
+            case eSetTime:
+                bCommand = Int2Byte(iSetTime);
+                break;
+            case eSendTimes:
+                bCommand = Int2Byte(iSendMessageTimes);
+                break;
+            case eRequestTimes:
+                bCommand = Int2Byte(iRequestMessageTimes);
+                break;
+
             default:
                 break;
 
@@ -181,9 +221,7 @@ public class GlobalData extends Application{
             }
             bValues[iCount] = bValue;
         }
-
         return bValues;
-
     }
 
     public int[] getIntReturn(byte[] bValues){

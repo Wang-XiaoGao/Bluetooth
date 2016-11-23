@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
         TextView mMaterialView = (TextView) MainActivity.getInstance().findViewById(R.id.id_MaterialNum_Value);
         TextView mVoltageView = (TextView) MainActivity.getInstance().findViewById(R.id.id_Voltage_Value);
         TextView mPressureView = (TextView) MainActivity.getInstance().findViewById(R.id.id_Pressure_Value);
+        EditText mDateText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Date);
+        EditText mTimeText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Time);
 
 
         // Todo, this test view is for debug.
@@ -124,14 +127,34 @@ public class BluetoothReceiver extends BroadcastReceiver {
                         return;
                     }
                     mVoltageView.setText(String.format("%d", iReturnData[GlobalData.cVoltage_Index]));
-                    mPressureView.setText(String.format("%d", iReturnData[GlobalData.cPressure_Index]));
+                    String strPressure = String.format("%d", iReturnData[GlobalData.cPressure_Integer_Index]);
+                    strPressure += ".";
+                    strPressure += String.format("%d", iReturnData[GlobalData.cPressure_Decimal_Index]);
+                    mPressureView.setText(strPressure);
 
                     int iMaterialHigh = iReturnData[GlobalData.cMaterialHigh_Index];
                     int iMaterialLow = iReturnData[GlobalData.cMaterialLow_Index];
-
                     int iTem = iMaterialHigh<<8 + iMaterialLow;
 
                     mMaterialView.setText(String.format("%d", iTem));
+
+                    break;
+
+                case GlobalData.cCommand_ReadTime:
+                    String strDate = String.format("%d", 20); //2016, high part.
+                    strDate += String.format("%d", iReturnData[GlobalData.cYearLow_Index]);
+                    strDate += "-";
+                    strDate += String.format("%d", iReturnData[GlobalData.cMonth_Index]);
+                    strDate += "-";
+                    strDate += String.format("%d", iReturnData[GlobalData.cDay_Index]);
+                    mDateText.setText(strDate);
+
+                    String strTime = String.format("%d", iReturnData[GlobalData.cHour_Index]);
+                    strTime += ":";
+                    strTime += String.format("%d", iReturnData[GlobalData.cMinute_Index]);
+                    strTime += ":";
+                    strTime += String.format("%d", iReturnData[GlobalData.cSecond_Index]);
+                    mTimeText.setText(strTime);
 
                     break;
 
