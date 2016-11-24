@@ -263,54 +263,27 @@
             android:layout_height="wrap_content"
             android:text="@string/BT_Status"
             android:id="@+id/id_BTStatus_Button"
+            android:onClick="onButtonRequestStatus"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:textSize="20sp"/>
 
-        <TextView
+
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Select_Send_Times"
-            android:id="@+id/id_SendTimes"
-            android:textSize="20sp"
-            android:editable="false"
-            android:layout_alignBottom="@+id/id_BTStatus_Button"
-            android:layout_toEndOf="@+id/id_BTStatus_Button" />
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/id_Spinner_Times"
-            android:layout_alignParentEnd="true"
-            android:text="1"
-            android:spinnerMode="dropdown"
-            android:layout_toEndOf="@+id/id_SendTimes"
-            android:layout_alignTop="@+id/id_SendTimes"
-            android:layout_above="@+id/id_SendTimes_Message" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="发射信息："
-            android:id="@+id/id_Message_TextView"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="3dp"
-            android:textSize="20sp"
-            android:editable="false"
-            android:layout_below="@id/id_BTStatus_Button" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2016-11-22   11:11:11"
-            android:autoText="true"
+            android:text="2016-11-22   11:11:11\n2016-11-22   11:11:11\n2016-11-22   11:11:11\n2016-11-22   11:11:11\n2016-11-22   11:11:11\n2016-11-22   11:11:11\n2016-11-22   11:11:11\n2016-11-22   11:11:11\n"
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            android:scrollbars="vertical"
             android:id="@+id/id_SendTimes_Message"
-            android:layout_marginTop="3dp"
             android:textSize="20sp"
-            android:layout_toEndOf="@id/id_Message_TextView"
-            android:layout_alignBottom="@id/id_Message_TextView"/>
-
+            android:focusable="false"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/id_BTStatus_Button"
+            android:gravity="top"/>
+        <!--android:background="@android:drawable/edit_text"-->
 
     </RelativeLayout>
 

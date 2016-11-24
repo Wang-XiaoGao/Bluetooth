@@ -25,8 +25,8 @@ public class GlobalData extends Application{
     public static int[] iReadTime = {0x68, 0x01, 0xD7};
     //iSendMessageTimes
     public static int[] iSendMessageTimes = {0x68, 0x01, 0x40};
-    //RequestMessageTime, 0x41, 0x42...0x4a, for ten times, 0x00 just as default value, need renew.
-    public static int[] iRequestMessageTimes = {0x68, 0x01, 0x00};
+    //RequestMessageTime, 0x41, 0x42...0x4a, for ten times, 0x41 just as default value, need renew.
+    public static int[] iRequestMessageTimes = {0x68, 0x01, 0x41};
 
     public final static int cCommand_Head = 0x68;
     public final static int cCommand_BatteryRemain = 0x3C;
@@ -34,6 +34,9 @@ public class GlobalData extends Application{
     public final static int cCommand_Reset = 0xD2;
     //public final static int cCommand_SetTime = 0xC8;// It's just for send not receive, not used.
     public final static int cCommand_SendMessageTimes = 0x40;
+    public final static int cCommand_SendMessageTimes_First = 0x41;
+    public final static int cCommand_SendMessageTimes_Last = 0x4a;
+
     public final static int cCommand_ReadTime = 0xD7;
 
 
@@ -68,14 +71,14 @@ public class GlobalData extends Application{
     public final static int cSetSecond_Index = 8;
     // To get times of sending message.
     public final static int cSendTimes_Index = 0;
-    // To send which message want to read. {0x68, 0x01, 0x00}; renew 0x00 to be 0x41 or ...0x4a
+    // To send which message want to read. {0x68, 0x01, 0x40}; renew 0x00 to be 0x41 or ...0x4a
     public final static int cSetMessageTimes_Index = 2;
 
     public final static int cReset_Index = 0;
 
 
     enum eCommandIndex {eQueryBatter, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
-        eRequestTimes};
+        eRequestMessageTimes};
 
     public static String strLog = null;
     public static String strNewLog = null;
@@ -186,7 +189,7 @@ public class GlobalData extends Application{
             case eSendTimes:
                 bCommand = Int2Byte(iSendMessageTimes);
                 break;
-            case eRequestTimes:
+            case eRequestMessageTimes:
                 bCommand = Int2Byte(iRequestMessageTimes);
                 break;
 

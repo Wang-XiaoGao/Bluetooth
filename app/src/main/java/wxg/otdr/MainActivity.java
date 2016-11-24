@@ -683,6 +683,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onButtonRequestStatus(View v) {
+        Log.i(TAG, "Call onButtonRequestStatus.");
+        boolean bCheck = false;
+
+        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSendTimes);
+        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+
+        if (!bCheck){
+            Log.e(TAG, "StartSelfCheck: Send Command failed.");
+        }
+
+    }
+
     public void onButtonReset(View v) {
         Log.i(TAG, "Call onButtonReset.");
         boolean bCheck = false;

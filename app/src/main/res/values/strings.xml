@@ -32,7 +32,7 @@
     <string name="BT_Not_TurnOn">蓝牙功能未开启</string>
     <string name="Command_Send_Failed">命令发送失败！</string>
     <string name="Command_Reset">复位</string>
-    <string name="BT_Status">更新状态</string>
+    <string name="BT_Status">更\n新\n状\n态</string>
     <string name="Update_Send_Times">更新发射状态</string>
     <string name="Select_Send_Times">选择读取的次数</string>
     <string name="Device_Time_Settings">系统时间设置</string>

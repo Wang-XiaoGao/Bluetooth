@@ -57,6 +57,7 @@ public class BluetoothService extends IntentService {
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String ACTION_Disconnect = "BluetoothService.action.Disconnect";
     private static final String ACTION_Connection = "BluetoothService.action.Connection";
+    private static final String ACTION_QueryBTMessages = "BluetoothService.action.ACTION_QueryBTMessages";
     private static final String ACTION_Init = "BluetoothService.action.Init";
     private static final String ACTION_Close = "BluetoothService.action.Close";
 
@@ -122,10 +123,11 @@ public class BluetoothService extends IntentService {
     public static final UUID TEST_Name_SERVICE_UUID = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
     public static final UUID TEST_Name_CHAR_UUID = UUID.fromString("00002a00-0000-1000-8000-00805f9b34fb");
 
+    private static GlobalData mGlobalData = null;
 
-    //public static final int STATE_DISCONNECTED = 0;
-    //public static final int STATE_CONNECTING = 1;
-    //public static final int STATE_CONNECTED = 2;
+    // Special action for request BT status, max ten times.
+    private static int miSendTimes = 0;
+    public static String strBTStatus = null;
 
     private static int mConnectionState = BluetoothProfile.STATE_DISCONNECTED;
 
@@ -140,6 +142,8 @@ public class BluetoothService extends IntentService {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
+
+            mGlobalData = new GlobalData();
 
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
@@ -244,16 +248,32 @@ public class BluetoothService extends IntentService {
 
                 if (iValues != null){
                     int iCommand_Type = gData.getCommandTypeReturn(iValues);
-                    intent.putExtra(RETURN_COMMAND, iCommand_Type);
 
-
-                    int[] iData_Return = gData.getDataReturn(iValues);
-                    if (iData_Return == null){
-                        Log.d(TAG, "iData_Return is null.");
+                    if (iCommand_Type == GlobalData.cCommand_SendMessageTimes){
+                        // This case is special for query BT status, number of send times.
+                        miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
+                        ActionQueryBTMessages(getBaseContext(), miSendTimes);
                         return;
+                    }else if (iCommand_Type >= GlobalData.cCommand_SendMessageTimes_First ||
+                        iCommand_Type <= GlobalData.cCommand_SendMessageTimes_Last){
+                        // This case is special for query BT status, max ten times.
+                        int[] iData_Return = gData.getDataReturn(iValues);
+                        strBTStatus += mGlobalData.Int2String(iData_Return) + "\n";
+
+
                     }else{
-                        intent.putExtra(RETURN_DATA, iData_Return);
+                        // This is normal cases to send UI update to BluetoothReceiver.
+                        intent.putExtra(RETURN_COMMAND, iCommand_Type);
+
+                        int[] iData_Return = gData.getDataReturn(iValues);
+                        if (iData_Return == null){
+                            Log.d(TAG, "iData_Return is null.");
+                            return;
+                        }else{
+                            intent.putExtra(RETURN_DATA, iData_Return);
+                        }
                     }
+
                 }else{
                     Log.d(TAG, "iValue is null.");
                     return;
@@ -396,6 +416,13 @@ public class BluetoothService extends IntentService {
         context.startService(intent);
     }
 
+    public static void ActionQueryBTMessages(Context context, int iPara) {
+        Intent intent = new Intent(context, BluetoothService.class);
+        intent.setAction(ACTION_QueryBTMessages);
+        intent.putExtra(EXTRA_PARAM1, iPara);
+        context.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -406,6 +433,11 @@ public class BluetoothService extends IntentService {
                 final String param1 = intent.getStringExtra(EXTRA_PARAM1);
                 final String param2 = intent.getStringExtra(EXTRA_PARAM2);
                 handleActionConnection(param1, param2);
+            }else if (ACTION_QueryBTMessages.equals(action)){
+                int iDefault = 10;
+                int iParam = intent.getIntExtra(EXTRA_PARAM1, iDefault);
+
+                handleActionQueryBTMessages(iParam);
             }else if (ACTION_Init.equals(action)) {
                 initialize();
             }else if (ACTION_Close.equals(action)) {
@@ -477,6 +509,48 @@ public class BluetoothService extends IntentService {
         mBluetoothDeviceAddress = Address;
         mConnectionState = BluetoothProfile.STATE_CONNECTING;
 
+    }
+
+    // A special action to query BT messages, max for ten times.
+    private void handleActionQueryBTMessages(int iTimes){
+
+        boolean bCheck = false;
+
+        int iBTTem = getBTConnectStatus();
+        GlobalData mGlobalData = new GlobalData();
+
+        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
+            //send data to service
+            bCheck = AssignGATTService(BluetoothService.RX_SERVICE_UUID);
+            if (!bCheck){
+                Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
+                return;
+            }
+            bCheck = AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
+            if (!bCheck){
+                Log.e(TAG, "StartSelfCheck: Characteristics is null.");
+                return;
+            }
+
+        }else{
+            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
+        }
+
+        for (int iTem = 0; iTem < iTimes; iTem++){
+            byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eRequestMessageTimes);
+            int[] iValues = mGlobalData.getIntReturn(bCommand);
+            Log.e(TAG, "onButtonReset, Data to send: " + mGlobalData.Int2String(iValues));
+            bCheck = writeRXCharacteristic(bCommand);
+
+            GlobalData.iRequestMessageTimes[GlobalData.cSetMessageTimes_Index] ++;
+
+            if (!bCheck){
+                Log.e(TAG, "StartSelfCheck: writeRXCharacteristic failed.");
+
+                return;
+            }
+
+        }
     }
 
     public boolean AssignGATTService(UUID UID){
