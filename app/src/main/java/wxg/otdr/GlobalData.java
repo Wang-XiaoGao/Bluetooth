@@ -73,6 +73,14 @@ public class GlobalData extends Application{
     public final static int cSendTimes_Index = 0;
     // To send which message want to read. {0x68, 0x01, 0x40}; renew 0x00 to be 0x41 or ...0x4a
     public final static int cSetMessageTimes_Index = 2;
+    // To get Date and time info from returned data.
+    public final static int cMessageYearHigh_Index = 0;
+    public final static int cMessageYearLow_Index = 1;
+    public final static int cMessageMonth_Index = 2;
+    public final static int cMessageDay_Index = 3;
+    public final static int cMessageHour_Index = 4;
+    public final static int cMessageMinute_Index = 5;
+    public final static int cMessageSecond_Index = 6;
 
     public final static int cReset_Index = 0;
 
@@ -279,6 +287,7 @@ public class GlobalData extends Application{
         return iCommand;
     }
 
+    // This function only return data, remove Head 0x68, Lenth and command type.
     // Also for battery reading, this case, int[] only got length = 1;
     public int[] getDataReturn(int[] iReturnValues){
         Log.i(TAG, "AnalyzeData");

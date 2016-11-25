@@ -44,6 +44,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
         TextView mPressureView = (TextView) MainActivity.getInstance().findViewById(R.id.id_Pressure_Value);
         EditText mDateText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Date);
         EditText mTimeText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Time);
+        EditText mSendTimesText = (EditText) MainActivity.getInstance().findViewById(R.id.id_SendTimes_Message);
+
 
 
         // Todo, this test view is for debug.
@@ -111,7 +113,9 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
 
             int iCommandType = intent.getIntExtra(BluetoothService.RETURN_COMMAND, iDefault);
-            int[] iReturnData = intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+            int[] iReturnData  = null;
+            String strReturnData = null;
+
             if (iReturnData == null){
                 Log.e(TAG, "iReturnData is null.");
                 return;
@@ -119,9 +123,11 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
             switch (iCommandType){
                 case GlobalData.cCommand_BatteryRemain:
+                    iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
                     mBatteryValue.setText(String.format("%d", iReturnData[GlobalData.cBattery_Index]));
                     break;
                 case GlobalData.cCommand_Selfcheck:
+                    iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
                     if (iReturnData.length < GlobalData.cMaterialHigh_Index + 1){
                         Log.e(TAG, "iReturnData is less than expected.");
                         return;
@@ -141,6 +147,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     break;
 
                 case GlobalData.cCommand_ReadTime:
+                    iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
                     String strDate = String.format("%d", 20); //2016, high part.
                     strDate += String.format("%d", iReturnData[GlobalData.cYearLow_Index]);
                     strDate += "-";
@@ -157,6 +164,10 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     mTimeText.setText(strTime);
 
                     break;
+
+                case GlobalData.cCommand_SendMessageTimes:
+                    strReturnData= intent.getStringExtra(BluetoothService.RETURN_DATA);
+                    mSendTimesText.setText(strReturnData);
 
                 case GlobalData.cCommand_Reset:
 

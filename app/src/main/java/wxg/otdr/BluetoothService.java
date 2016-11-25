@@ -242,35 +242,34 @@ public class BluetoothService extends IntentService {
             Log.d(TAG, String.format("Received data modified: ",characteristic.getValue() ));
 
             GlobalData gData = new GlobalData();
+            int iCommand_Type = 0;
+            int[] iDatas_Return = null;
             byte[] bValues = characteristic.getValue();
             if (bValues != null){
                 int[] iValues = gData.Byte2Int(bValues);
 
                 if (iValues != null){
-                    int iCommand_Type = gData.getCommandTypeReturn(iValues);
+                    iCommand_Type = gData.getCommandTypeReturn(iValues);
+                    iDatas_Return = gData.getDataReturn(iValues);
 
-                    if (iCommand_Type == GlobalData.cCommand_SendMessageTimes){
+                    if (iCommand_Type >= GlobalData.cCommand_SendMessageTimes &&
+                            iCommand_Type <= GlobalData.cCommand_SendMessageTimes_Last){
                         // This case is special for query BT status, number of send times.
-                        miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
-                        ActionQueryBTMessages(getBaseContext(), miSendTimes);
-                        return;
-                    }else if (iCommand_Type >= GlobalData.cCommand_SendMessageTimes_First ||
-                        iCommand_Type <= GlobalData.cCommand_SendMessageTimes_Last){
-                        // This case is special for query BT status, max ten times.
-                        int[] iData_Return = gData.getDataReturn(iValues);
-                        strBTStatus += mGlobalData.Int2String(iData_Return) + "\n";
+                        if (!BTMessage_CommandType(iCommand_Type, iDatas_Return)){
+                            Log.e(TAG, "Analyze SendMessagetimes failed.");
+                        }
 
 
                     }else{
                         // This is normal cases to send UI update to BluetoothReceiver.
                         intent.putExtra(RETURN_COMMAND, iCommand_Type);
 
-                        int[] iData_Return = gData.getDataReturn(iValues);
-                        if (iData_Return == null){
+                        gData.getDataReturn(iValues);
+                        if (iDatas_Return == null){
                             Log.d(TAG, "iData_Return is null.");
                             return;
                         }else{
-                            intent.putExtra(RETURN_DATA, iData_Return);
+                            intent.putExtra(RETURN_DATA, iDatas_Return);
                         }
                     }
 
@@ -343,6 +342,59 @@ public class BluetoothService extends IntentService {
 
 
     }
+
+    public boolean BTMessage_CommandType(int iCommandTpye, int[] iValues){
+        boolean bCheck = false;
+
+        if (iCommandTpye == GlobalData.cCommand_SendMessageTimes){
+            // Receive times of message and then call to send xx times to get messages.
+            miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
+            ActionQueryBTMessages(getBaseContext(), miSendTimes); // to next thread to handle.
+            bCheck = true;
+        }else if (iCommandTpye >= GlobalData.cCommand_SendMessageTimes_First &&
+                iCommandTpye <= GlobalData.cCommand_SendMessageTimes_Last){
+            // Only to receive messages from BT.
+            if ( miSendTimes != 0){
+                miSendTimes --;
+                int[] iData_Return = mGlobalData.getDataReturn(iValues);
+                int iYear = iData_Return[GlobalData.cMessageYearHigh_Index]<<8 +
+                        iData_Return[GlobalData.cMessageYearLow_Index];
+                int iMonth = iData_Return[GlobalData.cMessageMonth_Index];
+                int iDay = iData_Return[GlobalData.cMessageDay_Index];
+                int iHour = iData_Return[GlobalData.cMessageHour_Index];
+                int iMinute = iData_Return[GlobalData.cMessageMinute_Index];
+                int iSecond = iData_Return[GlobalData.cMessageSecond_Index];
+
+                String strDate = String.format(iYear + "-" + mGlobalData.set02dMode(iMonth)
+                        + "-" + mGlobalData.set02dMode(iDay));
+
+                String strTime = String.format(mGlobalData.set02dMode(iHour) + ":" +
+                        mGlobalData.set02dMode(iMinute) + ":" + mGlobalData.set02dMode(iSecond));
+
+                String strTem = strDate + "   " + strTime + "\n";
+                strBTStatus += strTem;
+            }else if (miSendTimes == 0 && strBTStatus != null){
+                final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
+                intent.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes);
+                intent.putExtra(RETURN_DATA, strBTStatus);
+                //sendBroadcast(intent);
+                MainActivity.getInstance().sendBroadcast(intent);
+                bCheck = true;
+            }else{
+                Log.e(TAG, "Error: BT messages number is wrong.");
+                bCheck = false;
+            }
+            strBTStatus = null;
+            return bCheck;
+        }
+
+        // This case is special for query BT status, max ten times.
+
+
+        return bCheck;
+
+    }
+
 
     /**
      * Initializes a reference to the local Bluetooth adapter.

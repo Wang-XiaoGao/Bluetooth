@@ -443,13 +443,13 @@ public class MainActivity extends AppCompatActivity {
             mMinute = mCalendar.get(Calendar.MINUTE);
             mSecond = mCalendar.get(Calendar.SECOND);
 
-            String srtDate = String.format(mYear + "-" + mGlobalData.set02dMode(mMonth)
+            String strDate = String.format(mYear + "-" + mGlobalData.set02dMode(mMonth)
                     + "-" + mGlobalData.set02dMode(mDay));
-            mDateEdit.setText(srtDate);
+            mDateEdit.setText(strDate);
 
-            String srtTime = String.format(mGlobalData.set02dMode(mHour) + ":" +
+            String strTime = String.format(mGlobalData.set02dMode(mHour) + ":" +
                     mGlobalData.set02dMode(mMinute) + ":" + mGlobalData.set02dMode(mSecond));
-            mTimeEdit.setText(srtTime);
+            mTimeEdit.setText(strTime);
 
             mDateEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
