@@ -35,6 +35,8 @@
     <string name="BT_Status">更\n新\n状\n态</string>
     <string name="Update_Send_Times">更新发射状态</string>
     <string name="Select_Send_Times">选择读取的次数</string>
+    <string name="WatchDog_Ongoing">正在读取系统状态，请稍后...</string>
+    <string name="WatchDog_Timeout">读取系统状态操作超时！</string>
     <string name="Device_Time_Settings">系统时间设置</string>
     <string name="Device_Year_Up">20</string>
     <string name="Separator_1"> : </string>

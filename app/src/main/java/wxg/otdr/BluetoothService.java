@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Binder;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -350,6 +351,31 @@ public class BluetoothService extends IntentService {
             // Receive times of message and then call to send xx times to get messages.
             miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
             ActionQueryBTMessages(getBaseContext(), miSendTimes); // to next thread to handle.
+
+            CountDownTimer WatchDog1 = new CountDownTimer(GlobalData.iWatchDogTimer1, 1) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    // If after iWatchDogTimer1 ms, WatchDog1 still be active, something wrong.
+                    if (GlobalData.bWatchDog1_Protection){
+                        Log.e(TAG, "WatchDog1: Update BT send message status timeout.");
+                        GlobalData.bWatchDog1_Protection = true;
+                        strBTStatus = null;
+                        miSendTimes = 0;
+                        MainActivity.getInstance().ShowInfo2User(
+                                getResources().getText(R.string.WatchDog_Timeout).toString(),
+                                Toast.LENGTH_SHORT);
+                    }
+
+                }
+                @Override
+                public void onFinish() {
+
+                }
+            };
+
+            WatchDog1.start();
+
+
             bCheck = true;
         }else if (iCommandTpye >= GlobalData.cCommand_SendMessageTimes_First &&
                 iCommandTpye <= GlobalData.cCommand_SendMessageTimes_Last){
@@ -374,6 +400,8 @@ public class BluetoothService extends IntentService {
                 String strTem = strDate + "   " + strTime + "\n";
                 strBTStatus += strTem;
             }else if (miSendTimes == 0 && strBTStatus != null){
+                GlobalData.bWatchDog1_Protection = false; // Query BT send messages finish, end WatchDog1.
+
                 final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
                 intent.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes);
                 intent.putExtra(RETURN_DATA, strBTStatus);

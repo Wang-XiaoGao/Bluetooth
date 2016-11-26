@@ -420,11 +420,6 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     Log.e("PlaceholderFragment", "Unexpected tab position.");
             }
-
-
-
-
-
             return rootView;
         }
 
@@ -687,11 +682,22 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Call onButtonRequestStatus.");
         boolean bCheck = false;
 
-        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSendTimes);
-        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+        // Check whether previous query on-going. There is a watch dog 1 to monitor, timeout gate is 3000ms.
+        if (!GlobalData.bWatchDog1_Protection){
+            byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSendTimes);
+            bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
-        if (!bCheck){
-            Log.e(TAG, "StartSelfCheck: Send Command failed.");
+
+            if (!bCheck){
+                Log.e(TAG, "onButtonRequestStatus: Send Command failed.");
+            }else{
+                // WatchDog1 enter active mode. Note: need to activate WatchDog1 after command sent.
+                GlobalData.bWatchDog1_Protection = true;
+            }
+        }else{
+            Log.e(TAG, "onButtonRequestStatus: Already on-going.");
+            Toast.makeText(this, getResources().getText(R.string.WatchDog_Ongoing),
+                    Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -768,12 +774,12 @@ public class MainActivity extends AppCompatActivity {
         boolean bCheck = false;
 
         // Only take lower part of year, e.g. 2016-->16.
-        mGlobalData.iSetTime[GlobalData.cSetYearLow_Index] =  mYear - 2000;
-        mGlobalData.iSetTime[GlobalData.cSetMonth_Index] =  mMonth;
-        mGlobalData.iSetTime[GlobalData.cSetDay_Index] =  mDay;
-        mGlobalData.iSetTime[GlobalData.cSetHour_Index] =  mHour;
-        mGlobalData.iSetTime[GlobalData.cSetMinute_Index] =  mMinute;
-        mGlobalData.iSetTime[GlobalData.cSetSecond_Index] =  mSecond;
+        GlobalData.iSetTime[GlobalData.cSetYearLow_Index] =  mYear - 2000;
+        GlobalData.iSetTime[GlobalData.cSetMonth_Index] =  mMonth;
+        GlobalData.iSetTime[GlobalData.cSetDay_Index] =  mDay;
+        GlobalData.iSetTime[GlobalData.cSetHour_Index] =  mHour;
+        GlobalData.iSetTime[GlobalData.cSetMinute_Index] =  mMinute;
+        GlobalData.iSetTime[GlobalData.cSetSecond_Index] =  mSecond;
 
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSetTime);
 
@@ -791,8 +797,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void ShowInfo2User(String strInfo, int iShowTime){
+        Toast.makeText(this.getApplicationContext(),
+                strInfo,
+                iShowTime).show();
+    }
+
     public boolean SendCommand(View v, UUID ServiceUUID, UUID CharUUID, byte[] bCommand){
-        int iBTTem = mBluetoothService.getBTConnectStatus();
+        int iBTTem = BluetoothService.getBTConnectStatus();
         boolean bCheck = false;
 
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){

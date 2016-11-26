@@ -12,7 +12,9 @@ import java.io.InputStream;
 public class GlobalData extends Application{
     public static final String TAG = GlobalData.class.getSimpleName();
 
-    private static boolean bIsInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016
+    private static boolean bIsInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016.
+    public static boolean bWatchDog1_Protection = false; // To prevent button pressed again and agian.
+    public final static int iWatchDogTimer1 = 3000; // Timeout gate for 3000 ms.
 
     enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
