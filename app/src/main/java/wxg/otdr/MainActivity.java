@@ -655,7 +655,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Call QueryBattery.");
         boolean bCheck = false;
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBatter);
-
+//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID //TEST_TX_CHAR_UUID, RX_CHAR_UUID
         bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
         if (!bCheck){
@@ -762,7 +762,7 @@ public class MainActivity extends AppCompatActivity {
 
         bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
-        if (!bCheck){
+        if (!bCheck) {
             Log.e(TAG, "onButtonReadTime: Send Command failed.");
         }
 

@@ -116,18 +116,23 @@ public class BluetoothReceiver extends BroadcastReceiver {
             int[] iReturnData  = null;
             String strReturnData = null;
 
-            if (iReturnData == null){
-                Log.e(TAG, "iReturnData is null.");
-                return;
-            }
-
             switch (iCommandType){
                 case GlobalData.cCommand_BatteryRemain:
                     iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+                    if (iReturnData == null){
+                        Log.e(TAG, "iReturnData is null.");
+                        return;
+                    }
+
                     mBatteryValue.setText(String.format("%d", iReturnData[GlobalData.cBattery_Index]));
                     break;
                 case GlobalData.cCommand_Selfcheck:
                     iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+                    if (iReturnData == null){
+                        Log.e(TAG, "iReturnData is null.");
+                        return;
+                    }
+
                     if (iReturnData.length < GlobalData.cMaterialHigh_Index + 1){
                         Log.e(TAG, "iReturnData is less than expected.");
                         return;
@@ -148,6 +153,11 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 case GlobalData.cCommand_ReadTime:
                     iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+                    if (iReturnData == null){
+                        Log.e(TAG, "iReturnData is null.");
+                        return;
+                    }
+
                     String strDate = String.format("%d", 20); //2016, high part.
                     strDate += String.format("%d", iReturnData[GlobalData.cYearLow_Index]);
                     strDate += "-";
@@ -167,6 +177,11 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 case GlobalData.cCommand_SendMessageTimes:
                     strReturnData= intent.getStringExtra(BluetoothService.RETURN_DATA);
+                    if (strReturnData == null){
+                        Log.e(TAG, "strReturnData is null.");
+                        return;
+                    }
+
                     mSendTimesText.setText(strReturnData);
 
                 case GlobalData.cCommand_Reset:

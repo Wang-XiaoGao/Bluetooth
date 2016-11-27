@@ -240,7 +240,7 @@ public class BluetoothService extends IntentService {
         final Intent intent = new Intent(action);
 //TX_CHAR_UUID, TEST_TX_CHAR_UUID
         if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
-            Log.d(TAG, String.format("Received data modified: ",characteristic.getValue() ));
+            Log.d(TAG, String.format("Received data modified: ", characteristic.getValue() ));
 
             GlobalData gData = new GlobalData();
             int iCommand_Type = 0;
@@ -259,8 +259,6 @@ public class BluetoothService extends IntentService {
                         if (!BTMessage_CommandType(iCommand_Type, iDatas_Return)){
                             Log.e(TAG, "Analyze SendMessagetimes failed.");
                         }
-
-
                     }else{
                         // This is normal cases to send UI update to BluetoothReceiver.
                         intent.putExtra(RETURN_COMMAND, iCommand_Type);
