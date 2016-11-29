@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -20,7 +21,7 @@ import java.util.List;
 public class Engineering_Adapter extends BaseAdapter {
     private ViewHolder mViewHolder;
     private LayoutInflater mLayoutInflater;
-    private List<String> mList;
+    private static List<String> mList;
 
     //mTouchItemPosition, used to record position of EditText.
     private int mTouchItemPosition = -1;
@@ -45,6 +46,29 @@ public class Engineering_Adapter extends BaseAdapter {
         return position;
     }
 
+    /**
+     * EditText竖直方向是否可以滚动
+     * @param editText 需要判断的EditText
+     * @return true：可以滚动 false：不可以滚动
+     */
+    private boolean canVerticalScroll(EditText editText) {
+        //滚动的距离
+        int scrollY = editText.getScrollY();
+        //控件内容的总高度
+        int scrollRange = editText.getLayout().getHeight();
+        //控件实际显示的高度
+        int scrollExtent = editText.getHeight() - editText.getCompoundPaddingTop() -editText.getCompoundPaddingBottom();
+        //控件内容总高度与实际显示高度的差值
+        int scrollDifference = scrollRange - scrollExtent;
+
+        if(scrollDifference == 0) {
+            return false;
+        }
+
+        return (scrollY > 0) || (scrollY < scrollDifference - 1);
+    }
+
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -55,13 +79,22 @@ public class Engineering_Adapter extends BaseAdapter {
             mViewHolder.mEditText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
-                    //注意，此处必须使用getTag的方式，不能将position定义为final，写成mTouchItemPosition = position
+                    //Note: here use getTag()，position could not defined as final，mTouchItemPosition = position
                     mTouchItemPosition = (Integer) view.getTag();
+
+                    //触摸的是EditText并且当前EditText可以滚动则将事件交给EditText处理；否则将事件交由其父类处理
+                    if ((view.getId() == R.id.edit_text && canVerticalScroll((EditText)view))) {
+                        view.getParent().requestDisallowInterceptTouchEvent(true);
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            view.getParent().requestDisallowInterceptTouchEvent(false);
+                        }
+                    }
                     return false;
                 }
             });
 
-            // 让ViewHolder持有一个TextWathcer，动态更新position来防治数据错乱；不能将position定义成final直接使用，必须动态更新
+
+            // Let's ViewHolder get a TextWathcer，update position to avoid edit mix up.
             mViewHolder.mTextWatcher = new MyTextWatcher();
             mViewHolder.mEditText.addTextChangedListener(mViewHolder.mTextWatcher);
             mViewHolder.updatePosition(position);
@@ -69,28 +102,35 @@ public class Engineering_Adapter extends BaseAdapter {
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
-            //动态更新TextWathcer的position
+
             mViewHolder.updatePosition(position);
         }
 
         switch (position){
             case 0:
-                mViewHolder.mTextView.setText("压力门限值(M)");
+                mViewHolder.mTextView.setText("压力门限值\n(M)");
+                mViewHolder.mEditText.setInputType(EditorInfo.TYPE_NUMBER_FLAG_DECIMAL);
                 break;
             case 1:
-                mViewHolder.mTextView.setText("持续时间门限T1(0~240min)");
+                mViewHolder.mTextView.setText("持续时间门限T1\n(0~240min)");
+                mViewHolder.mEditText.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
+
                 break;
             case 2:
-                mViewHolder.mTextView.setText("持续时间门限T2(30~100S)");
+                mViewHolder.mTextView.setText("持续时间门限T2\n(30~100S)");
+                mViewHolder.mEditText.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
                 break;
             case 3:
-                mViewHolder.mTextView.setText("发射信号长度(0~1000S)");
+                mViewHolder.mTextView.setText("发射信号长度\n(0~1000S)");
+                mViewHolder.mEditText.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
                 break;
             case 4:
-                mViewHolder.mTextView.setText("工作频率设定(20~40khz)");
+                mViewHolder.mTextView.setText("工作频率设定\n(20~40khz)");
+                mViewHolder.mEditText.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
                 break;
             case 5:
-                mViewHolder.mTextView.setText("发射信号周期设定(0~100S)");
+                mViewHolder.mTextView.setText("发射信号周期设定\n(0~100S)");
+                mViewHolder.mEditText.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
                 break;
         }
 
@@ -113,14 +153,13 @@ public class Engineering_Adapter extends BaseAdapter {
         EditText mEditText;
         MyTextWatcher mTextWatcher;
 
-        //动态更新TextWathcer的position
         public void updatePosition(int position) {
             mTextWatcher.updatePosition(position);
         }
     }
 
     class MyTextWatcher implements TextWatcher {
-        //由于TextWatcher的afterTextChanged中拿不到对应的position值，所以自己创建一个子类
+        //afterTextChanged use position value
         private int mPosition;
 
         public void updatePosition(int position) {
@@ -142,4 +181,6 @@ public class Engineering_Adapter extends BaseAdapter {
             mList.set(mPosition, s.toString());
         }
     };
+
+
 }

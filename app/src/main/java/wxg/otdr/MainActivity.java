@@ -39,6 +39,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -407,6 +408,20 @@ public class MainActivity extends AppCompatActivity {
 
             Log.i("PlaceholderFragment", "Fragment Creation");
             View rootView = null;
+
+            // If input soft windows could not be hidden after switch frame, need to hide manually.
+            /*
+            InputMethodManager InputManger = (InputMethodManager) getContext().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+
+            EditText edit = (EditText) MainActivity.getInstance().findViewById(R.id.edit_text);
+            if (edit != null){
+                InputManger.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+            }else{
+                Log.e(TAG, "EditText edit is null.");
+            }
+            */
+
 
             switch (iSectionNumber) {
                 case MainActivity.iDeviceStatus:
@@ -852,7 +867,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
 
             Toast.makeText(getBaseContext(),
-                    "Bluetooth not connected yet!",
+                    "蓝牙设备还未连接!",
                     Toast.LENGTH_SHORT).show();
             return false;
         }

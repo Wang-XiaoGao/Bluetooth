@@ -345,6 +345,15 @@ public class BluetoothService extends IntentService {
     public boolean BTMessage_CommandType(int iCommandTpye, int[] iValues){
         boolean bCheck = false;
 
+        // To be deleted.
+        miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
+        String strTemp = "The number of error times: ";
+        strTemp += strTemp + String.format("%2d", miSendTimes);
+
+        MainActivity.getInstance().ShowInfo2User(
+                strTemp,
+                Toast.LENGTH_SHORT);
+
         if (iCommandTpye == GlobalData.cCommand_SendMessageTimes){
             // Receive times of message and then call to send xx times to get messages.
             miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
@@ -356,7 +365,7 @@ public class BluetoothService extends IntentService {
                     // If after iWatchDogTimer1 ms, WatchDog1 still be active, something wrong.
                     if (GlobalData.bWatchDog1_Protection){
                         Log.e(TAG, "WatchDog1: Update BT send message status timeout.");
-                        GlobalData.bWatchDog1_Protection = true;
+                        GlobalData.bWatchDog1_Protection = false;
                         strBTStatus = null;
                         miSendTimes = 0;
                         MainActivity.getInstance().ShowInfo2User(
@@ -372,6 +381,8 @@ public class BluetoothService extends IntentService {
             };
 
             WatchDog1.start();
+
+
 
 
             bCheck = true;
@@ -444,7 +455,6 @@ public class BluetoothService extends IntentService {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
-
         return true;
     }
 
@@ -586,7 +596,6 @@ public class BluetoothService extends IntentService {
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = Address;
         mConnectionState = BluetoothProfile.STATE_CONNECTING;
-
     }
 
     // A special action to query BT messages, max for ten times.
