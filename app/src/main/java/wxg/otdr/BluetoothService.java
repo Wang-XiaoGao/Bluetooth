@@ -256,6 +256,16 @@ public class BluetoothService extends IntentService {
                     if (iCommand_Type >= GlobalData.cCommand_SendMessageTimes &&
                             iCommand_Type <= GlobalData.cCommand_SendMessageTimes_Last){
                         // This case is special for query BT status, number of send times.
+
+                        // To be deleted.
+                        //miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
+                        String strTemp = "截取前，已经发送读取状态信息指令";
+                        //strTemp += strTemp + String.format("%2d", miSendTimes);
+
+                        MainActivity.getInstance().ShowInfo2User(
+                                strTemp,
+                                Toast.LENGTH_SHORT);
+
                         if (!BTMessage_CommandType(iCommand_Type, iDatas_Return)){
                             Log.e(TAG, "Analyze SendMessagetimes failed.");
                         }
@@ -346,9 +356,9 @@ public class BluetoothService extends IntentService {
         boolean bCheck = false;
 
         // To be deleted.
-        miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
-        String strTemp = "The number of error times: ";
-        strTemp += strTemp + String.format("%2d", miSendTimes);
+        //miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
+        String strTemp = "已经发送读取状态信息指令";
+        //strTemp += strTemp + String.format("%2d", miSendTimes);
 
         MainActivity.getInstance().ShowInfo2User(
                 strTemp,

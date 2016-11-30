@@ -703,12 +703,11 @@ public class MainActivity extends AppCompatActivity {
     public void onButtonRequestStatus(View v) {
         Log.i(TAG, "Call onButtonRequestStatus.");
         boolean bCheck = false;
-
+//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID//TEST_TX_CHAR_UUID, RX_CHAR_UUID
         // Check whether previous query on-going. There is a watch dog 1 to monitor, timeout gate is 3000ms.
         if (!GlobalData.bWatchDog1_Protection){
             byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSendTimes);
             bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
-
 
             if (!bCheck){
                 Log.e(TAG, "onButtonRequestStatus: Send Command failed.");

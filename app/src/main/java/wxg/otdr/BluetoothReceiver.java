@@ -111,7 +111,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
             //final String StrEXTRA_DATA = intent.getStringExtra(BluetoothService.EXTRA_DATA);
             int iDefault = 0;
 
-
             int iCommandType = intent.getIntExtra(BluetoothService.RETURN_COMMAND, iDefault);
             int[] iReturnData  = null;
             String strReturnData = null;
@@ -145,7 +144,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                     int iMaterialHigh = iReturnData[GlobalData.cMaterialHigh_Index];
                     int iMaterialLow = iReturnData[GlobalData.cMaterialLow_Index];
-                    int iTem = iMaterialHigh<<8 + iMaterialLow;
+                    int iTem = iMaterialHigh*256 + iMaterialLow;
 
                     mMaterialView.setText(String.format("%d", iTem));
 
@@ -195,7 +194,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
             // To do, delete, just for debug.
             GlobalData.strNewLog = "Command_Type:";
             GlobalData.strNewLog += String.format("0x%02x; Data: ", iCommandType);
-
             if (iReturnData != null){
                 for (int iTem = 0; iTem < iReturnData.length; iTem ++){
                     //String str = String.valueOf(txValue[iTem]);
