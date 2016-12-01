@@ -127,7 +127,7 @@ public class BluetoothService extends IntentService {
     private static GlobalData mGlobalData = null;
 
     // Special action for request BT status, max ten times.
-    private static int miSendTimes = 0;
+    public static int miSendTimes = 0;
     public static String strBTStatus = null;
 
     private static int mConnectionState = BluetoothProfile.STATE_DISCONNECTED;
@@ -368,32 +368,6 @@ public class BluetoothService extends IntentService {
             // Receive times of message and then call to send xx times to get messages.
             miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
             ActionQueryBTMessages(getBaseContext(), miSendTimes); // to next thread to handle.
-
-            CountDownTimer WatchDog1 = new CountDownTimer(GlobalData.iWatchDogTimer1, 1) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    // If after iWatchDogTimer1 ms, WatchDog1 still be active, something wrong.
-                    if (GlobalData.bWatchDog1_Protection){
-                        Log.e(TAG, "WatchDog1: Update BT send message status timeout.");
-                        GlobalData.bWatchDog1_Protection = false;
-                        strBTStatus = null;
-                        miSendTimes = 0;
-                        MainActivity.getInstance().ShowInfo2User(
-                                getResources().getText(R.string.WatchDog_Timeout).toString(),
-                                Toast.LENGTH_SHORT);
-                    }
-
-                }
-                @Override
-                public void onFinish() {
-
-                }
-            };
-
-            WatchDog1.start();
-
-
-
 
             bCheck = true;
         }else if (iCommandTpye >= GlobalData.cCommand_SendMessageTimes_First &&

@@ -19,7 +19,7 @@ public class GlobalData extends Application{
     enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
 
-    public static int[] iQueryBatter = {0x68, 0x01, 0x3C};
+    public static int[] iQueryBattery = {0x68, 0x01, 0x3C};
     public static int[] iSelfCheck = {0x68, 0x01, 0x69};
     public static int[] iReset = {0x68, 0x01, 0x4B};
     //iSetTime, for date and time need to renew, so just take 0x0 as default.
@@ -87,7 +87,7 @@ public class GlobalData extends Application{
     public final static int cReset_Index = 0;
 
 
-    enum eCommandIndex {eQueryBatter, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
+    enum eCommandIndex {eQueryBattery, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
         eRequestMessageTimes};
 
     public static String strLog = null;
@@ -181,8 +181,8 @@ public class GlobalData extends Application{
 
         byte[] bCommand = null;
         switch (eIndex){
-            case eQueryBatter:
-                bCommand = Int2Byte(iQueryBatter);
+            case eQueryBattery:
+                bCommand = Int2Byte(iQueryBattery);
                 break;
             case eSelfCheck:
                 bCommand = Int2Byte(iSelfCheck);

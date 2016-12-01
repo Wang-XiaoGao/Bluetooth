@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private static MainActivity Myinstance;
     public static GlobalData mGlobalData = null;
 
-    private BluetoothService mBluetoothService = null;
+    private static BluetoothService mBluetoothService = null;
     private BluetoothReceiver mBroadcastReceiver = null;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -676,7 +677,7 @@ public class MainActivity extends AppCompatActivity {
     public void QueryBattery(View v) {
         Log.i(TAG, "Call QueryBattery.");
         boolean bCheck = false;
-        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBatter);
+        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBattery);
 //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID //TEST_TX_CHAR_UUID, RX_CHAR_UUID
         bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
@@ -714,6 +715,28 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 // WatchDog1 enter active mode. Note: need to activate WatchDog1 after command sent.
                 GlobalData.bWatchDog1_Protection = true;
+                CountDownTimer WatchDog1 = new CountDownTimer(GlobalData.iWatchDogTimer1, GlobalData.iWatchDogTimer1-50) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+                    @Override
+                    public void onFinish() {
+                        // If after iWatchDogTimer1 ms, WatchDog1 still be active, something wrong.
+                        if (GlobalData.bWatchDog1_Protection){
+                            Log.e(TAG, "WatchDog1: Update BT send message status timeout.");
+                            GlobalData.bWatchDog1_Protection = false;
+                            BluetoothService.strBTStatus = null;
+                            BluetoothService.miSendTimes = 0;
+                            MainActivity.getInstance().ShowInfo2User(
+                                    getResources().getText(R.string.WatchDog_Timeout).toString(),
+                                    Toast.LENGTH_SHORT);
+                        }
+
+                    }
+                };
+
+                WatchDog1.start();
             }
         }else{
             Log.e(TAG, "onButtonRequestStatus: Already on-going.");
@@ -832,15 +855,15 @@ public class MainActivity extends AppCompatActivity {
             //eSelfCheck, eQueryBatter
             int[] iValues = mGlobalData.getIntReturn(bCommand);
 
-            Log.e(TAG, "Qurey Battery, Data to send: " + mGlobalData.Int2String(iValues));
-//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
+            Log.i(TAG, "Data to send: " + mGlobalData.Int2String(iValues));
+//BluetoothService.TEST_TX_SERVICE_UUID,RX_SERVICE_UUID//ServiceUUID
             if (mBluetoothService != null) {
                 bCheck = mBluetoothService.AssignGATTService(ServiceUUID);
                 if (!bCheck){
                     Log.e(TAG, "mBluetoothService is null.");
                     return false;
                 }
-//TEST_TX_CHAR_UUID, RX_CHAR_UUID
+//BluetoothService.TEST_TX_CHAR_UUID, RX_CHAR_UUID//CharUUID
                 bCheck = mBluetoothService.AssignGATTCharacteristics(CharUUID);
                 if (!bCheck){
                     Log.e(TAG, "Characteristics is null.");
