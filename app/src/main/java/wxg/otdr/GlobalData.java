@@ -29,6 +29,8 @@ public class GlobalData extends Application{
     public static int[] iSendMessageTimes = {0x68, 0x01, 0x40};
     //RequestMessageTime, 0x41, 0x42...0x4a, for ten times, 0x41 just as default value, need renew.
     public static int[] iRequestMessageTimes = {0x68, 0x01, 0x41};
+    // To send which message want to read. {0x68, 0x01, 0x41}; renew 0x40 to be 0x41 or ...0x4a
+    public final static int cSetMessageTimes_Index = 2;
 
     public final static int cCommand_Head = 0x68;
     public final static int cCommand_BatteryRemain = 0x3C;
@@ -41,6 +43,9 @@ public class GlobalData extends Application{
 
     public final static int cCommand_ReadTime = 0xD7;
 
+
+
+    // Those below index are defined as pure data, not inclued command type.
 
     // Index in byte[], e.g. 0x68, 0x01, 0x3C
     public final static int cCommandHead_Index = 0; //0x68, head of every return data.
@@ -71,10 +76,8 @@ public class GlobalData extends Application{
     public final static int cSetHour_Index = 6;
     public final static int cSetMinute_Index = 7;
     public final static int cSetSecond_Index = 8;
-    // To get times of sending message.
+    // To get times of sending message. {0x68, 0x02, 0x40, 0x0a}, times number is ox0a.
     public final static int cSendTimes_Index = 0;
-    // To send which message want to read. {0x68, 0x01, 0x40}; renew 0x00 to be 0x41 or ...0x4a
-    public final static int cSetMessageTimes_Index = 2;
     // To get Date and time info from returned data.
     public final static int cMessageYearHigh_Index = 0;
     public final static int cMessageYearLow_Index = 1;

@@ -98,14 +98,15 @@ public class BluetoothService extends IntentService {
             "wxg.otdr.ACTION_FEEDBACK_AVAILABLE";
     public final static String ACTION_DATA_AVAILABLE =
             "wxg.otdr.ACTION_DATA_AVAILABLE";
+    public final static String ACTION_DEBUG_DATA =
+            "wxg.otdr.ACTION_DEBUG_DATA";
     public final static String EXTRA_DATA =
             "wxg.otdr.EXTRA_DATA";
     public final static String DEVICE_DOES_NOT_SUPPORT_UART =
             "wxg.otdr.DEVICE_DOES_NOT_SUPPORT_UART";
     public static final String RETURN_COMMAND = "wxg.otdr.extra.COMMAND";
     public static final String RETURN_DATA = "wxg.otdr.extra.DATA";
-
-
+    public static final String DEBUG_COMMAND = "wxg.otdr.extra.DEBUG.DATA";
 
 
     public static final UUID TX_POWER_UUID = UUID.fromString("00001804-0000-1000-8000-00805f9b34fb");
@@ -113,10 +114,13 @@ public class BluetoothService extends IntentService {
     public static final UUID CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     public static final UUID FIRMWARE_REVISON_UUID = UUID.fromString("00002a26-0000-1000-8000-00805f9b34fb");
     public static final UUID DIS_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
-    public static final UUID RX_SERVICE_UUID = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb");
 
-    public static final UUID RX_CHAR_UUID = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb");
-    public static final UUID TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
+    public static UUID RX_SERVICE_UUID = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb");
+    public static UUID RX_CHAR_UUID = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb");
+    public static UUID TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
+
+    // Set a pre-compile conditions.
+    public static boolean bInDebug = false;
 
     // For debug.
     public static final UUID TEST_TX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
@@ -207,7 +211,6 @@ public class BluetoothService extends IntentService {
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-
         }
     };
 
@@ -238,11 +241,39 @@ public class BluetoothService extends IntentService {
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
+/*
+        int iComTemp = 60;
+        int[] iDatas_Temp = new int[1];
+        iDatas_Temp[0] = 60;
+        byte[] bValues = characteristic.getValue();
+        GlobalData gData = new GlobalData();
+        int[] iValues = gData.Byte2Int(bValues);
+
+        final Intent intentTemp = new Intent(action);
+        intentTemp.putExtra(RETURN_COMMAND, iComTemp);
+        intentTemp.putExtra(RETURN_DATA, iValues);
+        MainActivity.getInstance().sendBroadcast(intentTemp);*/
+
+        // just for debug.
+        byte[] bDebugValues = characteristic.getValue();
+        GlobalData gData = new GlobalData();
+        String strNewLog = "";
+        int[] iDebugValues = gData.Byte2Int(bDebugValues);
+        if (iDebugValues != null){
+            for (int iTem = 0; iTem < iDebugValues.length; iTem ++){
+                //String str = String.valueOf(txValue[iTem]);
+                strNewLog += String.format("%02x ", iDebugValues[iTem]);
+            }
+        }
+        strNewLog += "。";
+        Intent intent_Debug = new Intent(ACTION_DEBUG_DATA);
+        intent_Debug.putExtra(DEBUG_COMMAND, strNewLog);
+        MainActivity.getInstance().sendBroadcast(intent_Debug);
+
 //TX_CHAR_UUID, TEST_TX_CHAR_UUID
         if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
-            Log.d(TAG, String.format("Received data modified: ", characteristic.getValue() ));
-
-            GlobalData gData = new GlobalData();
+            Log.d(TAG, String.format("Received data modified: ", characteristic.getValue()));
+            //GlobalData gData = new GlobalData();
             int iCommand_Type = 0;
             int[] iDatas_Return = null;
             byte[] bValues = characteristic.getValue();
@@ -256,15 +287,6 @@ public class BluetoothService extends IntentService {
                     if (iCommand_Type >= GlobalData.cCommand_SendMessageTimes &&
                             iCommand_Type <= GlobalData.cCommand_SendMessageTimes_Last){
                         // This case is special for query BT status, number of send times.
-
-                        // To be deleted.
-                        //miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
-                        String strTemp = "截取前，已经发送读取状态信息指令";
-                        //strTemp += strTemp + String.format("%2d", miSendTimes);
-
-                        MainActivity.getInstance().ShowInfo2User(
-                                strTemp,
-                                Toast.LENGTH_SHORT);
 
                         if (!BTMessage_CommandType(iCommand_Type, iDatas_Return)){
                             Log.e(TAG, "Analyze SendMessagetimes failed.");
@@ -349,24 +371,23 @@ public class BluetoothService extends IntentService {
             Log.e(TAG, "Unable to initialize Bluetooth.");
         }
 
-
+        if(!bInDebug){
+            RX_SERVICE_UUID = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb");
+            RX_CHAR_UUID = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb");
+            TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
+        }else{
+            RX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
+            RX_CHAR_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
+            TX_CHAR_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
+        };
     }
 
     public boolean BTMessage_CommandType(int iCommandTpye, int[] iValues){
         boolean bCheck = false;
 
-        // To be deleted.
-        //miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
-        String strTemp = "已经发送读取状态信息指令";
-        //strTemp += strTemp + String.format("%2d", miSendTimes);
-
-        MainActivity.getInstance().ShowInfo2User(
-                strTemp,
-                Toast.LENGTH_SHORT);
-
         if (iCommandTpye == GlobalData.cCommand_SendMessageTimes){
             // Receive times of message and then call to send xx times to get messages.
-            miSendTimes = iValues[GlobalData.cSetMessageTimes_Index];
+            miSendTimes = iValues[GlobalData.cSendTimes_Index];
             ActionQueryBTMessages(getBaseContext(), miSendTimes); // to next thread to handle.
 
             bCheck = true;
@@ -610,10 +631,12 @@ public class BluetoothService extends IntentService {
         for (int iTem = 0; iTem < iTimes; iTem++){
             byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eRequestMessageTimes);
             int[] iValues = mGlobalData.getIntReturn(bCommand);
+            // {0x68, 0x01, 0x41}...{0x68, 0x01, 0x4a}
+            iValues[GlobalData.cSetMessageTimes_Index] += iTem;
+            bCommand = mGlobalData.Int2Byte(iValues);
+
             Log.e(TAG, "onButtonReset, Data to send: " + mGlobalData.Int2String(iValues));
             bCheck = writeRXCharacteristic(bCommand);
-
-            GlobalData.iRequestMessageTimes[GlobalData.cSetMessageTimes_Index] ++;
 
             if (!bCheck){
                 Log.e(TAG, "StartSelfCheck: writeRXCharacteristic failed.");

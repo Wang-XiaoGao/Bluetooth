@@ -233,7 +233,8 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothService.ACTION_FEEDBACK_AVAILABLE);
         intentFilter.addAction(BluetoothService.ACTION_DATA_AVAILABLE);
-        intentFilter.addAction(BluetoothService.DEVICE_DOES_NOT_SUPPORT_UART);
+        intentFilter.addAction(BluetoothService.ACTION_DEBUG_DATA);
+
         //Just for debug, to receive info from system
         //intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         registerReceiver(mBroadcastReceiver, intentFilter);

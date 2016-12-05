@@ -68,9 +68,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
             mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
             mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
 
-            GlobalData.strNewLog = "Connected";
-
-            GlobalData.strLog = GlobalData.strNewLog + GlobalData.strLog;
+            GlobalData.strLog = "BT Connected.";
             String strTem = GlobalData.strTitle + GlobalData.strLog;
 
             mDebugTextVew.setText(strTem);
@@ -82,11 +80,9 @@ public class BluetoothReceiver extends BroadcastReceiver {
             Log.d(TAG, "Bluetooth Disconnected");
 
             // Tobe deleted.
-            GlobalData.strNewLog = null;
             GlobalData.strLog = null;
 
             String strTem = GlobalData.strTitle + "Clear.";
-
             mDebugTextVew.setText(strTem);
 
 
@@ -104,7 +100,13 @@ public class BluetoothReceiver extends BroadcastReceiver {
             Log.d(TAG, "ACTION_FEEDBACK_AVAILABLE");
             //final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
 
+        }else if (strAction.equals(BluetoothService.ACTION_DEBUG_DATA)){
+            Log.d(TAG, "ACTION_DEBUG_DATA");
+            String StrDebugData = intent.getStringExtra(BluetoothService.DEBUG_COMMAND);
+            GlobalData.strLog = StrDebugData + GlobalData.strLog;
+            String strTem = GlobalData.strTitle + GlobalData.strLog;
 
+            mDebugTextVew.setText(strTem);
 
         }else if (strAction.equals(BluetoothService.ACTION_DATA_AVAILABLE)){
             Log.d(TAG, "ACTION_DATA_AVAILABLE");
@@ -190,23 +192,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     break;
 
             }
-
-            // To do, delete, just for debug.
-            GlobalData.strNewLog = "Command_Type:";
-            GlobalData.strNewLog += String.format("0x%02x; Data: ", iCommandType);
-            if (iReturnData != null){
-                for (int iTem = 0; iTem < iReturnData.length; iTem ++){
-                    //String str = String.valueOf(txValue[iTem]);
-                    GlobalData.strNewLog += String.format("%02x ", iReturnData[iTem]);
-                }
-            }
-            GlobalData.strNewLog += "。";
-
-            GlobalData.strLog = GlobalData.strNewLog + GlobalData.strLog;
-            String strTem = GlobalData.strTitle + GlobalData.strLog;
-
-            mDebugTextVew.setText(strTem);
-
 
             // Todo, show all log;
 
