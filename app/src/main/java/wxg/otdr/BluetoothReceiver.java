@@ -177,7 +177,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     break;
 
                 case GlobalData.cCommand_SendMessageTimes:
-                    strReturnData= intent.getStringExtra(BluetoothService.RETURN_DATA);
+                    strReturnData = intent.getStringExtra(BluetoothService.RETURN_DATA);
                     if (strReturnData == null){
                         Log.e(TAG, "strReturnData is null.");
                         return;

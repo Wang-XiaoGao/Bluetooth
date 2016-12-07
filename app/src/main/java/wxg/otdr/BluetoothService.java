@@ -390,8 +390,19 @@ public class BluetoothService extends IntentService {
         if (iCommandTpye == GlobalData.cCommand_SendMessageTimes){
             // Receive times of message and then call to send xx times to get messages.
             miSendTimes = iValues[GlobalData.cSendTimes_Index];
-            ActionQueryBTMessages(getBaseContext(), miSendTimes); // to next thread to handle.
-            strBTStatus = "";
+            strBTStatus = ""; // A new query start. So clear strBTStatus.
+            if (miSendTimes != 0){
+                // In this case, number of error message is not zero. Need to query and show.
+                ActionQueryBTMessages(getBaseContext(), miSendTimes); // to next thread to handle.
+            }else{
+                // In this case, the number of error message is zero. Need reset in UI.
+                Intent intent = new Intent(ACTION_DATA_AVAILABLE);
+                intent.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes);
+                intent.putExtra(RETURN_DATA, strBTStatus);
+                //sendBroadcast(intent);
+                MainActivity.getInstance().sendBroadcast(intent);
+            }
+
             bCheck = true;
         }else if (iCommandTpye >= GlobalData.cCommand_SendMessageTimes_First &&
                 iCommandTpye <= GlobalData.cCommand_SendMessageTimes_Last){
@@ -426,7 +437,7 @@ public class BluetoothService extends IntentService {
                 // 2, miSendTimes != 0 ; strBTStatus will be updated to UI.
                 GlobalData.bWatchDog1_Protection = false; // Query BT send messages finish, end WatchDog1.
 
-                final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
+                Intent intent = new Intent(ACTION_DATA_AVAILABLE);
                 intent.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes);
                 intent.putExtra(RETURN_DATA, strBTStatus);
                 //sendBroadcast(intent);
@@ -640,7 +651,7 @@ public class BluetoothService extends IntentService {
             Log.e(TAG, "Data to send: " + mGlobalData.Int2String(iValues));
             bCheck = writeRXCharacteristic(bCommand);
             try {
-                Thread.currentThread().sleep(100);//阻断100ms
+                Thread.currentThread().sleep(1000);//阻断1000ms
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

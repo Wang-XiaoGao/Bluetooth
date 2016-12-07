@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="@string/Bluetooth_Title"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageViewBT"
             android:layout_marginLeft="10dp"
@@ -72,7 +72,7 @@
                 android:text="@string/Battery_Remain"
                 android:layout_toRightOf="@id/id_Battery_Image"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_marginLeft="20dp"
 
                 android:layout_gravity="center_vertical"
@@ -82,10 +82,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Battery_Remain_Value"
-                android:text="100"
+                android:text="  "
                 android:textColorHighlight="@color/colorPrimaryDark"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:autoLink="all"
 
                 android:layout_centerVertical="true"
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:text="%"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
 
                 android:layout_toRightOf="@id/id_Battery_Remain_Value"
                 android:layout_centerVertical="true" />
@@ -140,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:text="手环编号："
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
 
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/id_SelfCheck_Image"
@@ -152,8 +152,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_MaterialNum_Value"
-                android:text="100"
-                android:textSize="20sp"
+                android:text="  "
+                android:textSize="16sp"
 
                 android:layout_toRightOf="@id/id_MaterialNum_Chinese"
                 android:layout_alignBottom="@id/id_MaterialNum_Chinese"
@@ -166,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:text="手环电压："
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
 
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/id_SelfCheck_Image"
@@ -177,8 +177,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Voltage_Value"
-                android:text="100"
-                android:textSize="20sp"
+                android:text="  "
+                android:textSize="16sp"
                 android:layout_toRightOf="@id/id_Voltage_Chinese"
                 android:layout_alignBottom="@id/id_Voltage_Chinese"
                 />
@@ -189,7 +189,7 @@
                 android:id="@+id/id_Voltage_Percent"
                 android:text="%"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_toRightOf="@+id/id_Voltage_Value"
                 android:layout_alignBottom="@id/id_Voltage_Chinese"/>
 
@@ -204,7 +204,7 @@
                 android:layout_height="wrap_content"
                 android:text="压力值："
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/id_SelfCheck_Image"
@@ -215,8 +215,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Pressure_Value"
-                android:text="100"
-                android:textSize="20sp"
+                android:text="  "
+                android:textSize="16sp"
                 android:layout_toRightOf="@id/id_Pressure_Chinese"
                 android:layout_alignBottom="@id/id_Pressure_Chinese"
                 />
@@ -227,7 +227,7 @@
                 android:id="@+id/id_Pressure_Percent"
                 android:text="m"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_toRightOf="@+id/id_Pressure_Value"
                 android:layout_alignBottom="@id/id_Pressure_Chinese"/>
 
@@ -242,7 +242,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:inputType="textMultiLine"
-        android:maxLines="3"
+        android:maxLines="6"
         android:layout_alignParentEnd="true" />
 
 
@@ -250,7 +250,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/BTStatusLayout"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:background="@color/GrayWhite"
         android:layout_below="@+id/id_DebugText_View"
         android:layout_alignParentStart="true"
@@ -266,7 +266,7 @@
             android:onClick="onButtonRequestStatus"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:textSize="20sp"/>
+            android:textSize="16sp"/>
 
 
         <EditText
@@ -277,7 +277,7 @@
             android:maxLines="5"
             android:scrollbars="vertical"
             android:id="@+id/id_SendTimes_Message"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:focusable="false"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
@@ -295,7 +295,7 @@
         android:layout_below="@id/BTStatusLayout"
         android:layout_alignParentStart="true"
         android:layout_marginTop="5dp"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:background="@color/GrayWhite">
 
 
@@ -304,7 +304,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_Time_TextView"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:text="@string/Device_Time_Settings"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
@@ -314,7 +314,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Edit_Date"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="2000-11-05"
                 android:maxLength="10"
                 android:layout_alignParentLeft="true"
@@ -328,7 +328,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Edit_Time"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:maxLength="8"
                 android:text="22:00:00"
                 android:layout_marginStart="30dp"

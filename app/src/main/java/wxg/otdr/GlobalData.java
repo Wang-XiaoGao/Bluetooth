@@ -14,7 +14,7 @@ public class GlobalData extends Application{
 
     private static boolean bIsInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016.
     public static boolean bWatchDog1_Protection = false; // To prevent button pressed again and agian.
-    public final static int iWatchDogTimer1 = 3000; // Timeout gate for 3000 ms.
+    public final static int iWatchDogTimer1 = 15000; // Timeout gate for 15000 ms.
 
     enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
