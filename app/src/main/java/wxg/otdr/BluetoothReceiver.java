@@ -42,9 +42,14 @@ public class BluetoothReceiver extends BroadcastReceiver {
         TextView mMaterialView = (TextView) MainActivity.getInstance().findViewById(R.id.id_MaterialNum_Value);
         TextView mVoltageView = (TextView) MainActivity.getInstance().findViewById(R.id.id_Voltage_Value);
         TextView mPressureView = (TextView) MainActivity.getInstance().findViewById(R.id.id_Pressure_Value);
+        TextView mFrequencyText = (TextView) MainActivity.getInstance().findViewById(R.id.id_Frequency_Value);
+        TextView mWaveLengthText = (TextView) MainActivity.getInstance().findViewById(R.id.id_WaveLength_Value);
+        TextView mCycleText = (TextView) MainActivity.getInstance().findViewById(R.id.id_Cycle_Value);
+        TextView mAmplitudeText = (TextView) MainActivity.getInstance().findViewById(R.id.id_Amplitude_Value);
         EditText mDateText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Date);
         EditText mTimeText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Time);
         EditText mSendTimesText = (EditText) MainActivity.getInstance().findViewById(R.id.id_SendTimes_Message);
+
 
 
 
@@ -147,8 +152,27 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     int iMaterialHigh = iReturnData[GlobalData.cMaterialHigh_Index];
                     int iMaterialLow = iReturnData[GlobalData.cMaterialLow_Index];
                     int iTem = iMaterialHigh*256 + iMaterialLow;
-
                     mMaterialView.setText(String.format("%d", iTem));
+
+                    String strFrequency = String.format("%d", iReturnData[GlobalData.cFrequency_Integer_Index]);
+                    strFrequency += ".";
+                    strFrequency += String.format("%d", iReturnData[GlobalData.cFrequency_Decimal_Index]);
+                    mFrequencyText.setText(strFrequency);
+
+                    int iWaveLengthHigh = iReturnData[GlobalData.cWaveLengthHigh_Index];
+                    int iWaveLengthLow = iReturnData[GlobalData.cWaveLengthLow_Index];
+                    iTem = iWaveLengthHigh*256 + iWaveLengthLow;
+                    mWaveLengthText.setText(String.format("%d", iTem));
+
+                    iTem = iReturnData[GlobalData.cCycle_Index];
+                    mCycleText.setText(String.format("%d", iTem));
+
+                    String strAmplitude = String.format("%d", iReturnData[GlobalData.cAmplitude_Integer_Index]);
+                    strAmplitude += ".";
+                    strAmplitude += String.format("%d", iReturnData[GlobalData.cAmplitude_Decimal_Index]);
+                    mAmplitudeText.setText(strFrequency);
+
+                    mAmplitudeText.setTextDirection(90);
 
                     break;
 

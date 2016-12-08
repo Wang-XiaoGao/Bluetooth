@@ -122,40 +122,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/devicecheck56gray"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                android:onClick="StartSelfCheck"/>
-
-
-
-
-
-
+                android:layout_marginStart="10dp"
+                android:onClick="StartSelfCheck"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
 
 
             <TextView
                 android:id="@+id/id_MaterialNum_Chinese"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="手环编号："
+                android:text="编号："
                 android:textStyle="bold"
                 android:textSize="16sp"
 
                 android:layout_gravity="center_vertical"
-                android:layout_toRightOf="@id/id_SelfCheck_Image"
-                android:layout_alignParentTop="true"
                 android:layout_marginLeft="10dp"
-                />
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/id_SelfCheck_Image" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_MaterialNum_Value"
-                android:text="  "
+                android:text="     "
+                android:maxLength="6"
                 android:textSize="16sp"
 
-                android:layout_toRightOf="@id/id_MaterialNum_Chinese"
+                android:layout_toEndOf="@id/id_MaterialNum_Chinese"
                 android:layout_alignBottom="@id/id_MaterialNum_Chinese"
                 />
 
@@ -164,23 +158,24 @@
                 android:id="@+id/id_Voltage_Chinese"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="手环电压："
+                android:text="电压："
                 android:textStyle="bold"
                 android:textSize="16sp"
 
                 android:layout_gravity="center_vertical"
-                android:layout_toRightOf="@id/id_SelfCheck_Image"
-                android:layout_marginLeft="10dp"
-                android:layout_below="@id/id_MaterialNum_Chinese"/>
+                android:layout_toEndOf="@id/id_MaterialNum_Value"
+                android:layout_marginStart="40dp"
+                android:layout_alignBottom="@id/id_MaterialNum_Chinese"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Voltage_Value"
-                android:text="  "
+                android:text="     "
+                android:maxLength="6"
                 android:textSize="16sp"
-                android:layout_toRightOf="@id/id_Voltage_Chinese"
-                android:layout_alignBottom="@id/id_Voltage_Chinese"
+                android:layout_toEndOf="@id/id_Voltage_Chinese"
+                android:layout_alignBottom="@id/id_MaterialNum_Chinese"
                 />
 
             <TextView
@@ -190,34 +185,28 @@
                 android:text="%"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_toRightOf="@+id/id_Voltage_Value"
+                android:layout_toEndOf="@+id/id_Voltage_Value"
                 android:layout_alignBottom="@id/id_Voltage_Chinese"/>
-
-
-
-
-
 
             <TextView
                 android:id="@+id/id_Pressure_Chinese"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="压力值："
+                android:text="压力："
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical"
-                android:layout_toRightOf="@id/id_SelfCheck_Image"
-                android:layout_alignRight="@id/id_Voltage_Chinese"
-                android:layout_below="@id/id_Voltage_Chinese"/>/>
+                android:layout_below="@id/id_Voltage_Chinese"
+                android:layout_alignStart="@id/id_MaterialNum_Chinese" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Pressure_Value"
-                android:text="  "
+                android:text="     "
+                android:maxLength="6"
                 android:textSize="16sp"
-                android:layout_toRightOf="@id/id_Pressure_Chinese"
+                android:layout_toEndOf="@id/id_Pressure_Chinese"
                 android:layout_alignBottom="@id/id_Pressure_Chinese"
                 />
 
@@ -228,8 +217,136 @@
                 android:text="m"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_toRightOf="@+id/id_Pressure_Value"
+                android:layout_toEndOf="@id/id_Pressure_Value"
                 android:layout_alignBottom="@id/id_Pressure_Chinese"/>
+
+            <TextView
+                android:id="@+id/id_Frequency_Chinese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="频率："
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"
+                android:layout_below="@+id/id_Voltage_Chinese"
+                android:layout_alignStart="@id/id_Voltage_Chinese" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Frequency_Value"
+                android:text="     "
+                android:maxLength="6"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/id_Frequency_Chinese"
+                android:layout_alignBottom="@id/id_Pressure_Chinese"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Frequency_KHZ"
+                android:text="khz"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/id_Frequency_Value"
+                android:layout_alignBottom="@id/id_Pressure_Chinese"/>
+
+            <TextView
+                android:id="@+id/id_WaveLength_Chinese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="长度："
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"
+                android:layout_below="@id/id_Frequency_Chinese"
+                android:layout_alignStart="@id/id_MaterialNum_Chinese" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_WaveLength_Value"
+                android:text="     "
+                android:maxLength="6"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/id_WaveLength_Chinese"
+                android:layout_alignBottom="@id/id_WaveLength_Chinese"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_WaveLength_Unit"
+                android:text="ms"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/id_WaveLength_Value"
+                android:layout_alignBottom="@id/id_WaveLength_Value"/>
+
+            <TextView
+                android:id="@+id/id_Cycle_Chinese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="周期："
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"
+                android:layout_below="@+id/id_Frequency_Chinese"
+                android:layout_alignStart="@id/id_Frequency_Chinese" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Cycle_Value"
+                android:text="     "
+                android:maxLength="6"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/id_Cycle_Chinese"
+                android:layout_alignBottom="@id/id_Cycle_Chinese"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Cycle_Unit"
+                android:text="s"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/id_Cycle_Value"
+                android:layout_alignBottom="@id/id_Cycle_Value"/>
+
+            <TextView
+                android:id="@+id/id_Amplitude_Chinese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="幅值："
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"
+                android:layout_below="@id/id_WaveLength_Chinese"
+                android:layout_alignStart="@id/id_WaveLength_Chinese" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Amplitude_Value"
+                android:text="     "
+                android:maxLength="6"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/id_Amplitude_Chinese"
+                android:layout_alignBottom="@id/id_Amplitude_Chinese"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Amplitude_Unit"
+                android:text="v"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/id_Amplitude_Value"
+                android:layout_alignBottom="@id/id_Amplitude_Value"/>
 
         </RelativeLayout>
 
@@ -242,7 +359,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:inputType="textMultiLine"
-        android:maxLines="6"
+        android:maxLines="4"
         android:layout_alignParentEnd="true" />
 
 
@@ -259,14 +376,14 @@
 
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="@string/BT_Status"
             android:id="@+id/id_BTStatus_Button"
             android:onClick="onButtonRequestStatus"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
 
         <EditText
@@ -282,7 +399,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/id_BTStatus_Button"
-            android:gravity="top"/>
+            />
         <!--android:background="@android:drawable/edit_text"-->
 
     </RelativeLayout>
@@ -306,9 +423,8 @@
             android:id="@+id/id_Time_TextView"
             android:textSize="16sp"
             android:text="@string/Device_Time_Settings"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            />
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/id_Set_Button" />
 
             <EditText
                 android:layout_width="wrap_content"
@@ -317,10 +433,9 @@
                 android:textSize="16sp"
                 android:text="2000-11-05"
                 android:maxLength="10"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/id_Time_TextView"
                 android:focusable="false"
-                />
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/id_Time_TextView" />
 
 
 
@@ -331,11 +446,9 @@
                 android:textSize="16sp"
                 android:maxLength="8"
                 android:text="22:00:00"
-                android:layout_marginStart="30dp"
-                android:layout_toEndOf="@id/id_Edit_Date"
-                android:layout_below="@id/id_Time_TextView"
                 android:focusable="false"
-                />
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/id_Edit_Date" />
 
 
 
@@ -347,8 +460,8 @@
             android:text="读取"
             android:id="@+id/id_Read_Button"
             android:onClick="onButtonReadTime"
-            android:layout_alignTop="@+id/id_Time_TextView"
-            android:layout_alignParentEnd="true" />
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -357,13 +470,10 @@
             android:text="设置"
             android:id="@+id/id_Set_Button"
             android:onClick="onButtonSetTime"
-            android:layout_alignBottom="@+id/id_Edit_Time"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/id_Read_Button" />
 
     </RelativeLayout>
-
-
-
 
 
 </RelativeLayout>

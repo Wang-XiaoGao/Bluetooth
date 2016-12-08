@@ -62,6 +62,13 @@ public class GlobalData extends Application{
     public final static int cPressure_Decimal_Index = 2;
     public final static int cMaterialLow_Index = 3;
     public final static int cMaterialHigh_Index = 4;
+    public final static int cFrequency_Integer_Index = 5;
+    public final static int cFrequency_Decimal_Index = 6;
+    public final static int cWaveLengthLow_Index = 7;
+    public final static int cWaveLengthHigh_Index = 8;
+    public final static int cCycle_Index = 9;
+    public final static int cAmplitude_Integer_Index = 10;
+    public final static int cAmplitude_Decimal_Index = 11;
     // To Read Date and Time.{0x68, 0x07, 0xD7, YearLow, month, day, hour, minute, second}
     public final static int cYearLow_Index = 0;
     public final static int cMonth_Index = 1;

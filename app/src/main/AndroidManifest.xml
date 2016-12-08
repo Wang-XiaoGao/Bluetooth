@@ -3,7 +3,7 @@
     package="wxg.otdr"
     android:allowBackup="true"
     android:installLocation="auto"
-    android:versionName="1.0.0">
+    >
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />

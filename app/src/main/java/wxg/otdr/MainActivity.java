@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -119,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
     private static int mMinute;
     private static int mSecond;
     private static boolean mbDrawListVew = false;
+
+    private static EditText mVersionEdit;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -458,11 +462,24 @@ public class MainActivity extends AppCompatActivity {
 
             String strDate = String.format(mYear + "-" + mGlobalData.set02dMode(mMonth)
                     + "-" + mGlobalData.set02dMode(mDay));
-            mDateEdit.setText(strDate);
+            if (mDateEdit != null){
+                mDateEdit.setText(strDate);
+            }else{
+                Log.e(TAG, "mDateEdit is null.");
+            }
+
 
             String strTime = String.format(mGlobalData.set02dMode(mHour) + ":" +
                     mGlobalData.set02dMode(mMinute) + ":" + mGlobalData.set02dMode(mSecond));
-            mTimeEdit.setText(strTime);
+            if (mTimeEdit != null){
+                mTimeEdit.setText(strTime);
+            }else{
+                Log.e(TAG, "mTimeEdit is null.");
+            }
+
+            if (mDateEdit == null){
+                Log.e(TAG, "mDateEdit is null.");
+            }
 
             mDateEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -515,7 +532,23 @@ public class MainActivity extends AppCompatActivity {
             Log.i("PlaceholderFragment", "ShowSystemInfo");
             View rootView = inflater.inflate(R.layout.fragment_system_info, container, false);
 
+            mVersionEdit = (EditText) rootView.findViewById(R.id.VersionInfo);
 
+            String pName = "wxg.otdr";
+
+            try {
+                PackageManager pm = getContext().getPackageManager();
+
+                PackageInfo pinfo = pm.getPackageInfo(pName, PackageManager.GET_CONFIGURATIONS);
+                String strVersion = "版本：" + pinfo.versionName;
+                //String versionName = String.format("%d", pinfo.versionCode);
+                if (mVersionEdit != null){
+                    mVersionEdit.setText(strVersion);
+                }else{
+                    Log.e(TAG, "mVersion is null.");
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+            }
             return rootView;
         }
 
