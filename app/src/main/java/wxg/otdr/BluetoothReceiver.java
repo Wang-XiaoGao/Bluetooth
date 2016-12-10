@@ -139,7 +139,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                         return;
                     }
 
-                    if (iReturnData.length < GlobalData.cMaterialHigh_Index + 1){
+                    if (iReturnData.length < GlobalData.cAmplitude_Decimal_Index + 1){
                         Log.e(TAG, "iReturnData is less than expected.");
                         return;
                     }
@@ -170,10 +170,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     String strAmplitude = String.format("%d", iReturnData[GlobalData.cAmplitude_Integer_Index]);
                     strAmplitude += ".";
                     strAmplitude += String.format("%d", iReturnData[GlobalData.cAmplitude_Decimal_Index]);
-                    mAmplitudeText.setText(strFrequency);
-
-                    mAmplitudeText.setTextDirection(90);
-
+                    mAmplitudeText.setText(strAmplitude);
                     break;
 
                 case GlobalData.cCommand_ReadTime:

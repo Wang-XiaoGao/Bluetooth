@@ -299,26 +299,23 @@ public class GlobalData extends Application{
         return iCommand;
     }
 
-    // This function only return data, remove Head 0x68, Lenth and command type.
+    // This function only return data, remove Head 0x68, Length and command type.
     // Also for battery reading, this case, int[] only got length = 1;
     public int[] getDataReturn(int[] iReturnValues){
         Log.i(TAG, "AnalyzeData");
 
-        /*
-        int iLength = iReturnValues[cCommandLength_Index];
-
-        int[] iValues = new int[iLength];
-
-        for (int iCount = 0; iCount < iLength; iCount ++){
-            iValues[iCount] = iReturnValues[cCommandLength_Index + iCount];
-        }*/
-
         int iLength = iReturnValues[cCommandLength_Index]-1;
+        int iAllLength = iReturnValues.length;
+        iAllLength = iAllLength - 3; //iAllLength = 0x68+Length+commandType (3 bytes) + iLength
 
         int[] iValues = new int[iLength];
-
-        for (int iCount = 0; iCount < iLength; iCount ++){
-            iValues[iCount] = iReturnValues[cDataStart_Index + iCount];
+        if (iLength == iAllLength){
+            for (int iCount = 0; iCount < iLength; iCount ++){
+                iValues[iCount] = iReturnValues[cDataStart_Index + iCount];
+            }
+        }else{
+            Log.e(TAG, "Length is not match");
+            iValues = null;
         }
 
         return iValues;
