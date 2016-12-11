@@ -49,6 +49,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
         EditText mDateText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Date);
         EditText mTimeText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Time);
         EditText mSendTimesText = (EditText) MainActivity.getInstance().findViewById(R.id.id_SendTimes_Message);
+        EditText mMessagesText = (EditText) MainActivity.getInstance().findViewById(R.id.id_MessageNumberText_Value);
 
 
 
@@ -198,13 +199,33 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     break;
 
                 case GlobalData.cCommand_SendMessageTimes:
+                    int iTimes = intent.getIntExtra(BluetoothService.RETURN_DATA, 0);
+                    if (iTimes < 0){
+                        Log.e(TAG, "strReturnData is null.");
+                        return;
+                    }
+                    if (mMessagesText != null){
+                        mMessagesText.setText(String.format("%d", iTimes));
+                    }else{
+                        Log.e(TAG, "mMessagesText is null");
+                    }
+
+                    break;
+
+                case GlobalData.cCommand_SendMessageTimes_First:
                     strReturnData = intent.getStringExtra(BluetoothService.RETURN_DATA);
                     if (strReturnData == null){
                         Log.e(TAG, "strReturnData is null.");
                         return;
                     }
 
-                    mSendTimesText.setText(strReturnData);
+                    if (mSendTimesText != null){
+                        mSendTimesText.setText(strReturnData);
+                    }else{
+                        Log.e(TAG, "mSendTimesText is null");
+                    }
+
+                    break;
 
                 case GlobalData.cCommand_Reset:
 

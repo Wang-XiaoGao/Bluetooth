@@ -369,22 +369,43 @@
         android:id="@+id/BTStatusLayout"
         android:textSize="16sp"
         android:background="@color/GrayWhite"
-        android:layout_below="@+id/id_DebugText_View"
+        android:layout_below="@id/id_DebugText_View"
         android:layout_alignParentStart="true"
         android:layout_marginTop="8dp"
-        android:layout_alignEnd="@+id/id_DebugText_View">
+        android:layout_alignEnd="@id/id_DebugText_View">
 
 
         <Button
-            android:layout_width="50dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="@string/BT_Status"
             android:id="@+id/id_BTStatus_Button"
             android:onClick="onButtonRequestStatus"
             android:textSize="16sp"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="总数："
+            android:layout_marginTop="10dp"
+            android:id="@+id/id_MessageNumberText_View"
+            android:layout_alignParentStart="true"
+            android:textSize="16sp"
+            android:layout_below="@id/id_BTStatus_Button"
+            />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_MessageNumberText_Value"
+
+            android:text="0"
+            android:focusable="false"
+            android:textSize="16sp"
+            android:layout_below="@id/id_BTStatus_Button"
+            android:layout_toEndOf="@id/id_MessageNumberText_View" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -398,7 +419,8 @@
             android:focusable="false"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/id_BTStatus_Button"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@id/id_BTStatus_Button"
             />
         <!--android:background="@android:drawable/edit_text"-->
 

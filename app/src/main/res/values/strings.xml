@@ -32,7 +32,7 @@
     <string name="BT_Not_TurnOn">蓝牙功能未开启</string>
     <string name="Command_Send_Failed">命令发送失败！</string>
     <string name="Command_Reset">复位</string>
-    <string name="BT_Status">出\n错\n信\n息</string>
+    <string name="BT_Status">查询\n出错\n信息</string>
     <string name="Update_Send_Times">更新发射状态</string>
     <string name="Select_Send_Times">选择读取的次数</string>
     <string name="WatchDog_Ongoing">正在读取系统状态，请稍后...</string>
@@ -44,8 +44,8 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2016-Dec-08</string>
-    <string name="Update_Info">更新内容：\n1，增加自检项目；\n2，查询错误信息；\n3, 增加版本信息.....</string>
+    <string name="Delivery_Date">更新日期：2016-Dec-12</string>
+    <string name="Update_Info">更新内容：\n1，修复更新错误信息逻辑.....</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 

@@ -28,6 +28,7 @@ public class GlobalData extends Application{
     //iSendMessageTimes
     public static int[] iSendMessageTimes = {0x68, 0x01, 0x40};
     //RequestMessageTime, 0x41, 0x42...0x4a, for ten times, 0x41 just as default value, need renew.
+    public static int iMaxMessageNum = 10; // Only up to 10 messages could be shown.
     public static int[] iRequestMessageTimes = {0x68, 0x01, 0x41};
     // To send which message want to read. {0x68, 0x01, 0x41}; renew 0x40 to be 0x41 or ...0x4a
     public final static int cSetMessageTimes_Index = 2;

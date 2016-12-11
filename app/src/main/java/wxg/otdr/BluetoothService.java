@@ -120,7 +120,7 @@ public class BluetoothService extends IntentService {
     public static UUID TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
 
     // Set a pre-compile conditions.
-    public static boolean bInDebug = false;
+    public static boolean bInDebug = true;
 
     // For debug.
     public static final UUID TEST_TX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
@@ -241,18 +241,6 @@ public class BluetoothService extends IntentService {
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
-/*
-        int iComTemp = 60;
-        int[] iDatas_Temp = new int[1];
-        iDatas_Temp[0] = 60;
-        byte[] bValues = characteristic.getValue();
-        GlobalData gData = new GlobalData();
-        int[] iValues = gData.Byte2Int(bValues);
-
-        final Intent intentTemp = new Intent(action);
-        intentTemp.putExtra(RETURN_COMMAND, iComTemp);
-        intentTemp.putExtra(RETURN_DATA, iValues);
-        MainActivity.getInstance().sendBroadcast(intentTemp);*/
 
         // just for debug.
         byte[] bDebugValues = characteristic.getValue();
@@ -270,7 +258,6 @@ public class BluetoothService extends IntentService {
         intent_Debug.putExtra(DEBUG_COMMAND, strNewLog);
         MainActivity.getInstance().sendBroadcast(intent_Debug);
 
-//TX_CHAR_UUID, TEST_TX_CHAR_UUID
         if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
             Log.d(TAG, String.format("Received data modified: ", characteristic.getValue()));
             //GlobalData gData = new GlobalData();
@@ -390,17 +377,27 @@ public class BluetoothService extends IntentService {
         if (iCommandTpye == GlobalData.cCommand_SendMessageTimes){
             // Receive times of message and then call to send xx times to get messages.
             miSendTimes = iValues[GlobalData.cSendTimes_Index];
+
+            // Send to update message number.
+            Intent intent = new Intent(ACTION_DATA_AVAILABLE);
+            intent.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes);
+            intent.putExtra(RETURN_DATA, miSendTimes);
+            MainActivity.getInstance().sendBroadcast(intent);
+
             strBTStatus = ""; // A new query start. So clear strBTStatus.
             if (miSendTimes != 0){
+                if (miSendTimes > GlobalData.iMaxMessageNum){
+                    miSendTimes = GlobalData.iMaxMessageNum; // Only up to 10 messages could be shown.
+                }
                 // In this case, number of error message is not zero. Need to query and show.
                 ActionQueryBTMessages(getBaseContext(), miSendTimes); // to next thread to handle.
+
             }else{
                 // In this case, the number of error message is zero. Need reset in UI.
-                Intent intent = new Intent(ACTION_DATA_AVAILABLE);
-                intent.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes);
-                intent.putExtra(RETURN_DATA, strBTStatus);
-                //sendBroadcast(intent);
-                MainActivity.getInstance().sendBroadcast(intent);
+                Intent intent1 = new Intent(ACTION_DATA_AVAILABLE);
+                intent1.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes_First);
+                intent1.putExtra(RETURN_DATA, strBTStatus);
+                MainActivity.getInstance().sendBroadcast(intent1);
             }
 
             bCheck = true;
@@ -437,11 +434,11 @@ public class BluetoothService extends IntentService {
                 // 2, miSendTimes != 0 ; strBTStatus will be updated to UI.
                 GlobalData.bWatchDog1_Protection = false; // Query BT send messages finish, end WatchDog1.
 
-                Intent intent = new Intent(ACTION_DATA_AVAILABLE);
-                intent.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes);
-                intent.putExtra(RETURN_DATA, strBTStatus);
+                Intent intent2 = new Intent(ACTION_DATA_AVAILABLE);
+                intent2.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes_First);
+                intent2.putExtra(RETURN_DATA, strBTStatus);
                 //sendBroadcast(intent);
-                MainActivity.getInstance().sendBroadcast(intent);
+                MainActivity.getInstance().sendBroadcast(intent2);
                 strBTStatus = "";
                 bCheck = true;
             }
