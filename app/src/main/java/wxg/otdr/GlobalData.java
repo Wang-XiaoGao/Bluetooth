@@ -40,6 +40,14 @@ public class GlobalData extends Application{
     //public final static int cCommand_SetTime = 0xC8;// It's just for send not receive, not used.
     public final static int cCommand_SendMessageTimes = 0x40;
     public final static int cCommand_SendMessageTimes_First = 0x41;
+    public final static int cCommand_SendMessageTimes_Second = 0x42;
+    public final static int cCommand_SendMessageTimes_Third = 0x43;
+    public final static int cCommand_SendMessageTimes_Fourth = 0x44;
+    public final static int cCommand_SendMessageTimes_Fifth = 0x45;
+    public final static int cCommand_SendMessageTimes_Sixth = 0x46;
+    public final static int cCommand_SendMessageTimes_Seventh = 0x47;
+    public final static int cCommand_SendMessageTimes_Eighth = 0x48;
+    public final static int cCommand_SendMessageTimes_Ninth = 0x49;
     public final static int cCommand_SendMessageTimes_Last = 0x4a;
 
     public final static int cCommand_ReadTime = 0xD7;

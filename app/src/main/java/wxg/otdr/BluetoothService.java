@@ -120,7 +120,10 @@ public class BluetoothService extends IntentService {
     public static UUID TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
 
     // Set a pre-compile conditions.
-    public static boolean bInDebug = true;
+    public static boolean bInDebug = false;
+
+    // This parameter is used in receiving error message from BT.
+    public static int iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes;
 
     // For debug.
     public static final UUID TEST_TX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
@@ -375,6 +378,7 @@ public class BluetoothService extends IntentService {
         boolean bCheck = false;
 
         if (iCommandTpye == GlobalData.cCommand_SendMessageTimes){
+            iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes;
             // Receive times of message and then call to send xx times to get messages.
             miSendTimes = iValues[GlobalData.cSendTimes_Index];
 
@@ -385,51 +389,52 @@ public class BluetoothService extends IntentService {
             MainActivity.getInstance().sendBroadcast(intent);
 
             strBTStatus = ""; // A new query start. So clear strBTStatus.
+            intent = new Intent(ACTION_DATA_AVAILABLE);
+            intent.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes_First);
+            intent.putExtra(RETURN_DATA, strBTStatus);
+            MainActivity.getInstance().sendBroadcast(intent);
+
             if (miSendTimes != 0){
                 if (miSendTimes > GlobalData.iMaxMessageNum){
                     miSendTimes = GlobalData.iMaxMessageNum; // Only up to 10 messages could be shown.
                 }
                 // In this case, number of error message is not zero. Need to query and show.
-                ActionQueryBTMessages(getBaseContext(), miSendTimes); // to next thread to handle.
-
-            }else{
-                // In this case, the number of error message is zero. Need reset in UI.
-                Intent intent1 = new Intent(ACTION_DATA_AVAILABLE);
-                intent1.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes_First);
-                intent1.putExtra(RETURN_DATA, strBTStatus);
-                MainActivity.getInstance().sendBroadcast(intent1);
+                iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes_First;
+                ActionQueryBTMessages(getBaseContext(), iExpectCommandType_ErrorMessage); // to next thread to handle.
+                miSendTimes --; // Query has taken one step.
             }
-
             bCheck = true;
-        }else if (iCommandTpye >= GlobalData.cCommand_SendMessageTimes_First &&
-                iCommandTpye <= GlobalData.cCommand_SendMessageTimes_Last){
-            // Only to receive messages from BT.
-            if ( miSendTimes != 0){
+        }else if (iCommandTpye == iExpectCommandType_ErrorMessage){
+            //[GlobalData.cCommand_SendMessageTimes_First, GlobalData.cCommand_SendMessageTimes_Last]
+            //int[] iData_Return = mGlobalData.getDataReturn(iValues);
+            // In Java, int could not <<8, better *100.
+            int iYear = iValues[GlobalData.cMessageYearHigh_Index]*100 +
+                    iValues[GlobalData.cMessageYearLow_Index];
+            int iMonth = iValues[GlobalData.cMessageMonth_Index];
+            int iDay = iValues[GlobalData.cMessageDay_Index];
+            int iHour = iValues[GlobalData.cMessageHour_Index];
+            int iMinute = iValues[GlobalData.cMessageMinute_Index];
+            int iSecond = iValues[GlobalData.cMessageSecond_Index];
+
+            String strDate = String.format(iYear + "-" + mGlobalData.set02dMode(iMonth)
+                    + "-" + mGlobalData.set02dMode(iDay));
+
+            String strTime = String.format(mGlobalData.set02dMode(iHour) + ":" +
+                    mGlobalData.set02dMode(iMinute) + ":" + mGlobalData.set02dMode(iSecond));
+
+            String strTem = strDate + "   " + strTime + "\n";
+            strBTStatus += strTem;
+
+            if ( miSendTimes >= 1){
+                // >0, still need continue to query.
+
+                iExpectCommandType_ErrorMessage ++;
+                ActionQueryBTMessages(getBaseContext(), iExpectCommandType_ErrorMessage); // to next thread to handle.
                 miSendTimes --;
-                //int[] iData_Return = mGlobalData.getDataReturn(iValues);
-                // In Java, int could not <<8, better *100.
-                int iYear = iValues[GlobalData.cMessageYearHigh_Index]*100 +
-                        iValues[GlobalData.cMessageYearLow_Index];
-                int iMonth = iValues[GlobalData.cMessageMonth_Index];
-                int iDay = iValues[GlobalData.cMessageDay_Index];
-                int iHour = iValues[GlobalData.cMessageHour_Index];
-                int iMinute = iValues[GlobalData.cMessageMinute_Index];
-                int iSecond = iValues[GlobalData.cMessageSecond_Index];
-
-                String strDate = String.format(iYear + "-" + mGlobalData.set02dMode(iMonth)
-                        + "-" + mGlobalData.set02dMode(iDay));
-
-                String strTime = String.format(mGlobalData.set02dMode(iHour) + ":" +
-                        mGlobalData.set02dMode(iMinute) + ":" + mGlobalData.set02dMode(iSecond));
-
-                String strTem = strDate + "   " + strTime + "\n";
-                strBTStatus += strTem;
 
                 bCheck = true;
-            }
-
-            // Since previous it execute and then --, so when come to 1, means the last one.
-            if (miSendTimes == 0){
+            }else if(miSendTimes == 0){
+                // All query has finished.
                 // Two cases：1， no error message, miSendTimes = 0 and strBTStatus = "".
                 // 2, miSendTimes != 0 ; strBTStatus will be updated to UI.
                 GlobalData.bWatchDog1_Protection = false; // Query BT send messages finish, end WatchDog1.
@@ -442,8 +447,8 @@ public class BluetoothService extends IntentService {
                 strBTStatus = "";
                 bCheck = true;
             }
+
         }
-        // This case is special for query BT status, max ten times.
 
         return bCheck;
     }
@@ -615,7 +620,7 @@ public class BluetoothService extends IntentService {
     }
 
     // A special action to query BT messages, max for ten times.
-    private void handleActionQueryBTMessages(int iTimes){
+    private void handleActionQueryBTMessages(int iCommandType){
 
         boolean bCheck = false;
 
@@ -641,6 +646,17 @@ public class BluetoothService extends IntentService {
 
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eRequestMessageTimes);
         int[] iValues = mGlobalData.getIntReturn(bCommand);// {0x68, 0x01, 0x41}
+        // {0x68, 0x01, 0x41}...{0x68, 0x01, 0x4a}
+        iValues[GlobalData.cSetMessageTimes_Index] = iCommandType;
+        bCommand = mGlobalData.Int2Byte(iValues);
+        Log.i(TAG, "Data to send: " + mGlobalData.Int2String(iValues));
+        bCheck = writeRXCharacteristic(bCommand);
+        if (!bCheck) {
+            Log.e(TAG, "DATA send failed: " + mGlobalData.Int2String(iValues));
+        }
+
+
+/*
         for (int iTem = 0; iTem < iTimes; iTem++){
 
             bCommand = mGlobalData.Int2Byte(iValues);
@@ -660,11 +676,10 @@ public class BluetoothService extends IntentService {
 
                 return;
             }else{
-                // {0x68, 0x01, 0x41}...{0x68, 0x01, 0x4a}
-                iValues[GlobalData.cSetMessageTimes_Index]++;
+
             }
 
-        }
+        }*/
     }
 
     public boolean AssignGATTService(UUID UID){
