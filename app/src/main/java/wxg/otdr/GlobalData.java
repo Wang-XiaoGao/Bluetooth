@@ -33,6 +33,10 @@ public class GlobalData extends Application{
     // To send which message want to read. {0x68, 0x01, 0x41}; renew 0x40 to be 0x41 or ...0x4a
     public final static int cSetMessageTimes_Index = 2;
 
+    public static int[] iSettings = {0x68, 0x0C, 0xE1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00};
+
+
     public final static int cCommand_Head = 0x68;
     public final static int cCommand_BatteryRemain = 0x3C;
     public final static int cCommand_Selfcheck = 0x69;
@@ -105,9 +109,17 @@ public class GlobalData extends Application{
 
     public final static int cReset_Index = 0;
 
+    // To analyze settings parameters.
+    public final static int cPressureGate_Integer_Index = 0;
+    public final static int cPressureGate_Decimal_Index= 1;
+    public final static int cT1_Duration_Index = 2;
+    public final static int cT2_Duration_Index = 3;
+    public final static int cAudio_Duration_Index = 4;
+    public final static int cMaterial_Settings_High_Index = 7;
+    public final static int cMaterial_Settings_Low_Index = 8;
 
     enum eCommandIndex {eQueryBattery, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
-        eRequestMessageTimes};
+        eRequestMessageTimes, eSettings};
 
     public static String strLog = null;
     public static String strNewLog = null;
@@ -220,6 +232,9 @@ public class GlobalData extends Application{
                 break;
             case eRequestMessageTimes:
                 bCommand = Int2Byte(iRequestMessageTimes);
+                break;
+            case eSettings:
+                bCommand = Int2Byte(iSettings);
                 break;
 
             default:

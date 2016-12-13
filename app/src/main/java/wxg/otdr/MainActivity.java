@@ -137,16 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothDevice mDevice = null;
     private BluetoothAdapter mBtAdapter = null;
-    private ListView messageListView;
-    private ArrayAdapter<String> listAdapter;
-    private Button btnConnectDisconnect,btnSend;
-
-    // It's for listview in EngineeringMode frame.
-    private static final int DATA_CAPACITY = 6;
-    private static ListView mListView = null;
-    private static List<String> mList = new ArrayList<String>(DATA_CAPACITY);
-    private static Engineering_Adapter mAdapter = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -277,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
         mBluetoothService.startActionClose(this.getApplicationContext());
         mBluetoothService = null;
         mGlobalData = null;
-        mAdapter = null;
 
         Log.e(this.getString(R.string.Log_Info), "MainActivity::onDestroy");
     }
@@ -556,28 +545,6 @@ public class MainActivity extends AppCompatActivity {
             Log.i("PlaceholderFragment", "Draw Engineering Mode");
             View rootView = inflater.inflate(R.layout.fragment_engineering_mode, container, false);
 
-            mListView = (ListView) rootView.findViewById(R.id.Engineering_listView);
-            // Fill in data in Engineering frame.
-            if (!mbDrawListVew){
-                mbDrawListVew = true;
-                for(int i = 0; i < DATA_CAPACITY; i++) {
-                    mList.add("Item" + i);
-                }
-
-            }
-
-            //设置Adapter
-            //mAdapter = new Engineering_Adapter(this, mList);
-            if (mList != null && mAdapter == null){
-                mAdapter = new Engineering_Adapter(mListView.getContext(), mList);
-            }
-            if (mListView != null){
-                mListView.setAdapter(mAdapter);
-            }else{
-                Log.e(TAG, "mListView is null.");
-            }
-
-
             return rootView;
         }
 
@@ -828,6 +795,22 @@ public class MainActivity extends AppCompatActivity {
                     "Bluetooth not connected yet, could not read battery info:",
                     Toast.LENGTH_SHORT).show();
             return;
+        }
+    }
+
+    public void onButtonSettings(View v) {
+        Log.i(TAG, "Call onButtonSettings.");
+
+        boolean bCheck = false;
+        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSettings);
+
+        EditText PressureGate = (EditText) findViewById(R.id.id_Pressure_Gate_Value);
+
+
+        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+
+        if (!bCheck) {
+            Log.e(TAG, "onButtonReadTime: Send Command failed.");
         }
     }
 

@@ -5,25 +5,159 @@
     android:layout_height="match_parent"
     tools:context="wxg.otdr.MainActivity$PlaceholderFragment">
 
-
-    <ListView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Engineering_listView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
+        android:id="@+id/id_Settings_Frame"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/GrayWhite"
+        >
+
+        <TextView
+            android:id="@+id/id_Pressure_Gate_Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="压力门限："
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentTop="true"
         />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_Pressure_Gate_Value"
+            android:text="      "
+            android:maxLength="6"
+            android:textSize="16sp"
+            android:layout_marginTop="1dp"
+            android:layout_toEndOf="@id/id_Pressure_Gate_Description"
+            android:layout_alignBottom="@id/id_Pressure_Gate_Description"
+            />
+
+
+        <TextView
+            android:id="@+id/id_MaterialNum_Setting_Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="手环编号："
+            android:textStyle="bold"
+            android:textSize="16sp"
+
+            android:layout_toEndOf="@id/id_Pressure_Gate_Value"
+            android:layout_marginStart="80dp"
+            android:layout_alignBottom="@id/id_Pressure_Gate_Description"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_MaterialNum_Setting_Value"
+            android:text="      "
+            android:maxLength="6"
+            android:textSize="16sp"
+            android:layout_toEndOf="@id/id_MaterialNum_Setting_Description"
+            android:layout_alignBottom="@id/id_MaterialNum_Setting_Description"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_T1_Gate_Description"
+            android:text="时间门限T1:"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/id_Pressure_Gate_Description"
+            android:layout_alignStart="@+id/id_Pressure_Gate_Description"
+            />
+
+        <EditText
+            android:id="@+id/id_T1_Gate_Value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="      "
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_toEndOf="@id/id_T1_Gate_Description"
+            android:layout_alignBottom="@id/id_T1_Gate_Description"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_T2_Gate_Description"
+            android:text="时间门限T2:"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_alignTop="@id/id_T1_Gate_Description"
+            android:layout_alignStart="@id/id_MaterialNum_Setting_Description"
+            android:layout_toEndOf="@id/id_T1_Gate_Value"
+            />
+
+        <EditText
+            android:id="@+id/id_T2_Gate_Value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="      "
+            android:textStyle="bold"
+            android:textSize="16sp"
+
+            android:layout_toEndOf="@id/id_T2_Gate_Description"
+            android:layout_alignBottom="@id/id_T2_Gate_Description"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_Audio_Duration_Description"
+            android:text="音频信号持续时间："
+            android:textSize="16sp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/id_T1_Gate_Description"
+            android:layout_alignStart="@id/id_Pressure_Gate_Description"
+            />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_Audio_Duration_Value"
+            android:text="      "
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_toEndOf="@id/id_Audio_Duration_Description"
+            android:layout_alignBottom="@id/id_Audio_Duration_Description"/>
+
+
+
+    </RelativeLayout>
+
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="设  置  参  数"
+        android:textSize="24sp"
+        android:id="@+id/id_Setting_button"
+        android:clickable="true"
+        android:layout_below="@id/id_Settings_Frame"
+        android:layout_centerHorizontal="true"
+        android:onClick="onButtonSettings"
+        />
+
+
+    <Button
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/Command_Reset"
         android:textSize="24sp"
         android:id="@+id/id_Reset_button"
         android:clickable="true"
         android:onClick="onButtonReset"
+        android:layout_below="@id/id_Setting_button"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/Engineering_listView"
         />
 
 </RelativeLayout>
