@@ -189,36 +189,36 @@
                 android:layout_alignBottom="@id/id_Voltage_Chinese"/>
 
             <TextView
-                android:id="@+id/id_Pressure_Chinese"
+                android:id="@+id/id_Amplitude_Chinese"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="压力："
+                android:text="幅值："
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical"
-                android:layout_below="@id/id_Voltage_Chinese"
+                android:layout_below="@id/id_MaterialNum_Chinese"
                 android:layout_alignStart="@id/id_MaterialNum_Chinese" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/id_Pressure_Value"
+                android:id="@+id/id_Amplitude_Value"
                 android:text="     "
                 android:maxLength="6"
                 android:textSize="16sp"
-                android:layout_toEndOf="@id/id_Pressure_Chinese"
-                android:layout_alignBottom="@id/id_Pressure_Chinese"
+                android:layout_toEndOf="@id/id_Amplitude_Chinese"
+                android:layout_alignBottom="@id/id_Amplitude_Chinese"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/id_Pressure_Percent"
-                android:text="m"
+                android:id="@+id/id_Amplitude_Unit"
+                android:text="v"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_toEndOf="@id/id_Pressure_Value"
-                android:layout_alignBottom="@id/id_Pressure_Chinese"/>
+                android:layout_toEndOf="@id/id_Amplitude_Value"
+                android:layout_alignBottom="@id/id_Amplitude_Value"/>
 
             <TextView
                 android:id="@+id/id_Frequency_Chinese"
@@ -239,7 +239,7 @@
                 android:maxLength="6"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_Frequency_Chinese"
-                android:layout_alignBottom="@id/id_Pressure_Chinese"
+                android:layout_alignBottom="@id/id_Frequency_Chinese"
                 />
 
             <TextView
@@ -250,7 +250,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_Frequency_Value"
-                android:layout_alignBottom="@id/id_Pressure_Chinese"/>
+                android:layout_alignBottom="@id/id_Frequency_Chinese"/>
 
             <TextView
                 android:id="@+id/id_WaveLength_Chinese"
@@ -260,7 +260,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical"
-                android:layout_below="@id/id_Frequency_Chinese"
+                android:layout_below="@id/id_Amplitude_Chinese"
                 android:layout_alignStart="@id/id_MaterialNum_Chinese" />
 
             <TextView
@@ -316,37 +316,39 @@
                 android:layout_toEndOf="@id/id_Cycle_Value"
                 android:layout_alignBottom="@id/id_Cycle_Value"/>
 
+
+
             <TextView
-                android:id="@+id/id_Amplitude_Chinese"
+                android:id="@+id/id_Pressure_Chinese"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="幅值："
+                android:text="当前压力门限值："
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical"
                 android:layout_below="@id/id_WaveLength_Chinese"
-                android:layout_alignStart="@id/id_WaveLength_Chinese" />
+                android:layout_alignStart="@id/id_MaterialNum_Chinese" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/id_Amplitude_Value"
+                android:id="@+id/id_Pressure_Value"
                 android:text="     "
                 android:maxLength="6"
                 android:textSize="16sp"
-                android:layout_toEndOf="@id/id_Amplitude_Chinese"
-                android:layout_alignBottom="@id/id_Amplitude_Chinese"
+                android:layout_toEndOf="@id/id_Pressure_Chinese"
+                android:layout_alignBottom="@id/id_Pressure_Chinese"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/id_Amplitude_Unit"
-                android:text="v"
+                android:id="@+id/id_Pressure_Percent"
+                android:text="m"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_toEndOf="@id/id_Amplitude_Value"
-                android:layout_alignBottom="@id/id_Amplitude_Value"/>
+                android:layout_toEndOf="@id/id_Pressure_Value"
+                android:layout_alignBottom="@id/id_Pressure_Chinese"/>
 
         </RelativeLayout>
 

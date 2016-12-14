@@ -670,7 +670,7 @@ public class MainActivity extends AppCompatActivity {
             //startActivity(intent);
             startActivityForResult(intent, READ_REQUEST_CODE);
         } catch (Exception e) {
-            Toast.makeText(this, "没有正确打开文件管理器", 1).show();
+            Toast.makeText(this, "没有正确打开文件管理器", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -727,7 +727,7 @@ public class MainActivity extends AppCompatActivity {
                         if (GlobalData.bWatchDog1_Protection){
                             Log.e(TAG, "WatchDog1: Update BT send message status timeout.");
                             GlobalData.bWatchDog1_Protection = false;
-                            BluetoothService.strBTStatus = null;
+                            BluetoothService.strBTStatus = "";
                             BluetoothService.miSendTimes = 0;
                             MainActivity.getInstance().ShowInfo2User(
                                     getResources().getText(R.string.WatchDog_Timeout).toString(),

@@ -74,7 +74,7 @@ public class BluetoothService extends IntentService {
 
     private static BluetoothManager mBluetoothManager = null;
     private static BluetoothAdapter mBluetoothAdapter = null;
-    private static String mBluetoothDeviceAddress = null;
+    private static String mBluetoothDeviceAddress = "";
     private static BluetoothDevice mBluetoothDevice = null;
     private static BluetoothGatt mBluetoothGatt = null;
 
@@ -135,7 +135,7 @@ public class BluetoothService extends IntentService {
 
     // Special action for request BT status, max ten times.
     public static int miSendTimes = 0;
-    public static String strBTStatus = null;
+    public static String strBTStatus = "";
 
     private static int mConnectionState = BluetoothProfile.STATE_DISCONNECTED;
 
@@ -337,7 +337,7 @@ public class BluetoothService extends IntentService {
             return;
         }
         Log.w(TAG, "mBluetoothGatt closed");
-        mBluetoothDeviceAddress = null;
+        mBluetoothDeviceAddress = "";
         mBluetoothGatt.close();
         mBluetoothGatt = null;
     }
@@ -575,7 +575,7 @@ public class BluetoothService extends IntentService {
         mBluetoothGatt.disconnect();
         // mBluetoothGatt.close();
 
-        mBluetoothDeviceAddress = null;
+        mBluetoothDeviceAddress = "";
         mBluetoothDevice = null;
 
     }
