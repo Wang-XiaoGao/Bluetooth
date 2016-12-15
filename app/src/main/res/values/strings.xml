@@ -44,8 +44,8 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2016-Dec-14</string>
-    <string name="Update_Info">更新内容：\n1，自检内容排版\n2，修复null bug.....</string>
+    <string name="Delivery_Date">更新日期：2016-Dec-15</string>
+    <string name="Update_Info">更新内容：\n1，参数设置（注意：手环编号以及值域未实现）\n2，复位.....</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 

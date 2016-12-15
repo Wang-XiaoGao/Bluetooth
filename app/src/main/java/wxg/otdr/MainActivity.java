@@ -122,6 +122,13 @@ public class MainActivity extends AppCompatActivity {
     private static int mSecond;
     private static boolean mbDrawListVew = false;
 
+    private static double mdPressureGate = 0.0;
+    private static int miT1Gate = 0;
+    private static int miT2Duration = 0;
+    private static int miAudioDuration = 0;
+    private static int miMaterialNum = 0;
+
+
     private static EditText mVersionEdit;
 
     /**
@@ -751,50 +758,12 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Call onButtonReset.");
         boolean bCheck = false;
 
-        int iBTTem = mBluetoothService.getBTConnectStatus();
-
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eReset);
-        int[] iValues = mGlobalData.getIntReturn(bCommand);
 
-        Log.e(TAG, "onButtonReset, Data to send: " + mGlobalData.Int2String(iValues));
-        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
-            //send data to service
-//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID
-            if (mBluetoothService != null) {
-                bCheck = mBluetoothService.AssignGATTService(BluetoothService.RX_SERVICE_UUID);
-                if (!bCheck){
-                    Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
-                    return;
-                }
-//TEST_TX_CHAR_UUID, RX_CHAR_UUID
-                bCheck = mBluetoothService.AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
-                if (!bCheck){
-                    Log.e(TAG, "StartSelfCheck: Characteristics is null.");
-                    return;
-                }
+        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
-                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
-                if (!bCheck){
-                    Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
-                    //Intent intent = new Intent(BluetoothService.ACTION_DATA_AVAILABLE);
-                    //byte[] bValues = {0x9, 0x9};
-                    //intent.putExtra(BluetoothService.EXTRA_DATA, bValues);
-                    //sendBroadcast(intent);
-                    Toast.makeText(this, getResources().getText(R.string.Command_Send_Failed),
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-            }else{
-                Log.e(TAG, "Exception: mBluetoothService is null.");
-            }
-        }else{
-            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
-
-            Toast.makeText(v.getContext(),
-                    "Bluetooth not connected yet, could not read battery info:",
-                    Toast.LENGTH_SHORT).show();
-            return;
+        if (!bCheck) {
+            Log.e(TAG, "onButtonReset: Send Command failed.");
         }
     }
 
@@ -803,14 +772,152 @@ public class MainActivity extends AppCompatActivity {
 
         boolean bCheck = false;
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSettings);
+        int[] iCommand = mGlobalData.Byte2Int(bCommand);
 
+
+        String strTem;
+
+        // Get Pressure Gate.
         EditText PressureGate = (EditText) findViewById(R.id.id_Pressure_Gate_Value);
+        if (PressureGate != null){
+            strTem = PressureGate.getText().toString();
+            Log.i(TAG, "strTem: " + strTem);
 
+            int[] iPressureGate = new int[2];
+            iPressureGate = mGlobalData.getDoubleFromString(strTem);
+            if (iPressureGate == null){
+                Log.e(TAG, "iPressureGate is null.");
+                ShowInfo2User("PressureGate is null.", Toast.LENGTH_SHORT);
+            }else{
+                if (iPressureGate[0]<1 | iPressureGate[0]>=5){
+                    Log.e(TAG, "Pressure Gate number setting is not correct.");
+                    ShowInfo2User("Pressure Gate number setting is not correct.", Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            iCommand[GlobalData.cPressureGate_Integer_Index] = iPressureGate[0];
+            iCommand[GlobalData.cPressureGate_Decimal_Index] = iPressureGate[1];
+
+
+        }else{
+            Log.e(TAG, "PressureGate is null.");
+            ShowInfo2User("PressureGate is null.", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        // Get Time gate for T1.
+        EditText TimeGateT1 = (EditText) findViewById(R.id.id_T1_Gate_Value);
+        if (TimeGateT1 != null) {
+            strTem = TimeGateT1.getText().toString();
+            Log.i(TAG, "strTem: " + strTem);
+            int[] iTimeT1 = new int[2];
+            iTimeT1 = mGlobalData.getDoubleFromString(strTem);
+            if (iTimeT1 == null){
+                Log.e(TAG, "iTimeT1 is null.");
+                ShowInfo2User("TimeT1 is null.", Toast.LENGTH_SHORT);
+            }else{
+                if (iTimeT1[0]<0 | iTimeT1[0]>240){
+                    Log.e(TAG, "Time Gate T1 setting is not correct.");
+                    ShowInfo2User("Time Gate T1 setting is not correct.", Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            iCommand[GlobalData.cT1_Duration_Index] = iTimeT1[0];
+
+        }else{
+            Log.e(TAG, "TimeGateT1 is null.");
+            ShowInfo2User("TimeGateT1 is null.", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        // Get Time gate for T2.
+        EditText TimeGateT2 = (EditText) findViewById(R.id.id_T2_Gate_Value);
+        if (TimeGateT2 != null) {
+            strTem = TimeGateT2.getText().toString();
+            Log.i(TAG, "strTem: " + strTem);
+            int[] iTimeT2 = new int[2];
+            iTimeT2 = mGlobalData.getDoubleFromString(strTem);
+            if (iTimeT2 == null){
+                Log.e(TAG, "iTimeT2 is null.");
+                ShowInfo2User("TimeT2 is null.", Toast.LENGTH_SHORT);
+            }else{
+                if (iTimeT2[0] < 30 | iTimeT2[0]>100){
+                    Log.e(TAG, "Time Gate T2 setting is not correct.");
+                    ShowInfo2User("Time Gate T2 setting is not correct.", Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            iCommand[GlobalData.cT2_Duration_Index] = iTimeT2[0];
+
+        }else{
+            Log.e(TAG, "TimeGateT2 is null.");
+            ShowInfo2User("TimeGateT2 is null.", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        // Get audio gate.
+        EditText AudioGate = (EditText) findViewById(R.id.id_Audio_Duration_Value);
+        if (AudioGate != null) {
+            strTem = AudioGate.getText().toString();
+            Log.i(TAG, "strTem: " + strTem);
+            int[] iAudioGate = new int[2];
+            iAudioGate = mGlobalData.getDoubleFromString(strTem);
+            if (iAudioGate == null){
+                Log.e(TAG, "iAudioGate is null.");
+                ShowInfo2User("Audio Gate is null.", Toast.LENGTH_SHORT);
+            }else{
+                if (iAudioGate[0] < 0 | iAudioGate[0]>255){
+                    Log.e(TAG, "Audio Gate setting is not correct.");
+                    ShowInfo2User("Audio Gate setting is not correct.", Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            iCommand[GlobalData.cAudio_Duration_Index] = iAudioGate[0];
+
+        }else{
+            Log.e(TAG, "AudioGate is null.");
+            ShowInfo2User("AudioGate is null.", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        // Get Material number.
+        EditText MaterialNum = (EditText) findViewById(R.id.id_MaterialNum_Setting_Value);
+        if (AudioGate != null) {
+            strTem = AudioGate.getText().toString();
+            Log.i(TAG, "strTem: " + strTem);
+            int[] iMaterialNum = new int[2];
+            iMaterialNum = mGlobalData.getDoubleFromString(strTem);
+            if (iMaterialNum == null){
+                Log.e(TAG, "iMaterialNum is null.");
+                ShowInfo2User("Material Num is null.", Toast.LENGTH_SHORT);
+            }else{
+                if (iMaterialNum[0] < 0 | iMaterialNum[0]>65535){
+                    Log.e(TAG, "Material number setting is not correct.");
+                    ShowInfo2User("Material number setting is not correct.", Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            iCommand[GlobalData.cMaterial_Settings_High_Index] = 33;
+            iCommand[GlobalData.cMaterial_Settings_Low_Index] = 44;
+
+        }else{
+            Log.e(TAG, "AudioGate is null.");
+            ShowInfo2User("AudioGate is null.", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        bCommand = mGlobalData.Int2Byte(iCommand);
 
         bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
         if (!bCheck) {
-            Log.e(TAG, "onButtonReadTime: Send Command failed.");
+            Log.e(TAG, "onButtonSettings: Send Command failed.");
+            ShowInfo2User("onButtonSettings: Send Command failed.", Toast.LENGTH_SHORT);
         }
     }
 

@@ -21,7 +21,7 @@ public class GlobalData extends Application{
 
     public static int[] iQueryBattery = {0x68, 0x01, 0x3C};
     public static int[] iSelfCheck = {0x68, 0x01, 0x69};
-    public static int[] iReset = {0x68, 0x01, 0x4B};
+    public static int[] iReset = {0x68, 0x01, 0xD2};
     //iSetTime, for date and time need to renew, so just take 0x0 as default.
     public static int[] iSetTime = {0x68, 0x07, 0xC8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
     public static int[] iReadTime = {0x68, 0x01, 0xD7};
@@ -109,14 +109,14 @@ public class GlobalData extends Application{
 
     public final static int cReset_Index = 0;
 
-    // To analyze settings parameters.
-    public final static int cPressureGate_Integer_Index = 0;
-    public final static int cPressureGate_Decimal_Index= 1;
-    public final static int cT1_Duration_Index = 2;
-    public final static int cT2_Duration_Index = 3;
-    public final static int cAudio_Duration_Index = 4;
-    public final static int cMaterial_Settings_High_Index = 7;
-    public final static int cMaterial_Settings_Low_Index = 8;
+    // To set parameters.
+    public final static int cPressureGate_Integer_Index = 3;
+    public final static int cPressureGate_Decimal_Index= 4;
+    public final static int cT1_Duration_Index = 5;
+    public final static int cT2_Duration_Index = 6;
+    public final static int cAudio_Duration_Index = 7;
+    public final static int cMaterial_Settings_High_Index = 10;
+    public final static int cMaterial_Settings_Low_Index = 11;
 
     enum eCommandIndex {eQueryBattery, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
         eRequestMessageTimes, eSettings};
@@ -207,6 +207,7 @@ public class GlobalData extends Application{
         }
         return str;
     }
+
 
     public byte[] getCommand(eCommandIndex eIndex){
 
@@ -341,6 +342,61 @@ public class GlobalData extends Application{
             Log.e(TAG, "Length is not match");
             iValues = null;
         }
+
+        return iValues;
+    }
+
+    // This function get double type number from String and return as int[0]=Integer, int[1]=Decimal.
+    // This function apply to reading Pressure Gate setting from EditText.
+    public int[] getDoubleFromString(String strValue){
+        int[] iValues = new int[2];
+
+        byte[] bValues = strValue.getBytes(); // Here bValues contains ASCii.
+        int iLength = bValues.length;
+        if (iLength == 0 ){
+            return null;
+        }
+
+        int iInteger = 0;
+        int iDecimal = 0;
+        int iDot = -1;
+
+        // ASCii, "." = 46, 0 = 48 ... 9 = 57.
+        for (int iTem = 0; iTem < iLength; iTem++){
+
+            // First execute number verification and find where is the ".";
+            // Three case: 1, double, e.g. "3.2"; 2, integer, e.g. "3" or "3." or "3.0";
+            // 3, decimal, e.g. "0.2", or ".2".
+            if ((bValues[iTem] >= 48 && bValues[iTem] <= 57) | (bValues[iTem] == 46)){
+                if (bValues[iTem] == 46){
+                    iDot = iTem;
+                }else{
+                    bValues[iTem] -= 48; // turn it from ASCii to be number.
+                }
+            }else{
+                return null;
+            }
+        }
+
+        // "." not found, this is a integer.
+        if(iDot == -1){
+            iDot = iLength;
+        }
+
+        // Get position of "."  Now get integer part.
+        // e.g. "56.78", iDot = 2, Integer = 5*10(iDot-1 times) + 6*10(iDot-2 times)...
+        for (int iTem = 0; iTem < iDot; iTem++){
+            iInteger += (bValues[iTem]) * Math.pow(10, (iDot - iTem - 1));
+        }
+
+        // Now to get decimal part.
+        // e.g. "56.78", iDot = 2, Decimal = 7*10(iDot-1 times) + 8*10(iDot-2 times)...
+        for (int iTem = iDot +1; iTem < iLength; iTem++){
+            iDecimal += (bValues[iTem]) * Math.pow(10, (iLength -1 - iTem));
+        }
+
+        iValues[0] = iInteger;
+        iValues[1] = iDecimal;
 
         return iValues;
     }
