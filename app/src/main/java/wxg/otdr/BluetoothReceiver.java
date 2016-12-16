@@ -21,14 +21,17 @@ import java.util.Date;
  */
 public class BluetoothReceiver extends BroadcastReceiver {
     private final static String TAG = BluetoothReceiver.class.getSimpleName();
-
+    private static TextView mDebugTextVew = null;
+    // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
+    private static int iTabSelection = -1;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
         Log.i(TAG, "BluetoothReceiver::onReceive");
 
-
+        // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
+        iTabSelection = MainActivity.mtabLayout.getSelectedTabPosition();
 
         String strAction = intent.getAction();
 
@@ -55,7 +58,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
 
         // Todo, this test view is for debug.
-        TextView mDebugTextVew = (TextView) MainActivity.getInstance().findViewById(R.id.id_DebugText_View);
+        mDebugTextVew = (TextView) MainActivity.getInstance().findViewById(R.id.id_DebugText_View);
 
 
 
@@ -69,15 +72,21 @@ public class BluetoothReceiver extends BroadcastReceiver {
             String StrShowText = StrDeviceName + "\n" + StrDeviceAdd;
 
             Log.i(TAG, StrShowText);
-            mTextVew.setText(StrShowText);
-            mImageBT.setBackgroundResource(R.drawable.bluetooth56);
-            mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
-            mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
+
 
             GlobalData.strLog = "BT Connected.";
             String strTem = GlobalData.strTitle + GlobalData.strLog;
 
-            mDebugTextVew.setText(strTem);
+            // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
+            if (iTabSelection == 0){
+                mTextVew.setText(StrShowText);
+                mImageBT.setBackgroundResource(R.drawable.bluetooth56);
+                mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
+                mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
+
+                mDebugTextVew.setText(strTem);
+            }
+
 
 
             //mTextVew.notify();
@@ -89,13 +98,19 @@ public class BluetoothReceiver extends BroadcastReceiver {
             GlobalData.strLog = null;
 
             String strTem = GlobalData.strTitle + "Clear.";
-            mDebugTextVew.setText(strTem);
+
+            // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
+            if (iTabSelection == 0){
+                mDebugTextVew.setText(strTem);
+                mTextVew.setText(R.string.Bluetooth_Not_Connected);
+                mImageBT.setBackgroundResource(R.drawable.bluetooth56_gray);
+                mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56gray);
+                mImageBattery.setBackgroundResource(R.drawable.battery_56px_gray);
+            }
 
 
-            mTextVew.setText(R.string.Bluetooth_Not_Connected);
-            mImageBT.setBackgroundResource(R.drawable.bluetooth56_gray);
-            mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56gray);
-            mImageBattery.setBackgroundResource(R.drawable.battery_56px_gray);
+
+
 
         }else if (strAction.equals(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED)) {
 
@@ -112,7 +127,13 @@ public class BluetoothReceiver extends BroadcastReceiver {
             GlobalData.strLog = StrDebugData + GlobalData.strLog;
             String strTem = GlobalData.strTitle + GlobalData.strLog;
 
-            mDebugTextVew.setText(strTem);
+            // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
+            int iTabSelection = MainActivity.mtabLayout.getSelectedTabPosition();
+            if (iTabSelection == 0){
+                mDebugTextVew.setText(strTem);
+            }
+
+
 
         }else if (strAction.equals(BluetoothService.ACTION_DATA_AVAILABLE)){
             Log.d(TAG, "ACTION_DATA_AVAILABLE");
@@ -227,7 +248,14 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                     break;
 
+                case GlobalData.cCommand_Settings:
+                        MainActivity.getInstance().ShowInfo2User(
+                                "参数设置成功", Toast.LENGTH_SHORT);
+                    break;
+
                 case GlobalData.cCommand_Reset:
+                    MainActivity.getInstance().ShowInfo2User(
+                            "复位成功", Toast.LENGTH_SHORT);
 
                     break;
                 default:

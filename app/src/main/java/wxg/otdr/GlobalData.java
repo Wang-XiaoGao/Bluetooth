@@ -53,7 +53,7 @@ public class GlobalData extends Application{
     public final static int cCommand_SendMessageTimes_Eighth = 0x48;
     public final static int cCommand_SendMessageTimes_Ninth = 0x49;
     public final static int cCommand_SendMessageTimes_Last = 0x4a;
-
+    public final static int cCommand_Settings = 0xE1;
     public final static int cCommand_ReadTime = 0xD7;
 
 
@@ -115,8 +115,9 @@ public class GlobalData extends Application{
     public final static int cT1_Duration_Index = 5;
     public final static int cT2_Duration_Index = 6;
     public final static int cAudio_Duration_Index = 7;
-    public final static int cMaterial_Settings_High_Index = 10;
-    public final static int cMaterial_Settings_Low_Index = 11;
+    public final static int cMaterial_Settings_Low_Index = 10;
+    public final static int cMaterial_Settings_High_Index = 11;
+
 
     enum eCommandIndex {eQueryBattery, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
         eRequestMessageTimes, eSettings};

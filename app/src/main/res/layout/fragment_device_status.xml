@@ -164,7 +164,7 @@
 
                 android:layout_gravity="center_vertical"
                 android:layout_toEndOf="@id/id_MaterialNum_Value"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="60dp"
                 android:layout_alignBottom="@id/id_MaterialNum_Chinese"/>
 
             <TextView

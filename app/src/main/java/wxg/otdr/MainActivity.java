@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
     public static GlobalData mGlobalData = null;
 
     private static BluetoothService mBluetoothService = null;
-    private BluetoothReceiver mBroadcastReceiver = null;
+    private static BluetoothReceiver mBroadcastReceiver = null;
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    public static SectionsPagerAdapter mSectionsPagerAdapter;
 
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     private static TabLayout.Tab mEngineeringTab; // To add and remove for Standard & Engineering mode.
     private static TabLayout.Tab mSystemInfoTab;
     private static TabLayout.Tab mDeviceStatusTab;
-    private static TabLayout mtabLayout;
+    public static TabLayout mtabLayout;
 
 
     private static EditText mDateEdit;
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     //private ViewPager mViewPager;
-    private CustomerViewPager mViewPager;
+    private static CustomerViewPager mViewPager;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -207,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
         mtabLayout.setTabsFromPagerAdapter(mSectionsPagerAdapter);
 
         // This app set standard mode to be default mode.
-
         mEngineeringTab = mtabLayout.getTabAt(iEngineeringMode);
         // For development, default mode change to be engineering mode.
         //mtabLayout.removeTabAt(iEngineeringMode);
@@ -774,7 +773,6 @@ public class MainActivity extends AppCompatActivity {
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSettings);
         int[] iCommand = mGlobalData.Byte2Int(bCommand);
 
-
         String strTem;
 
         // Get Pressure Gate.
@@ -787,11 +785,12 @@ public class MainActivity extends AppCompatActivity {
             iPressureGate = mGlobalData.getDoubleFromString(strTem);
             if (iPressureGate == null){
                 Log.e(TAG, "iPressureGate is null.");
-                ShowInfo2User("PressureGate is null.", Toast.LENGTH_SHORT);
+                ShowInfo2User("压力门限值设置超出范围", Toast.LENGTH_SHORT);
+                return;
             }else{
                 if (iPressureGate[0]<1 | iPressureGate[0]>=5){
                     Log.e(TAG, "Pressure Gate number setting is not correct.");
-                    ShowInfo2User("Pressure Gate number setting is not correct.", Toast.LENGTH_SHORT);
+                    ShowInfo2User("压力门限值设置超出范围", Toast.LENGTH_SHORT);
                     return;
                 }
             }
@@ -802,7 +801,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "PressureGate is null.");
-            ShowInfo2User("PressureGate is null.", Toast.LENGTH_SHORT);
+            ShowInfo2User("压力门限值设置错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -815,11 +814,12 @@ public class MainActivity extends AppCompatActivity {
             iTimeT1 = mGlobalData.getDoubleFromString(strTem);
             if (iTimeT1 == null){
                 Log.e(TAG, "iTimeT1 is null.");
-                ShowInfo2User("TimeT1 is null.", Toast.LENGTH_SHORT);
+                ShowInfo2User("时间门限值T1超出范围", Toast.LENGTH_SHORT);
+                return;
             }else{
                 if (iTimeT1[0]<0 | iTimeT1[0]>240){
                     Log.e(TAG, "Time Gate T1 setting is not correct.");
-                    ShowInfo2User("Time Gate T1 setting is not correct.", Toast.LENGTH_SHORT);
+                    ShowInfo2User("时间门限值T1超出范围", Toast.LENGTH_SHORT);
                     return;
                 }
             }
@@ -828,7 +828,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "TimeGateT1 is null.");
-            ShowInfo2User("TimeGateT1 is null.", Toast.LENGTH_SHORT);
+            ShowInfo2User("时间门限值T1设置错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -841,11 +841,11 @@ public class MainActivity extends AppCompatActivity {
             iTimeT2 = mGlobalData.getDoubleFromString(strTem);
             if (iTimeT2 == null){
                 Log.e(TAG, "iTimeT2 is null.");
-                ShowInfo2User("TimeT2 is null.", Toast.LENGTH_SHORT);
+                ShowInfo2User("持续时间门限值T2超出范围", Toast.LENGTH_SHORT);
             }else{
                 if (iTimeT2[0] < 30 | iTimeT2[0]>100){
                     Log.e(TAG, "Time Gate T2 setting is not correct.");
-                    ShowInfo2User("Time Gate T2 setting is not correct.", Toast.LENGTH_SHORT);
+                    ShowInfo2User("持续时间门限值T2超出范围", Toast.LENGTH_SHORT);
                     return;
                 }
             }
@@ -854,7 +854,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "TimeGateT2 is null.");
-            ShowInfo2User("TimeGateT2 is null.", Toast.LENGTH_SHORT);
+            ShowInfo2User("持续时间门限值T2设置错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -867,11 +867,12 @@ public class MainActivity extends AppCompatActivity {
             iAudioGate = mGlobalData.getDoubleFromString(strTem);
             if (iAudioGate == null){
                 Log.e(TAG, "iAudioGate is null.");
-                ShowInfo2User("Audio Gate is null.", Toast.LENGTH_SHORT);
+                ShowInfo2User("音频信号持续时间超出范围", Toast.LENGTH_SHORT);
+                return;
             }else{
                 if (iAudioGate[0] < 0 | iAudioGate[0]>255){
                     Log.e(TAG, "Audio Gate setting is not correct.");
-                    ShowInfo2User("Audio Gate setting is not correct.", Toast.LENGTH_SHORT);
+                    ShowInfo2User("音频信号持续时间超出范围", Toast.LENGTH_SHORT);
                     return;
                 }
             }
@@ -880,34 +881,36 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "AudioGate is null.");
-            ShowInfo2User("AudioGate is null.", Toast.LENGTH_SHORT);
+            ShowInfo2User("音频信号持续时间设置错误", Toast.LENGTH_SHORT);
             return;
         }
 
         // Get Material number.
         EditText MaterialNum = (EditText) findViewById(R.id.id_MaterialNum_Setting_Value);
         if (AudioGate != null) {
-            strTem = AudioGate.getText().toString();
+            strTem = MaterialNum.getText().toString();
             Log.i(TAG, "strTem: " + strTem);
             int[] iMaterialNum = new int[2];
             iMaterialNum = mGlobalData.getDoubleFromString(strTem);
             if (iMaterialNum == null){
                 Log.e(TAG, "iMaterialNum is null.");
-                ShowInfo2User("Material Num is null.", Toast.LENGTH_SHORT);
+                ShowInfo2User("手环编号超出范围", Toast.LENGTH_SHORT);
+                return;
             }else{
                 if (iMaterialNum[0] < 0 | iMaterialNum[0]>65535){
                     Log.e(TAG, "Material number setting is not correct.");
-                    ShowInfo2User("Material number setting is not correct.", Toast.LENGTH_SHORT);
+                    ShowInfo2User("手环编号超出范围", Toast.LENGTH_SHORT);
                     return;
                 }
             }
 
-            iCommand[GlobalData.cMaterial_Settings_High_Index] = 33;
-            iCommand[GlobalData.cMaterial_Settings_Low_Index] = 44;
+            Short sValue = (short)iMaterialNum[0];
+            iCommand[GlobalData.cMaterial_Settings_High_Index] = sValue>>8 & 0x00FF;
+            iCommand[GlobalData.cMaterial_Settings_Low_Index] = sValue & 0x00FF;
 
         }else{
-            Log.e(TAG, "AudioGate is null.");
-            ShowInfo2User("AudioGate is null.", Toast.LENGTH_SHORT);
+            Log.e(TAG, "MaterialNum is null.");
+            ShowInfo2User("手环编号设置错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -917,7 +920,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (!bCheck) {
             Log.e(TAG, "onButtonSettings: Send Command failed.");
-            ShowInfo2User("onButtonSettings: Send Command failed.", Toast.LENGTH_SHORT);
+            ShowInfo2User("参数设置错误", Toast.LENGTH_SHORT);
         }
     }
 
@@ -959,12 +962,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // Try QueryLatestVersion.
+/*    // Try QueryLatestVersion.
     public void QueryLatestVersion(View v) {
         BluetoothService.startActionConnection(this.getApplicationContext(), null, null);
 
     }
-
+*/
     public void ShowInfo2User(String strInfo, int iShowTime){
         Toast.makeText(this.getApplicationContext(),
                 strInfo,
