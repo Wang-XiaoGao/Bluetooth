@@ -12,9 +12,12 @@ import java.io.InputStream;
 public class GlobalData extends Application{
     public static final String TAG = GlobalData.class.getSimpleName();
 
-    private static boolean bIsInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016.
+    public static boolean bInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016.
     public static boolean bWatchDog1_Protection = false; // To prevent button pressed again and agian.
     public final static int iWatchDogTimer1 = 15000; // Timeout gate for 15000 ms.
+
+    public static String StrDeviceName;
+    public static String StrDeviceAdd;
 
     enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
@@ -112,8 +115,8 @@ public class GlobalData extends Application{
     // To set parameters.
     public final static int cPressureGate_Integer_Index = 3;
     public final static int cPressureGate_Decimal_Index= 4;
-    public final static int cT1_Duration_Index = 5;
-    public final static int cT2_Duration_Index = 6;
+    public final static int cT2_Duration_Index = 5;
+    public final static int cT1_Duration_Index = 6;
     public final static int cAudio_Duration_Index = 7;
     public final static int cMaterial_Settings_Low_Index = 10;
     public final static int cMaterial_Settings_High_Index = 11;
@@ -136,10 +139,10 @@ public class GlobalData extends Application{
     }
 
     public boolean getInEngineeringMode(){
-        return bIsInEngineeringMode;
+        return bInEngineeringMode;
     }
     public void setEngineeringMode(boolean bStatus){
-        bIsInEngineeringMode = bStatus;
+        bInEngineeringMode = bStatus;
     }
 
     public BTStatus getBTStatus(){

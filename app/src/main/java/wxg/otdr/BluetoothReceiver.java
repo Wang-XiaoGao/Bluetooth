@@ -67,9 +67,9 @@ public class BluetoothReceiver extends BroadcastReceiver {
             Log.d(TAG, "ACTION_GATT_CONNECTED");
 
             // if it's not for connection action, the below two string may not be initiated.
-            final String StrDeviceName = intent.getStringExtra(BluetoothService.mStrDeviceName);
-            final String StrDeviceAdd = intent.getStringExtra(BluetoothService.mStrDeviceAdd);
-            String StrShowText = StrDeviceName + "\n" + StrDeviceAdd;
+            GlobalData.StrDeviceName = intent.getStringExtra(BluetoothService.mStrDeviceName);
+            GlobalData.StrDeviceAdd = intent.getStringExtra(BluetoothService.mStrDeviceAdd);
+            String StrShowText = GlobalData.StrDeviceName + "\n" + GlobalData.StrDeviceAdd;
 
             Log.i(TAG, StrShowText);
 
@@ -95,7 +95,9 @@ public class BluetoothReceiver extends BroadcastReceiver {
             Log.d(TAG, "Bluetooth Disconnected");
 
             // Tobe deleted.
-            GlobalData.strLog = null;
+            GlobalData.strLog = "";
+            GlobalData.StrDeviceName = "";
+            GlobalData.StrDeviceAdd = "";
 
             String strTem = GlobalData.strTitle + "Clear.";
 

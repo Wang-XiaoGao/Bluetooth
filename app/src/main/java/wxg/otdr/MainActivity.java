@@ -48,6 +48,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -444,6 +445,35 @@ public class MainActivity extends AppCompatActivity {
             Log.i("PlaceholderFragment", "Draw DeviceStatus");
             View rootView = inflater.inflate(R.layout.fragment_device_status, container, false);
 
+            // To check BT connection and refresh button image and text as correct.
+            TextView mTextVew = (TextView) rootView.findViewById(R.id.id_MakeSure_Connection);
+            ImageButton mImageBT = (ImageButton) rootView.findViewById(R.id.imageViewBT);
+            ImageButton mImageDeviceCheck = (ImageButton) rootView.findViewById(R.id.id_SelfCheck_Image);
+            ImageButton mImageBattery = (ImageButton) rootView.findViewById(R.id.id_Battery_Image);
+
+            if (mTextVew != null & mImageBT != null & mImageDeviceCheck != null &
+                    mImageBattery != null){
+                int iBTTem = BluetoothService.getBTConnectStatus();
+                if (iBTTem == BluetoothProfile.STATE_CONNECTED){
+                    String StrShowText = GlobalData.StrDeviceName + "\n" + GlobalData.StrDeviceAdd;
+                    mTextVew.setText(StrShowText);
+                    mImageBT.setBackgroundResource(R.drawable.bluetooth56);
+                    mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
+                    mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
+                }else{
+                    // BT not connected.
+                    mTextVew.setText(R.string.Bluetooth_Not_Connected);
+                    mImageBT.setBackgroundResource(R.drawable.bluetooth56_gray);
+                    mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56gray);
+                    mImageBattery.setBackgroundResource(R.drawable.battery_56px_gray);
+                }
+            }
+
+
+
+
+
+
             mDateEdit = (EditText) rootView.findViewById(R.id.id_Edit_Date);
             mTimeEdit = (EditText) rootView.findViewById(R.id.id_Edit_Time);
             mCalendar = Calendar.getInstance();
@@ -524,7 +554,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public View ShowSystemInfo(LayoutInflater inflater, ViewGroup container) {
-            Log.i("PlaceholderFragment", "ShowSystemInfo");
+            Log.i("PlaceholderFragment", "Draw ShowSystemInfo");
             View rootView = inflater.inflate(R.layout.fragment_system_info, container, false);
 
             mVersionEdit = (EditText) rootView.findViewById(R.id.VersionInfo);
@@ -983,14 +1013,12 @@ public class MainActivity extends AppCompatActivity {
             int[] iValues = mGlobalData.getIntReturn(bCommand);
 
             Log.i(TAG, "Data to send: " + mGlobalData.Int2String(iValues));
-//BluetoothService.TEST_TX_SERVICE_UUID,RX_SERVICE_UUID//ServiceUUID
             if (mBluetoothService != null) {
                 bCheck = mBluetoothService.AssignGATTService(ServiceUUID);
                 if (!bCheck){
                     Log.e(TAG, "mBluetoothService is null.");
                     return false;
                 }
-//BluetoothService.TEST_TX_CHAR_UUID, RX_CHAR_UUID//CharUUID
                 bCheck = mBluetoothService.AssignGATTCharacteristics(CharUUID);
                 if (!bCheck){
                     Log.e(TAG, "Characteristics is null.");
