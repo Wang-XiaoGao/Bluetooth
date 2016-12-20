@@ -16,8 +16,19 @@ public class GlobalData extends Application{
     public static boolean bWatchDog1_Protection = false; // To prevent button pressed again and agian.
     public final static int iWatchDogTimer1 = 15000; // Timeout gate for 15000 ms.
 
-    public static String StrDeviceName;
-    public static String StrDeviceAdd;
+    // Those parameters are used, when refresh the page of "Device status".
+    public static String StrDeviceName = "";
+    public static String StrDeviceAdd = "";
+    public static String strCurrentBattery = "";
+    public static String strMaterialNum = "";
+    public static String strVoltage = "";
+    public static String strAmplitude = "";
+    public static String strFrequency = "";
+    public static String strWaveLength = "";
+    public static String strWaveCycle = "";
+    public static String strPressureGate = "";
+    public static String strErrorMessageTimes = "";
+    public static String strQueryErrorMessage = "";
 
     enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
     private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
@@ -125,9 +136,9 @@ public class GlobalData extends Application{
     enum eCommandIndex {eQueryBattery, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
         eRequestMessageTimes, eSettings};
 
-    public static String strLog = null;
-    public static String strNewLog = null;
     public static String strTitle = "Log: ";
+    public static String strLog = "";
+
 
 
     @Override

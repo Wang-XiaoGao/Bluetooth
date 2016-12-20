@@ -75,7 +75,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
 
             GlobalData.strLog = "BT Connected.";
-            String strTem = GlobalData.strTitle + GlobalData.strLog;
+            String strTemp = GlobalData.strTitle + GlobalData.strLog;
 
             // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
             if (iTabSelection == 0){
@@ -84,7 +84,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
                 mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
 
-                mDebugTextVew.setText(strTem);
+                mDebugTextVew.setText(strTemp);
             }
 
 
@@ -109,10 +109,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56gray);
                 mImageBattery.setBackgroundResource(R.drawable.battery_56px_gray);
             }
-
-
-
-
 
         }else if (strAction.equals(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED)) {
 
@@ -154,7 +150,9 @@ public class BluetoothReceiver extends BroadcastReceiver {
                         return;
                     }
 
-                    mBatteryValue.setText(String.format("%d", iReturnData[GlobalData.cBattery_Index]));
+                    GlobalData.strCurrentBattery = String.format("%d", iReturnData[GlobalData.cBattery_Index]);
+
+                    mBatteryValue.setText(GlobalData.strCurrentBattery);
                     break;
                 case GlobalData.cCommand_Selfcheck:
                     iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
@@ -167,34 +165,39 @@ public class BluetoothReceiver extends BroadcastReceiver {
                         Log.e(TAG, "iReturnData is less than expected.");
                         return;
                     }
-                    mVoltageView.setText(String.format("%d", iReturnData[GlobalData.cVoltage_Index]));
-                    String strPressure = String.format("%d", iReturnData[GlobalData.cPressure_Integer_Index]);
-                    strPressure += ".";
-                    strPressure += String.format("%d", iReturnData[GlobalData.cPressure_Decimal_Index]);
-                    mPressureView.setText(strPressure);
+
+                    GlobalData.strVoltage = String.format("%d", iReturnData[GlobalData.cVoltage_Index]);
+                    mVoltageView.setText(GlobalData.strVoltage);
+                    GlobalData.strPressureGate = String.format("%d", iReturnData[GlobalData.cPressure_Integer_Index]);
+                    GlobalData.strPressureGate += ".";
+                    GlobalData.strPressureGate += String.format("%d", iReturnData[GlobalData.cPressure_Decimal_Index]);
+                    mPressureView.setText(GlobalData.strPressureGate);
 
                     int iMaterialHigh = iReturnData[GlobalData.cMaterialHigh_Index];
                     int iMaterialLow = iReturnData[GlobalData.cMaterialLow_Index];
                     int iTem = iMaterialHigh*256 + iMaterialLow;
-                    mMaterialView.setText(String.format("%d", iTem));
+                    GlobalData.strMaterialNum = String.format("%d", iTem);
+                    mMaterialView.setText(GlobalData.strMaterialNum);
 
-                    String strFrequency = String.format("%d", iReturnData[GlobalData.cFrequency_Integer_Index]);
-                    strFrequency += ".";
-                    strFrequency += String.format("%d", iReturnData[GlobalData.cFrequency_Decimal_Index]);
-                    mFrequencyText.setText(strFrequency);
+                    GlobalData.strFrequency = String.format("%d", iReturnData[GlobalData.cFrequency_Integer_Index]);
+                    GlobalData.strFrequency += ".";
+                    GlobalData.strFrequency += String.format("%d", iReturnData[GlobalData.cFrequency_Decimal_Index]);
+                    mFrequencyText.setText(GlobalData.strFrequency);
 
                     int iWaveLengthHigh = iReturnData[GlobalData.cWaveLengthHigh_Index];
                     int iWaveLengthLow = iReturnData[GlobalData.cWaveLengthLow_Index];
                     iTem = iWaveLengthHigh*256 + iWaveLengthLow;
-                    mWaveLengthText.setText(String.format("%d", iTem));
+                    GlobalData.strWaveLength = String.format("%d", iTem);
+                    mWaveLengthText.setText(GlobalData.strWaveLength);
 
                     iTem = iReturnData[GlobalData.cCycle_Index];
-                    mCycleText.setText(String.format("%d", iTem));
+                    GlobalData.strWaveCycle = String.format("%d", iTem);
+                    mCycleText.setText(GlobalData.strWaveCycle);
 
-                    String strAmplitude = String.format("%d", iReturnData[GlobalData.cAmplitude_Integer_Index]);
-                    strAmplitude += ".";
-                    strAmplitude += String.format("%d", iReturnData[GlobalData.cAmplitude_Decimal_Index]);
-                    mAmplitudeText.setText(strAmplitude);
+                    GlobalData.strAmplitude = String.format("%d", iReturnData[GlobalData.cAmplitude_Integer_Index]);
+                    GlobalData.strAmplitude += ".";
+                    GlobalData.strAmplitude += String.format("%d", iReturnData[GlobalData.cAmplitude_Decimal_Index]);
+                    mAmplitudeText.setText(GlobalData.strAmplitude);
                     break;
 
                 case GlobalData.cCommand_ReadTime:
@@ -226,9 +229,12 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     if (iTimes < 0){
                         Log.e(TAG, "strReturnData is null.");
                         return;
+                    }else{
+                        GlobalData.strErrorMessageTimes = String.format("%d", iTimes);
                     }
+
                     if (mMessagesText != null){
-                        mMessagesText.setText(String.format("%d", iTimes));
+                        mMessagesText.setText(GlobalData.strErrorMessageTimes);
                     }else{
                         Log.e(TAG, "mMessagesText is null");
                     }
@@ -236,14 +242,14 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     break;
 
                 case GlobalData.cCommand_SendMessageTimes_First:
-                    strReturnData = intent.getStringExtra(BluetoothService.RETURN_DATA);
-                    if (strReturnData == null){
-                        Log.e(TAG, "strReturnData is null.");
+                    GlobalData.strQueryErrorMessage = intent.getStringExtra(BluetoothService.RETURN_DATA);
+                    if (GlobalData.strQueryErrorMessage == ""){
+                        Log.e(TAG, "GlobalData.strQueryErrorMessage is null.");
                         return;
                     }
 
                     if (mSendTimesText != null){
-                        mSendTimesText.setText(strReturnData);
+                        mSendTimesText.setText(GlobalData.strQueryErrorMessage);
                     }else{
                         Log.e(TAG, "mSendTimesText is null");
                     }

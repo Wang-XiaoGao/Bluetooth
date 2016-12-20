@@ -44,8 +44,8 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2016-Dec-19</string>
-    <string name="Update_Info">更新内容：\n1，修复设备页面切换时状态没更新问题\n2，参数设置T1，T2混淆。.....</string>
+    <string name="Delivery_Date">更新日期：2016-Dec-20</string>
+    <string name="Update_Info">更新内容：\n1，修复设备页面切换时丢失数据及log信息</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 

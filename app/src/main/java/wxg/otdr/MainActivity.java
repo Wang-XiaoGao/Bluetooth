@@ -469,10 +469,52 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            // To refresh data in Batter, SelfCheck and QueryErrorMessages.
+            TextView mBatteryValue = (TextView) rootView.findViewById(R.id.id_Battery_Remain_Value);
+            TextView mMaterialView = (TextView) rootView.findViewById(R.id.id_MaterialNum_Value);
+            TextView mVoltageView = (TextView) rootView.findViewById(R.id.id_Voltage_Value);
+            TextView mPressureView = (TextView) rootView.findViewById(R.id.id_Pressure_Value);
+            TextView mFrequencyText = (TextView) rootView.findViewById(R.id.id_Frequency_Value);
+            TextView mWaveLengthText = (TextView) rootView.findViewById(R.id.id_WaveLength_Value);
+            TextView mCycleText = (TextView) rootView.findViewById(R.id.id_Cycle_Value);
+            TextView mAmplitudeText = (TextView) rootView.findViewById(R.id.id_Amplitude_Value);
+            EditText mSendTimesText = (EditText) rootView.findViewById(R.id.id_SendTimes_Message);
+            EditText mMessagesText = (EditText) rootView.findViewById(R.id.id_MessageNumberText_Value);
+            TextView mDebugTextVew = (TextView) rootView.findViewById(R.id.id_DebugText_View);
 
-
-
-
+            if (mBatteryValue != null & GlobalData.strCurrentBattery != ""){
+                mBatteryValue.setText(GlobalData.strCurrentBattery);
+            }
+            if (mMaterialView != null & GlobalData.strMaterialNum != ""){
+                mMaterialView.setText(GlobalData.strMaterialNum);
+            }
+            if (mVoltageView != null & GlobalData.strVoltage != ""){
+                mVoltageView.setText(GlobalData.strVoltage);
+            }
+            if (mPressureView != null & GlobalData.strPressureGate != ""){
+                mPressureView.setText(GlobalData.strPressureGate);
+            }
+            if (mFrequencyText != null & GlobalData.strFrequency != ""){
+                mFrequencyText.setText(GlobalData.strFrequency);
+            }
+            if (mWaveLengthText != null & GlobalData.strWaveLength != ""){
+                mWaveLengthText.setText(GlobalData.strWaveLength);
+            }
+            if (mCycleText != null & GlobalData.strWaveCycle != ""){
+                mCycleText.setText(GlobalData.strWaveCycle);
+            }
+            if (mAmplitudeText != null & GlobalData.strAmplitude != ""){
+                mAmplitudeText.setText(GlobalData.strAmplitude);
+            }
+            if (mSendTimesText != null & GlobalData.strErrorMessageTimes != ""){
+                mSendTimesText.setText(GlobalData.strErrorMessageTimes);
+            }
+            if (mMessagesText != null & GlobalData.strQueryErrorMessage != ""){
+                mMessagesText.setText(GlobalData.strQueryErrorMessage);
+            }
+            if (mDebugTextVew != null & GlobalData.strLog != ""){
+                mDebugTextVew.setText(GlobalData.strTitle + GlobalData.strLog);
+            }
 
             mDateEdit = (EditText) rootView.findViewById(R.id.id_Edit_Date);
             mTimeEdit = (EditText) rootView.findViewById(R.id.id_Edit_Time);
