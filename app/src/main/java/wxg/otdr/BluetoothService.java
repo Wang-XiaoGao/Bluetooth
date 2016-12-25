@@ -870,7 +870,6 @@ public class BluetoothService extends IntentService {
         String strFileName = "A_GATTServiceInfo.txt";
         String strLog = "Dump all Gatt Service info as below: \n";
 
-
         File newxmlfile = new File(Environment.getExternalStorageDirectory(), strFileName);
         try{
             if(!newxmlfile.exists())

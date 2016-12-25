@@ -139,6 +139,9 @@ public class GlobalData extends Application{
     public static String strTitle = "Log: ";
     public static String strLog = "";
 
+    public static long lLogFileVolume = 5242880; // The log file in android should be smaller than 5 Mb.
+    public static boolean bLogFileMode = false; // This flag decide whether logfile create.
+
 
 
     @Override

@@ -5,12 +5,20 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -24,6 +32,97 @@ public class BluetoothReceiver extends BroadcastReceiver {
     private static TextView mDebugTextVew = null;
     // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
     private static int iTabSelection = -1;
+
+    public BluetoothReceiver(){
+        String strFileName = "A_BlueToothApp_Log.txt";
+
+        String filePath = "/A_BlueToothApp/";
+
+        File newLogFolder = new File(Environment.getExternalStorageDirectory(), filePath);
+        boolean bCheck = false;
+        if(!newLogFolder.exists()){
+            bCheck = newLogFolder.mkdir();
+            if (!bCheck){
+                Log.e(TAG, "Create log folder failed.");
+            }else
+                Log.i(TAG, "Create log folder successfully.");
+        }
+
+
+        File newLogFile = new File(newLogFolder.getPath(), strFileName);
+        // First to check whether disk space is enough for 5Mb (GlobalData.lLogFileVolume);
+        // Second to decide whether GlobalData.bLogFileMode
+        try{
+            long lUsableSpace = newLogFile.getUsableSpace();
+            String strTemp = String.valueOf(lUsableSpace);
+            Log.i(TAG, "lUsableSpace is " + strTemp);
+
+            if (lUsableSpace <= GlobalData.lLogFileVolume) {
+                GlobalData.bLogFileMode = false;
+                MainActivity.getInstance().ShowInfo2User(
+                        "系统剩余空间不足！APK运行信息无法记录！", Toast.LENGTH_LONG);
+                Log.e(TAG, "系统剩余空间不足！APK运行信息无法记录！");
+            }else{
+                if (!newLogFile.exists()) {
+                    GlobalData.bLogFileMode = true;
+                    bCheck = newLogFile.createNewFile();
+                    if (!bCheck) {
+                        Log.e(TAG, "Create log file failed.");
+                    } else
+                        Log.i(TAG, "Create log file successfully.");
+                } else {
+                    long lFileVolume = newLogFile.length();
+
+                    strTemp = String.valueOf(lFileVolume);
+                    Log.i(TAG, "lFileVolume is " + strTemp);
+                    // If Log file is bigger than GlobalData.lLogFileVolume (5 Mb), renew.
+                    if (lFileVolume > GlobalData.lLogFileVolume) {
+                        bCheck = newLogFile.delete();
+                        if (!bCheck) {
+                            Log.e(TAG, "Delete log file failed.");
+                        } else
+                            Log.i(TAG, "Delete log file successfully.");
+
+                        bCheck = newLogFile.createNewFile();
+                        if (!bCheck) {
+                            Log.e(TAG, "Create log file failed.");
+                        } else
+                            Log.i(TAG, "Create log file successfully.");
+                    }
+
+
+                }
+            }
+        }catch(IOException e){
+            Log.e("IOException", "exception in createNewFile() method");
+        }
+
+        //we have to bind the new file with a FileOutputStream
+        FileOutputStream fileos = null;
+        try{
+            fileos = new FileOutputStream(newLogFile);
+        }catch(FileNotFoundException e){
+            Log.e("FileNotFoundException", "can't create FileOutputStream");
+        }
+
+        try {
+            Process process = Runtime.getRuntime().exec("logcat -d");
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            StringBuilder log=new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                log.append(line);
+            }
+
+            fileos.write(log.toString().getBytes());
+
+        } catch (IOException e) {
+        }
+
+
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
