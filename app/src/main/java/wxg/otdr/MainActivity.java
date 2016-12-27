@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -46,12 +47,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -131,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static EditText mVersionEdit;
+
+    private static Handler mHandler = null;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -622,6 +627,49 @@ public class MainActivity extends AppCompatActivity {
         public View EnterEngineeringMode(LayoutInflater inflater, ViewGroup container) {
             Log.i("PlaceholderFragment", "Draw Engineering Mode");
             View rootView = inflater.inflate(R.layout.fragment_engineering_mode, container, false);
+
+            Switch mSaveLog_Switch = (Switch) rootView.findViewById(R.id.id_SaveLog_Switch);
+
+            mSaveLog_Switch.setTextOn("状态记录：开");
+            mSaveLog_Switch.setTextOff("状态记录：关");
+
+            mSaveLog_Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            LogRecord mLogRecord = null;
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView,
+                                             boolean isChecked) {
+                    // TODO Auto-generated method stub
+                    if (isChecked) {
+                        Log.i(TAG, "SaveLog_Switch is on.");
+                        mHandler = new Handler() {
+                            @Override
+                            public void handleMessage(android.os.Message msg) {
+                                int iWhat = msg.what;
+
+                                switch (iWhat){
+                                    case 1: MainActivity.getInstance().ShowInfo2User(
+                                            "系统剩余空间不足！APK运行信息无法记录！", Toast.LENGTH_LONG);
+                                            break;
+                                    default:
+                                            break;
+                                }
+
+                            };
+                        };
+
+                        mLogRecord = new LogRecord(mHandler);
+
+                        mLogRecord.start();
+                    } else {
+                        Log.i(TAG, "SaveLog_Switch is off.");
+                        if (mLogRecord != null){
+                            mLogRecord.interrupt();
+                        }
+
+                    }
+                }
+            });
 
             return rootView;
         }

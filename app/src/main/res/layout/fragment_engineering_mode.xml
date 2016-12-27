@@ -169,9 +169,21 @@
         android:id="@+id/id_Reset_button"
         android:clickable="true"
         android:onClick="onButtonReset"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/id_Setting_button"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/id_Setting_button"
+        android:layout_centerHorizontal="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="关"
+        android:textOn="开"
+        android:text="状态记录"
+
+        android:id="@+id/id_SaveLog_Switch"
+        android:checked="false"
+        android:layout_alignTop="@+id/id_Reset_button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/id_Reset_button"
         />
 
 </RelativeLayout>
