@@ -214,6 +214,18 @@ public class GlobalData extends Application{
         return str;
     }
 
+    public String Int2HexString(int[] IntSerial){
+
+        int iCount = IntSerial.length;
+        String str = "";
+        for (int iTem = 0; iTem < iCount; iTem++){
+
+            String strTem = String.valueOf(IntSerial[iTem]);
+            str = str + String.format(strTem, "0x%02x") + ";";
+        }
+        return str;
+    }
+
     public String Int2StringLog(int[] IntSerial){
 
         int iCount = IntSerial.length;

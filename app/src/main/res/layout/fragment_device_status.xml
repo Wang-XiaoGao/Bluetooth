@@ -26,7 +26,7 @@
             android:id="@+id/imageViewBT"
             android:background="@drawable/bluetooth56_gray"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
+
             android:layout_centerVertical="true"
             android:onClick="OpenBluetoothSettings"
             />
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/battery_56px_gray"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
 
                 android:layout_centerVertical="true" />
 
@@ -73,7 +73,7 @@
                 android:layout_toRightOf="@id/id_Battery_Image"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="10dp"
 
                 android:layout_gravity="center_vertical"
                 android:layout_centerVertical="true"/>
@@ -122,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/devicecheck56gray"
-                android:layout_marginStart="10dp"
+
                 android:onClick="StartSelfCheck"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true" />

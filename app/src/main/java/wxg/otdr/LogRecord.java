@@ -115,6 +115,7 @@ public class LogRecord extends Thread {
             while ((line = bufferedReader.readLine()) != null) {
                 log.append(line);
             }
+            Log.d(TAG, "Process reading end.");
 
             fileos.write(log.toString().getBytes());
 

@@ -921,7 +921,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "PressureGate is null.");
-            ShowInfo2User("压力门限值设置错误", Toast.LENGTH_SHORT);
+            ShowInfo2User("压力门限界面错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -948,7 +948,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "TimeGateT1 is null.");
-            ShowInfo2User("时间门限值T1设置错误", Toast.LENGTH_SHORT);
+            ShowInfo2User("时间门限值T1界面错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -974,7 +974,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "TimeGateT2 is null.");
-            ShowInfo2User("持续时间门限值T2设置错误", Toast.LENGTH_SHORT);
+            ShowInfo2User("持续时间门限值T2界面错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -1001,7 +1001,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "AudioGate is null.");
-            ShowInfo2User("音频信号持续时间设置错误", Toast.LENGTH_SHORT);
+            ShowInfo2User("音频信号持续时间界面错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -1030,7 +1030,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.e(TAG, "MaterialNum is null.");
-            ShowInfo2User("手环编号设置错误", Toast.LENGTH_SHORT);
+            ShowInfo2User("手环编号界面错误", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -1040,7 +1040,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (!bCheck) {
             Log.e(TAG, "onButtonSettings: Send Command failed.");
-            ShowInfo2User("参数设置错误", Toast.LENGTH_SHORT);
+            //ShowInfo2User("参数设置失败", Toast.LENGTH_SHORT);
         }
     }
 
@@ -1098,20 +1098,25 @@ public class MainActivity extends AppCompatActivity {
         int iBTTem = BluetoothService.getBTConnectStatus();
         boolean bCheck = false;
 
+
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
             //eSelfCheck, eQueryBatter
             int[] iValues = mGlobalData.getIntReturn(bCommand);
 
-            Log.i(TAG, "Data to send: " + mGlobalData.Int2String(iValues));
+            Log.i(TAG, "Data to send: " + mGlobalData.Int2HexString(iValues));
             if (mBluetoothService != null) {
                 bCheck = mBluetoothService.AssignGATTService(ServiceUUID);
                 if (!bCheck){
                     Log.e(TAG, "mBluetoothService is null.");
+                    Toast.makeText(this, getResources().getText(R.string.BT_Service_Null),
+                            Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 bCheck = mBluetoothService.AssignGATTCharacteristics(CharUUID);
                 if (!bCheck){
                     Log.e(TAG, "Characteristics is null.");
+                    Toast.makeText(this, getResources().getText(R.string.BT_Characteristic_Null),
+                            Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
@@ -1129,12 +1134,14 @@ public class MainActivity extends AppCompatActivity {
 
             }else{
                 Log.e(TAG, "Exception: mBluetoothService is null.");
+                Toast.makeText(this, getResources().getText(R.string.BT_Component_Null),
+                        Toast.LENGTH_SHORT).show();
             }
         }else{
             Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
 
             Toast.makeText(getBaseContext(),
-                    "蓝牙设备还未连接!",
+                    getResources().getText(R.string.BT_Not_Connected),
                     Toast.LENGTH_SHORT).show();
             return false;
         }

@@ -30,7 +30,11 @@
     <string name="title_activity_display">DisplayActivity</string>
     <string name="BT_TurnOn">蓝牙功能已开启</string>
     <string name="BT_Not_TurnOn">蓝牙功能未开启</string>
+    <string name="BT_Service_Null">GATT无相关服务！</string>
+    <string name="BT_Characteristic_Null">GATT无相关特征值！</string>
     <string name="Command_Send_Failed">命令发送失败！</string>
+    <string name="BT_Component_Null">蓝牙组件未建立！</string>
+    <string name="BT_Not_Connected">蓝牙设备还未连接！</string>
     <string name="Command_Reset">复位</string>
     <string name="BT_Status">查询\n出错\n信息</string>
     <string name="Update_Send_Times">更新发射状态</string>

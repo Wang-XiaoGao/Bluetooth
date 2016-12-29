@@ -155,6 +155,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
                     if (iReturnData == null){
                         Log.e(TAG, "iReturnData is null.");
+                        MainActivity.getInstance().ShowInfo2User(
+                                "读取电池命令返回空", Toast.LENGTH_SHORT);
                         return;
                     }
 
@@ -166,11 +168,15 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
                     if (iReturnData == null){
                         Log.e(TAG, "iReturnData is null.");
+                        MainActivity.getInstance().ShowInfo2User(
+                                "自检命令返回空", Toast.LENGTH_SHORT);
                         return;
                     }
 
                     if (iReturnData.length < GlobalData.cAmplitude_Decimal_Index + 1){
                         Log.e(TAG, "iReturnData is less than expected.");
+                        MainActivity.getInstance().ShowInfo2User(
+                                "自检命令返回结果格式错误", Toast.LENGTH_SHORT);
                         return;
                     }
 
@@ -212,6 +218,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
                     if (iReturnData == null){
                         Log.e(TAG, "iReturnData is null.");
+                        MainActivity.getInstance().ShowInfo2User(
+                                "读取蓝牙时间返回未知结果", Toast.LENGTH_SHORT);
                         return;
                     }
 
@@ -236,6 +244,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     int iTimes = intent.getIntExtra(BluetoothService.RETURN_DATA, 0);
                     if (iTimes < 0){
                         Log.e(TAG, "strReturnData is null.");
+                        MainActivity.getInstance().ShowInfo2User(
+                                "错误信息条数返回未知结果", Toast.LENGTH_SHORT);
                         return;
                     }else{
                         GlobalData.strErrorMessageTimes = String.format("%d", iTimes);
@@ -265,8 +275,21 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     break;
 
                 case GlobalData.cCommand_Settings:
+                    iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+                    if (iReturnData[0] == 0){
+                        Log.e(TAG, "cCommand_Settings, BT parameters out of range.");
+                        MainActivity.getInstance().ShowInfo2User(
+                                "蓝牙终端判断参数设置超出范围", Toast.LENGTH_SHORT);
+                    }else if (iReturnData[0] == 1){
+                        Log.i(TAG, "cCommand_Settings, BT parameters successfully.");
                         MainActivity.getInstance().ShowInfo2User(
                                 "参数设置成功", Toast.LENGTH_SHORT);
+                    }else{
+                        Log.i(TAG, "cCommand_Settings, BT return unknown.");
+                        MainActivity.getInstance().ShowInfo2User(
+                                "参数设置返回未知结果", Toast.LENGTH_SHORT);
+                    }
+
                     break;
 
                 case GlobalData.cCommand_Reset:
