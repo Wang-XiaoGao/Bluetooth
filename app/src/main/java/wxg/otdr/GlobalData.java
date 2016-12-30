@@ -136,8 +136,12 @@ public class GlobalData extends Application{
     enum eCommandIndex {eQueryBattery, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
         eRequestMessageTimes, eSettings};
 
+    // This String is used to record log in UI.
     public static String strTitle = "Log: ";
     public static String strLog = "";
+
+    // This String is used to record log file mode.
+    public static String strPreLogFile = "";
 
     public static long lLogFileVolume = 5242880; // The log file in android should be smaller than 5 Mb.
     public static boolean bLogFileMode = false; // This flag decide whether logfile create.

@@ -245,7 +245,7 @@ public class BluetoothService extends IntentService {
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
 
-        // just for debug.
+        // just for debug, show in UI.
         byte[] bDebugValues = characteristic.getValue();
         GlobalData gData = new GlobalData();
         String strNewLog = "";
@@ -260,6 +260,9 @@ public class BluetoothService extends IntentService {
         Intent intent_Debug = new Intent(ACTION_DEBUG_DATA);
         intent_Debug.putExtra(DEBUG_COMMAND, strNewLog);
         MainActivity.getInstance().sendBroadcast(intent_Debug);
+
+        // This debug is for log saved in file. Collect all log in logcat.
+        Log.d(TAG, strNewLog);
 
         if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
             Log.d(TAG, String.format("Received data modified: ", characteristic.getValue()));

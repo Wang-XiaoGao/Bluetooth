@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class LogRecord extends Thread {
                     long lFileVolume = newLogFile.length();
 
                     strTemp = String.valueOf(lFileVolume);
-                    Log.i(TAG, "lFileVolume is " + strTemp);
+                    Log.i(TAG, "Existed Log File Volume is: " + strTemp);
                     // If Log file is bigger than GlobalData.lLogFileVolume (5 Mb), renew.
                     if (lFileVolume > GlobalData.lLogFileVolume) {
                         bCheck = newLogFile.delete();
@@ -97,14 +98,26 @@ public class LogRecord extends Thread {
         }
 
         //we have to bind the new file with a FileOutputStream
-        FileOutputStream fileos = null;
+        FileOutputStream FileOut = null;
+        FileInputStream FileIn = null;
+
         try{
-            fileos = new FileOutputStream(newLogFile);
-        }catch(FileNotFoundException e){
-            Log.e("FileNotFoundException", "can't create FileOutputStream");
+            FileIn = new FileInputStream(newLogFile);
+            int iFileVolume = FileIn.available();
+            Log.e(TAG, "Read Log file volume is: " + String.valueOf(iFileVolume));
+            if (iFileVolume>0){
+                byte[] bytesTemp = new byte[iFileVolume];
+                FileIn.read(bytesTemp);
+                GlobalData.strPreLogFile = bytesTemp.toString();
+            }
+            FileIn.close();
+        }catch(IOException e){
+            Log.e(TAG, "can't create FileInputStream");
         }
 
+
         try {
+            FileOut = new FileOutputStream(newLogFile);
             //Process process = Runtime.getRuntime().exec("logcat -d");
             Process process = Runtime.getRuntime().exec("logcat -d");
             BufferedReader bufferedReader = new BufferedReader(
@@ -117,9 +130,16 @@ public class LogRecord extends Thread {
             }
             Log.d(TAG, "Process reading end.");
 
-            fileos.write(log.toString().getBytes());
+            if(FileOut != null){
+                FileOut.write((GlobalData.strPreLogFile + log.toString()).getBytes());
+                GlobalData.strPreLogFile = "";
+                FileOut.close();
+            }
 
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
+            Log.e("FileNotFoundException", "can't create FileOutputStream");
+        } catch(IOException e){
+            Log.e(TAG, "can't write FileOutputStream");
         }
     }
 
