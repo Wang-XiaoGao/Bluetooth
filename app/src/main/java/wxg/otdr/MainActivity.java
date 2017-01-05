@@ -195,10 +195,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        TabTitle_Device_Status = getString(R.string.TabTitle_DeviceStauts);
-        TabTitle_System_Info = getString(R.string.TabTitle_SystemInfo);
-        TabTitle_Engineering_Mode = getString(R.string.TabTitle_EngineeringMode);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -214,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
         // This app set standard mode to be default mode.
         mEngineeringTab = mtabLayout.getTabAt(iEngineeringMode);
+
         // For development, default mode change to be engineering mode.
         //mtabLayout.removeTabAt(iEngineeringMode);
         //iTabCount--;
@@ -249,6 +246,8 @@ public class MainActivity extends AppCompatActivity {
                 // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
 
 
 
@@ -628,49 +627,6 @@ public class MainActivity extends AppCompatActivity {
             Log.i("PlaceholderFragment", "Draw Engineering Mode");
             View rootView = inflater.inflate(R.layout.fragment_engineering_mode, container, false);
 
-            Switch mSaveLog_Switch = (Switch) rootView.findViewById(R.id.id_SaveLog_Switch);
-
-            mSaveLog_Switch.setTextOn("状态记录：开");
-            mSaveLog_Switch.setTextOff("状态记录：关");
-
-            mSaveLog_Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            LogRecord mLogRecord = null;
-
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                                             boolean isChecked) {
-                    // TODO Auto-generated method stub
-                    if (isChecked) {
-                        Log.i(TAG, "SaveLog_Switch is on.");
-                        mHandler = new Handler() {
-                            @Override
-                            public void handleMessage(android.os.Message msg) {
-                                int iWhat = msg.what;
-
-                                switch (iWhat){
-                                    case 1: MainActivity.getInstance().ShowInfo2User(
-                                            "系统剩余空间不足！APK运行信息无法记录！", Toast.LENGTH_LONG);
-                                            break;
-                                    default:
-                                            break;
-                                }
-
-                            };
-                        };
-
-                        mLogRecord = new LogRecord(mHandler);
-
-                        mLogRecord.start();
-                    } else {
-                        Log.i(TAG, "SaveLog_Switch is off.");
-                        if (mLogRecord != null){
-                            mLogRecord.interrupt();
-                        }
-
-                    }
-                }
-            });
-
             return rootView;
         }
 
@@ -704,11 +660,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case iDeviceStatus:
-                    return TabTitle_Device_Status;
+                    return getString(R.string.TabTitle_DeviceStatus);
                 case iSystemInfo:
-                    return TabTitle_System_Info;
+                    return getString(R.string.TabTitle_SystemInfo);
                 case iEngineeringMode:
-                    return TabTitle_Engineering_Mode;
+                    return getString(R.string.TabTitle_EngineeringMode);
             }
             return null;
         }
@@ -1078,6 +1034,63 @@ public class MainActivity extends AppCompatActivity {
 
         if (!bCheck){
             Log.e(TAG, "onButtonSetTime: Send Command failed.");
+        }
+
+    }
+
+
+    public void onSwitchLog(View v) {
+        Log.i(TAG, "Call onSwitchLog.");
+        boolean bCheck = false;
+
+        Switch mSaveLog_Switch = (Switch) v.findViewById(R.id.id_SaveLog_Switch);
+
+        if (mSaveLog_Switch != null){
+            mSaveLog_Switch.setTextOn("状态记录：开");
+            mSaveLog_Switch.setTextOff("状态记录：关");
+
+            mSaveLog_Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                LogRecord mLogRecord = null;
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView,
+                                             boolean isChecked) {
+                    // TODO Auto-generated method stub
+                    if (isChecked) {
+                        Log.i(TAG, "SaveLog_Switch is on.");
+                        mHandler = new Handler() {
+                            @Override
+                            public void handleMessage(android.os.Message msg) {
+                                int iWhat = msg.what;
+
+                                switch (iWhat) {
+                                    case 1:
+                                        MainActivity.getInstance().ShowInfo2User(
+                                                "系统剩余空间不足！APK运行信息无法记录！", Toast.LENGTH_LONG);
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                            }
+
+                            ;
+                        };
+
+                        mLogRecord = new LogRecord(mHandler);
+
+                        mLogRecord.start();
+                    } else {
+                        Log.i(TAG, "SaveLog_Switch is off.");
+                        if (mLogRecord != null) {
+                            mLogRecord.interrupt();
+                        }
+
+                    }
+                }
+            });
+        }else{
+            Log.e(TAG, "Get mSaveLog_Switch failed.");
         }
 
     }

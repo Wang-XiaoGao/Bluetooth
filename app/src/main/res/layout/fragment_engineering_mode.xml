@@ -183,6 +183,7 @@
         android:checked="false"
         android:layout_alignTop="@+id/id_Reset_button"
         android:layout_alignParentEnd="true"
+        android:onClick="onSwitchLog"
         android:layout_alignBottom="@+id/id_Reset_button"
         />
 

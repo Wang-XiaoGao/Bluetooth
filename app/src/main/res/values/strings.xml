@@ -9,9 +9,9 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
 
-    <string name="TabTitle_DeviceStauts">手环状态信息</string>
-    <string name="TabTitle_EngineeringMode">工程模式</string>
+    <string name="TabTitle_DeviceStatus">手环状态信息</string>
     <string name="TabTitle_SystemInfo">系统信息</string>
+    <string name="TabTitle_EngineeringMode">工程模式</string>
 
 
     <string name="Bluetooth_Title">请连接手环</string>

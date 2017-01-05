@@ -143,10 +143,9 @@ public class GlobalData extends Application{
     // This String is used to record log file mode.
     public static String strPreLogFile = "";
 
-    public static long lLogFileVolume = 5242880; // The log file in android should be smaller than 5 Mb.
+    public static long lLogFile_WarningVolume = 5242880; // Warning gate for logfile in android better, 5 Mb.
+    public static long lLogFile_MaxVolume = 10485760; // The log file in android should be smaller than 10 Mb.
     public static boolean bLogFileMode = false; // This flag decide whether logfile create.
-
-
 
     @Override
     public void onCreate(){

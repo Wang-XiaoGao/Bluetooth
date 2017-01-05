@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -55,7 +56,7 @@ public class LogRecord extends Thread {
             String strTemp = String.valueOf(lUsableSpace);
             Log.i(TAG, "lUsableSpace is " + strTemp);
 
-            if (lUsableSpace <= GlobalData.lLogFileVolume) {
+            if (lUsableSpace <= GlobalData.lLogFile_MaxVolume) {
                 GlobalData.bLogFileMode = false;
                 Message message=new Message();
                 message.what=1;
@@ -75,8 +76,8 @@ public class LogRecord extends Thread {
 
                     strTemp = String.valueOf(lFileVolume);
                     Log.i(TAG, "Existed Log File Volume is: " + strTemp);
-                    // If Log file is bigger than GlobalData.lLogFileVolume (5 Mb), renew.
-                    if (lFileVolume > GlobalData.lLogFileVolume) {
+                    // If Log file is bigger than GlobalData.lLogFile_MaxVolume (10 Mb), renew.
+                    if (lFileVolume > GlobalData.lLogFile_MaxVolume) {
                         bCheck = newLogFile.delete();
                         if (!bCheck) {
                             Log.e(TAG, "Delete log file failed.");
@@ -89,8 +90,6 @@ public class LogRecord extends Thread {
                         } else
                             Log.i(TAG, "Create log file successfully.");
                     }
-
-
                 }
             }
         }catch(IOException e){
@@ -98,49 +97,47 @@ public class LogRecord extends Thread {
         }
 
         //we have to bind the new file with a FileOutputStream
-        FileOutputStream FileOut = null;
         FileInputStream FileIn = null;
+        long iFileVolume = 0;
 
         try{
             FileIn = new FileInputStream(newLogFile);
-            int iFileVolume = FileIn.available();
+            iFileVolume = FileIn.available();
             Log.e(TAG, "Read Log file volume is: " + String.valueOf(iFileVolume));
-            if (iFileVolume>0){
-                byte[] bytesTemp = new byte[iFileVolume];
-                FileIn.read(bytesTemp);
-                GlobalData.strPreLogFile = bytesTemp.toString();
-            }
             FileIn.close();
         }catch(IOException e){
             Log.e(TAG, "can't create FileInputStream");
         }
 
+        iFileVolume = GlobalData.lLogFile_MaxVolume - iFileVolume;
+        try{
+            // Open a file writer，the second parameter means to write with append mode.
+            FileWriter writer = new FileWriter(newLogFile, true);
+        // Run a loop, continue to read, unless the file reach max volume.
+            while (iFileVolume > 0) {
+                //Process process = Runtime.getRuntime().exec("logcat -d");
+                Process process = Runtime.getRuntime().exec("logcat -d");
+                BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream()));
 
-        try {
-            FileOut = new FileOutputStream(newLogFile);
-            //Process process = Runtime.getRuntime().exec("logcat -d");
-            Process process = Runtime.getRuntime().exec("logcat -d");
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
+                StringBuilder log = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    log.append(line);
+                }
+                Log.d(TAG, "Process reading end.");
+                iFileVolume = iFileVolume - log.length();
 
-            StringBuilder log=new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                log.append(line);
+                writer.write(log.toString().toCharArray());
             }
-            Log.d(TAG, "Process reading end.");
 
-            if(FileOut != null){
-                FileOut.write((GlobalData.strPreLogFile + log.toString()).getBytes());
-                GlobalData.strPreLogFile = "";
-                FileOut.close();
-            }
-
+            writer.close();
         } catch (FileNotFoundException e) {
-            Log.e("FileNotFoundException", "can't create FileOutputStream");
-        } catch(IOException e){
-            Log.e(TAG, "can't write FileOutputStream");
+                Log.e("FileNotFoundException", "can't create FileOutputStream");
+        } catch (IOException e) {
+                Log.e(TAG, "can't create FileWriter");
         }
+
     }
 
 }
