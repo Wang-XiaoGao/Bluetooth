@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
     private static EditText mVersionEdit;
 
     private static Handler mHandler = null;
+    public static Switch mSaveLog_Switch = null;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -1043,7 +1044,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Call onSwitchLog.");
         boolean bCheck = false;
 
-        Switch mSaveLog_Switch = (Switch) v.findViewById(R.id.id_SaveLog_Switch);
+        mSaveLog_Switch = (Switch) v.findViewById(R.id.id_SaveLog_Switch);
 
         if (mSaveLog_Switch != null){
             mSaveLog_Switch.setTextOn("状态记录：开");

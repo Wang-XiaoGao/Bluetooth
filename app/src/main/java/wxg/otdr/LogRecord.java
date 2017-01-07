@@ -34,7 +34,7 @@ public class LogRecord extends Thread {
 
 
 
-        String strFileName = "A_BlueToothApp_Log.txt";
+        String strFileName = "A_BlueToothApp.log";
         String filePath = "/A_BlueToothApp/";
 
         File newLogFolder = new File(Environment.getExternalStorageDirectory(), filePath);
@@ -45,13 +45,15 @@ public class LogRecord extends Thread {
                 Log.e(TAG, "Create log folder failed.");
             }else
                 Log.i(TAG, "Create log folder successfully.");
+        }else{
+            Log.i(TAG, "Log folder already exist.");
         }
 
 
-        File newLogFile = new File(newLogFolder.getPath(), strFileName);
+        //File newLogFile = new File(newLogFolder.getPath(), strFileName);
         // First to check whether disk space is enough for 5Mb (GlobalData.lLogFileVolume);
         // Second to decide whether GlobalData.bLogFileMode
-        try{
+
             long lUsableSpace = newLogFolder.getUsableSpace();
             String strTemp = String.valueOf(lUsableSpace);
             Log.i(TAG, "lUsableSpace is " + strTemp);
@@ -63,7 +65,7 @@ public class LogRecord extends Thread {
                 mHandler.sendMessage(message);
 
                 Log.e(TAG, "系统剩余空间不足！APK运行信息无法记录！");
-            }else{
+            }/*else{
                 if (!newLogFile.exists()) {
                     GlobalData.bLogFileMode = true;
                     bCheck = newLogFile.createNewFile();
@@ -91,15 +93,13 @@ public class LogRecord extends Thread {
                             Log.i(TAG, "Create log file successfully.");
                     }
                 }
-            }
-        }catch(IOException e){
-            Log.e("IOException", "exception in createNewFile() method");
-        }
+            }*/
+
 
         //we have to bind the new file with a FileOutputStream
         FileInputStream FileIn = null;
         long iFileVolume = 0;
-
+/*
         try{
             FileIn = new FileInputStream(newLogFile);
             iFileVolume = FileIn.available();
@@ -109,14 +109,18 @@ public class LogRecord extends Thread {
             Log.e(TAG, "can't create FileInputStream");
         }
 
-        iFileVolume = GlobalData.lLogFile_MaxVolume - iFileVolume;
+        iFileVolume = GlobalData.lLogFile_MaxVolume - iFileVolume;*/
         try{
             // Open a file writer，the second parameter means to write with append mode.
-            FileWriter writer = new FileWriter(newLogFile, true);
+            //FileWriter writer = new FileWriter(newLogFile, true);
         // Run a loop, continue to read, unless the file reach max volume.
-            while (iFileVolume > 0) {
+            //while (iFileVolume > 0) {
                 //Process process = Runtime.getRuntime().exec("logcat -d");
-                Process process = Runtime.getRuntime().exec("logcat -d");
+            String strLogFile = Environment.getExternalStorageDirectory() + "/A_BlueToothApp/DumpBTApp.log";
+            Process processTry =Runtime.getRuntime().exec(
+                    "logcat -b main -v time -n 5 -r 16 -f" + strLogFile);
+
+            /*    Process process = Runtime.getRuntime().exec("logcat -d");
                 BufferedReader bufferedReader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()));
 
@@ -129,9 +133,9 @@ public class LogRecord extends Thread {
                 iFileVolume = iFileVolume - log.length();
 
                 writer.write(log.toString().toCharArray());
-            }
+            //}
 
-            writer.close();
+            writer.close();*/
         } catch (FileNotFoundException e) {
                 Log.e("FileNotFoundException", "can't create FileOutputStream");
         } catch (IOException e) {
