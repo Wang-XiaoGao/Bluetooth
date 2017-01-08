@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 public class LogRecord extends Thread {
     private final static String TAG = LogRecord.class.getSimpleName();
     private Handler mHandler;
+    public static Process Proc_Logcat = null;
 
     public LogRecord(Handler handler){
         super();
@@ -33,6 +34,7 @@ public class LogRecord extends Thread {
     public void run(){
 
 
+        Log.i(TAG, "Execute run() to LogRecord.");
 
         String strFileName = "A_BlueToothApp.log";
         String filePath = "/A_BlueToothApp/";
@@ -117,7 +119,7 @@ public class LogRecord extends Thread {
             //while (iFileVolume > 0) {
                 //Process process = Runtime.getRuntime().exec("logcat -d");
             String strLogFile = Environment.getExternalStorageDirectory() + "/A_BlueToothApp/DumpBTApp.log";
-            Process processTry =Runtime.getRuntime().exec(
+            Proc_Logcat =Runtime.getRuntime().exec(
                     "logcat -b main -v time -n 5 -r 16 -f" + strLogFile);
 
             /*    Process process = Runtime.getRuntime().exec("logcat -d");
@@ -142,6 +144,17 @@ public class LogRecord extends Thread {
                 Log.e(TAG, "can't create FileWriter");
         }
 
+    }
+
+    public void interrupt(){
+        Log.i(TAG, "Execute interrupt() to LogRecord.");
+        try {
+            Process processTry = Runtime.getRuntime().exec("logcat -c");
+        }catch(IOException e){
+            Log.e(TAG, "can't stop logcat dump process.");
+        }
+
+        super.interrupt();
     }
 
 }

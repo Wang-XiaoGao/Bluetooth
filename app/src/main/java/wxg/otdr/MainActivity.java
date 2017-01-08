@@ -63,6 +63,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -1052,7 +1053,6 @@ public class MainActivity extends AppCompatActivity {
 
             mSaveLog_Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 LogRecord mLogRecord = null;
-
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView,
                                              boolean isChecked) {
@@ -1073,9 +1073,7 @@ public class MainActivity extends AppCompatActivity {
                                         break;
                                 }
 
-                            }
-
-                            ;
+                            };
                         };
 
                         mLogRecord = new LogRecord(mHandler);
@@ -1086,6 +1084,17 @@ public class MainActivity extends AppCompatActivity {
                         if (mLogRecord != null) {
                             mLogRecord.interrupt();
                         }
+                        //try {
+                            Process processTry = LogRecord.Proc_Logcat;
+                            if (processTry != null){
+
+                                processTry.destroy();
+                            }
+
+                        //}
+                        //catch(IOException e){
+                        //    Log.e(TAG, "can't stop logcat dump process.");
+                        //}
 
                     }
                 }
