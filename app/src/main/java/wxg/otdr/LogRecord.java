@@ -120,7 +120,7 @@ public class LogRecord extends Thread {
                 //Process process = Runtime.getRuntime().exec("logcat -d");
             String strLogFile = Environment.getExternalStorageDirectory() + "/A_BlueToothApp/DumpBTApp.log";
             Proc_Logcat =Runtime.getRuntime().exec(
-                    "logcat -b main -v time -n 5 -r 16 -f" + strLogFile);
+                    "logcat -b main -v time -n 5 -r 64 -f" + strLogFile);
 
             /*    Process process = Runtime.getRuntime().exec("logcat -d");
                 BufferedReader bufferedReader = new BufferedReader(

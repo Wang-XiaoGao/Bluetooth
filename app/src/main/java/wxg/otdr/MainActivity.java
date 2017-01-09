@@ -1046,7 +1046,36 @@ public class MainActivity extends AppCompatActivity {
         boolean bCheck = false;
 
         mSaveLog_Switch = (Switch) v.findViewById(R.id.id_SaveLog_Switch);
+        LogRecord mLogRecord = null;
+        if (mSaveLog_Switch == null){
+            Log.e(TAG, "mSaveLog_Switch is null!");
+        }else{
+            bCheck = mSaveLog_Switch.isChecked();
 
+            if (bCheck){
+                Log.i(TAG, "SaveLog_Switch is on.");
+                mHandler = new MyHandler();
+                mLogRecord = new LogRecord(mHandler);
+
+                mLogRecord.start();
+            } else {
+                Log.i(TAG, "SaveLog_Switch is off.");
+                if (mLogRecord != null) {
+                    mLogRecord.interrupt();
+                }
+                //try {
+                Process processTry = LogRecord.Proc_Logcat;
+                if (processTry != null){
+
+                    processTry.destroy();
+                }
+
+
+            }
+
+        }
+        // Stop register listener, since some bug: need to trigger twice to start threat.
+/*
         if (mSaveLog_Switch != null){
             mSaveLog_Switch.setTextOn("状态记录：开");
             mSaveLog_Switch.setTextOff("状态记录：关");
@@ -1084,25 +1113,35 @@ public class MainActivity extends AppCompatActivity {
                         if (mLogRecord != null) {
                             mLogRecord.interrupt();
                         }
-                        //try {
-                            Process processTry = LogRecord.Proc_Logcat;
-                            if (processTry != null){
+                        Process processTry = LogRecord.Proc_Logcat;
+                        if (processTry != null){
 
-                                processTry.destroy();
-                            }
-
-                        //}
-                        //catch(IOException e){
-                        //    Log.e(TAG, "can't stop logcat dump process.");
-                        //}
-
+                            processTry.destroy();
+                        }
                     }
                 }
             });
         }else{
             Log.e(TAG, "Get mSaveLog_Switch failed.");
         }
+*/
+    }
 
+    public static class  MyHandler extends Handler {
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            int iWhat = msg.what;
+
+            switch (iWhat) {
+                case 1:
+                    MainActivity.getInstance().ShowInfo2User(
+                            "系统剩余空间不足！APK运行信息无法记录！", Toast.LENGTH_LONG);
+                    break;
+                default:
+                    break;
+            }
+
+        };
     }
 
 /*    // Try QueryLatestVersion.
