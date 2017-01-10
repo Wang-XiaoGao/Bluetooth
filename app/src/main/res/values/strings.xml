@@ -48,8 +48,8 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2017-Jan-09</string>
-    <string name="Update_Info">更新内容：\n1，修正点击两次才能激活dump log的bug。</string>
+    <string name="Delivery_Date">更新日期：2017-Jan-11</string>
+    <string name="Update_Info">更新内容：\n1，按1226需求增加自检字节。</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 

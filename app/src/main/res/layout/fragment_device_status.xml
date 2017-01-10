@@ -203,7 +203,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Amplitude_Value"
-                android:text="     "
+                android:text="      "
                 android:maxLength="6"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_Amplitude_Chinese"
@@ -235,7 +235,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Frequency_Value"
-                android:text="     "
+                android:text="      "
                 android:maxLength="6"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_Frequency_Chinese"
@@ -267,7 +267,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_WaveLength_Value"
-                android:text="     "
+                android:text="      "
                 android:maxLength="6"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_WaveLength_Chinese"
@@ -317,6 +317,69 @@
                 android:layout_alignBottom="@id/id_Cycle_Value"/>
 
 
+        <TextView
+            android:id="@+id/id_Continuous_T2_Chinese"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="持续T2："
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@+id/id_WaveLength_Chinese"
+            android:layout_toStartOf="@+id/id_WaveLength_Value" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_Continuous_T2_Value"
+            android:text="      "
+            android:maxLength="6"
+            android:textSize="16sp"
+            android:layout_toEndOf="@id/id_Continuous_T2_Chinese"
+            android:layout_alignBottom="@id/id_Continuous_T2_Chinese"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_Continuous_T2_Unit"
+            android:text="s"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_toEndOf="@id/id_Continuous_T2_Value"
+            android:layout_alignBottom="@id/id_Continuous_T2_Value"/>
+
+        <TextView
+            android:id="@+id/id_T1_Gate_Chinese"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间T1："
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@id/id_Cycle_Chinese"
+            android:layout_alignEnd="@id/id_Cycle_Chinese" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_T1_Gate_Value"
+            android:text="      "
+            android:maxLength="6"
+            android:textSize="16sp"
+            android:layout_toEndOf="@id/id_T1_Gate_Chinese"
+            android:layout_alignBottom="@id/id_T1_Gate_Chinese"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_T1_Gate_Unit"
+            android:text="min"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_toEndOf="@id/id_T1_Gate_Value"
+            android:layout_alignBottom="@id/id_T1_Gate_Chinese"/>
 
             <TextView
                 android:id="@+id/id_Pressure_Chinese"
@@ -326,7 +389,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical"
-                android:layout_below="@id/id_WaveLength_Chinese"
+                android:layout_below="@id/id_Continuous_T2_Chinese"
                 android:layout_alignStart="@id/id_MaterialNum_Chinese" />
 
             <TextView

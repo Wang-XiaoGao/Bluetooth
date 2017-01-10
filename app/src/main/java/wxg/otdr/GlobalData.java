@@ -27,6 +27,8 @@ public class GlobalData extends Application{
     public static String strWaveLength = "";
     public static String strWaveCycle = "";
     public static String strPressureGate = "";
+    public static String strT2Continuous = "";
+    public static String strT1Gate = "";
     public static String strErrorMessageTimes = "";
     public static String strQueryErrorMessage = "";
 
@@ -96,6 +98,10 @@ public class GlobalData extends Application{
     public final static int cCycle_Index = 9;
     public final static int cAmplitude_Integer_Index = 10;
     public final static int cAmplitude_Decimal_Index = 11;
+    public final static int cT2_Continue_Duration_Index = 12;
+    public final static int cT1_Gate__Index = 13;
+
+
     // To Read Date and Time.{0x68, 0x07, 0xD7, YearLow, month, day, hour, minute, second}
     public final static int cYearLow_Index = 0;
     public final static int cMonth_Index = 1;

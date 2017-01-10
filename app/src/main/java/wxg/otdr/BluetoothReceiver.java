@@ -57,6 +57,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
         TextView mWaveLengthText = (TextView) MainActivity.getInstance().findViewById(R.id.id_WaveLength_Value);
         TextView mCycleText = (TextView) MainActivity.getInstance().findViewById(R.id.id_Cycle_Value);
         TextView mAmplitudeText = (TextView) MainActivity.getInstance().findViewById(R.id.id_Amplitude_Value);
+        TextView mT2ContinuousText = (TextView) MainActivity.getInstance().findViewById(R.id.id_Continuous_T2_Value);
+        TextView mT1GateText = (TextView) MainActivity.getInstance().findViewById(R.id.id_T1_Gate_Value);
         EditText mDateText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Date);
         EditText mTimeText = (EditText) MainActivity.getInstance().findViewById(R.id.id_Edit_Time);
         EditText mSendTimesText = (EditText) MainActivity.getInstance().findViewById(R.id.id_SendTimes_Message);
@@ -173,7 +175,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                         return;
                     }
 
-                    if (iReturnData.length < GlobalData.cAmplitude_Decimal_Index + 1){
+                    if (iReturnData.length < GlobalData.cT1_Gate__Index + 1){
                         Log.e(TAG, "iReturnData is less than expected.");
                         MainActivity.getInstance().ShowInfo2User(
                                 "自检命令返回结果格式错误", Toast.LENGTH_SHORT);
@@ -212,6 +214,20 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     GlobalData.strAmplitude += ".";
                     GlobalData.strAmplitude += String.format("%d", iReturnData[GlobalData.cAmplitude_Decimal_Index]);
                     mAmplitudeText.setText(GlobalData.strAmplitude);
+
+                    GlobalData.strAmplitude = String.format("%d", iReturnData[GlobalData.cAmplitude_Integer_Index]);
+                    GlobalData.strAmplitude += ".";
+                    GlobalData.strAmplitude += String.format("%d", iReturnData[GlobalData.cAmplitude_Decimal_Index]);
+                    mAmplitudeText.setText(GlobalData.strAmplitude);
+
+                    iTem = iReturnData[GlobalData.cT2_Continue_Duration_Index];
+                    GlobalData.strT2Continuous = String.format("%d", iTem);
+                    mT2ContinuousText.setText(GlobalData.strT2Continuous);
+
+                    iTem = iReturnData[GlobalData.cT1_Gate__Index];
+                    GlobalData.strT1Gate = String.format("%d", iTem);
+                    mT1GateText.setText(GlobalData.strT1Gate);
+
                     break;
 
                 case GlobalData.cCommand_ReadTime:
