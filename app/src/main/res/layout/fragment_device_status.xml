@@ -51,7 +51,7 @@
         android:weightSum="1"
         android:id="@+id/id_Battery_Frame"
         android:layout_below="@+id/ConfigBTLayout"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:layout_centerHorizontal="true"
         android:background="@color/GrayWhite"
         android:onClick="QueryBattery">
@@ -112,7 +112,7 @@
         android:weightSum="1"
         android:id="@+id/id_Status_Frame"
         android:layout_below="@id/id_Battery_Frame"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:layout_centerHorizontal="true"
         android:background="@color/GrayWhite"
         android:onClick="StartSelfCheck">
@@ -145,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_MaterialNum_Value"
-                android:text="     "
+                android:text="      "
                 android:maxLength="6"
                 android:textSize="16sp"
 
@@ -164,14 +164,14 @@
 
                 android:layout_gravity="center_vertical"
                 android:layout_toEndOf="@id/id_MaterialNum_Value"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="45dp"
                 android:layout_alignBottom="@id/id_MaterialNum_Chinese"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Voltage_Value"
-                android:text="     "
+                android:text="      "
                 android:maxLength="6"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_Voltage_Chinese"
@@ -203,8 +203,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Amplitude_Value"
-                android:text="      "
-                android:maxLength="6"
+                android:text="        "
+                android:maxLength="8"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_Amplitude_Chinese"
                 android:layout_alignBottom="@id/id_Amplitude_Chinese"
@@ -267,8 +267,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_WaveLength_Value"
-                android:text="      "
-                android:maxLength="6"
+                android:text="        "
+                android:maxLength="8"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_WaveLength_Chinese"
                 android:layout_alignBottom="@id/id_WaveLength_Chinese"
@@ -299,7 +299,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Cycle_Value"
-                android:text="     "
+                android:text="      "
                 android:maxLength="6"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_Cycle_Chinese"
@@ -332,8 +332,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_Continuous_T2_Value"
-            android:text="      "
-            android:maxLength="6"
+            android:text="        "
+            android:maxLength="8"
             android:textSize="16sp"
             android:layout_toEndOf="@id/id_Continuous_T2_Chinese"
             android:layout_alignBottom="@id/id_Continuous_T2_Chinese"
@@ -353,7 +353,7 @@
             android:id="@+id/id_T1_Gate_Chinese"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="时间T1："
+            android:text="T1："
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_gravity="center_vertical"
@@ -396,7 +396,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_Pressure_Value"
-                android:text="     "
+                android:text="      "
                 android:maxLength="6"
                 android:textSize="16sp"
                 android:layout_toEndOf="@id/id_Pressure_Chinese"
@@ -422,7 +422,7 @@
         android:id="@+id/id_DebugText_View"
         android:layout_below="@+id/id_Status_Frame"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="3dp"
         android:inputType="textMultiLine"
         android:maxLines="4"
         android:layout_alignParentEnd="true" />
@@ -436,57 +436,60 @@
         android:background="@color/GrayWhite"
         android:layout_below="@id/id_DebugText_View"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:layout_alignEnd="@id/id_DebugText_View">
 
 
         <Button
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/BT_Status"
             android:id="@+id/id_BTStatus_Button"
             android:onClick="onButtonRequestStatus"
             android:textSize="16sp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="总数："
-            android:layout_marginTop="10dp"
-            android:id="@+id/id_MessageNumberText_View"
             android:layout_alignParentStart="true"
-            android:textSize="16sp"
-            android:layout_below="@id/id_BTStatus_Button"
-            />
+            android:layout_marginStart="25dp" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_MessageNumberText_Value"
 
-            android:text="0"
+            android:text="  "
             android:focusable="false"
             android:textSize="16sp"
-            android:layout_below="@id/id_BTStatus_Button"
-            android:layout_toEndOf="@id/id_MessageNumberText_View" />
+            android:layout_alignBottom="@+id/id_BTStatus_Button"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="32dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="状态信息条数："
+            android:id="@+id/id_MessageNumberText_View"
+            android:textSize="16sp"
+            android:layout_alignBottom="@+id/id_MessageNumberText_Value"
+            android:layout_toStartOf="@+id/id_MessageNumberText_Value"
+            android:layout_alignTop="@+id/id_MessageNumberText_Value" />
+
+
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:maxLines="7"
-            android:lines="5"
+            android:maxLines="5"
+            android:lines="4"
             android:scrollbars="vertical"
             android:id="@+id/id_SendTimes_Message"
             android:textSize="16sp"
             android:focusable="false"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@id/id_BTStatus_Button"
-            />
+
+            android:layout_below="@+id/id_MessageNumberText_Value"
+            android:layout_alignParentStart="true" />
         <!--android:background="@android:drawable/edit_text"-->
 
     </RelativeLayout>
@@ -498,7 +501,7 @@
 
         android:layout_below="@id/BTStatusLayout"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:textSize="16sp"
         android:background="@color/GrayWhite">
 

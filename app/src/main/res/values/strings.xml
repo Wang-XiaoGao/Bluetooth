@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">羿弓力创</string>
-    <string name="main_Title">羿弓力创：智能手环设定平台</string>
+    <string name="main_Title">智能手环设定平台</string>
     <string name="Simple_Mode">标准模式</string>
     <string name="Standard_Mode">工程模式</string>
     <string name="SaveAsDefault">默认保存</string>
@@ -36,7 +36,7 @@
     <string name="BT_Component_Null">蓝牙组件未建立！</string>
     <string name="BT_Not_Connected">蓝牙设备还未连接！</string>
     <string name="Command_Reset">复位</string>
-    <string name="BT_Status">查询\n出错\n信息</string>
+    <string name="BT_Status">查询状态信息</string>
     <string name="Update_Send_Times">更新发射状态</string>
     <string name="Select_Send_Times">选择读取的次数</string>
     <string name="WatchDog_Ongoing">正在读取系统状态，请稍后...</string>
@@ -48,8 +48,8 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2017-Jan-11</string>
-    <string name="Update_Info">更新内容：\n1，按1226需求增加自检字节。</string>
+    <string name="Delivery_Date">更新日期：2017-Jan-20</string>
+    <string name="Update_Info">更新内容：\n1，增强查询状态功能; \n2, 修改标题。</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 

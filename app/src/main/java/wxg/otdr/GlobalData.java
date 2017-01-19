@@ -138,6 +138,13 @@ public class GlobalData extends Application{
     public final static int cMaterial_Settings_Low_Index = 10;
     public final static int cMaterial_Settings_High_Index = 11;
 
+    // Used to record those no-replied commands in BT Status Query.
+    public static byte[] bCommand_Waiting = null; // Which command got no replied.
+    public static int miReReadTimes = 0; // re-read time, max 3 times.
+    public final static int MaxReadTimes = 3; // For specific id, read at most three times.
+    // Avoid when send query and then re-send query at very short time, since send query done in
+    // BluetoothService intend and re-send in MainActivity Watchdog 1.
+    public static int miIntervalSecond = 0;
 
     enum eCommandIndex {eQueryBattery, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
         eRequestMessageTimes, eSettings};
@@ -356,7 +363,7 @@ public class GlobalData extends Application{
     }
 
     public int getCommandTypeReturn(int[] iReturnValues){
-        Log.i(TAG, "AnalyzeData");
+        Log.i(TAG, "AnalyzeData, getCommandTypeReturn.");
 
         int iCommand = iReturnValues[cCommandType_Index];
 
@@ -366,7 +373,7 @@ public class GlobalData extends Application{
     // This function only return data, remove Head 0x68, Length and command type.
     // Also for battery reading, this case, int[] only got length = 1;
     public int[] getDataReturn(int[] iReturnValues){
-        Log.i(TAG, "AnalyzeData");
+        Log.i(TAG, "AnalyzeData, getDataReturn.");
 
         int iLength = iReturnValues[cCommandLength_Index]-1;
         int iAllLength = iReturnValues.length;

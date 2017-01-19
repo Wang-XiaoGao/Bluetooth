@@ -21,6 +21,7 @@ import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.util.Xml;
@@ -37,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -135,6 +137,11 @@ public class BluetoothService extends IntentService {
 
     // Special action for request BT status, max ten times.
     public static int miSendTimes = 0;
+    public final static int MaxReadTimes = 3;// For specific id, read at most three times.
+    public static int miReReadTimes = 0; // Reread times, important counting.
+    public static byte[] bStatusCommand; // To record command for request BT status;
+    public static boolean bQueryBTStatus = false;
+    private static CountDownTimer WatchDog2 = null;
     public static String strBTStatus = "";
 
     private static int mConnectionState = BluetoothProfile.STATE_DISCONNECTED;
@@ -206,6 +213,7 @@ public class BluetoothService extends IntentService {
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.i(TAG, "onCharacteristicRead");
                 broadcastUpdate(ACTION_FEEDBACK_AVAILABLE, characteristic);
             }
         }
@@ -214,6 +222,7 @@ public class BluetoothService extends IntentService {
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            Log.i(TAG, "onCharacteristicChanged");
         }
     };
 
@@ -256,16 +265,16 @@ public class BluetoothService extends IntentService {
                 strNewLog += String.format("%02x ", iDebugValues[iTem]);
             }
         }
-        strNewLog += "。";
+        //strNewLog += ";";
         Intent intent_Debug = new Intent(ACTION_DEBUG_DATA);
-        intent_Debug.putExtra(DEBUG_COMMAND, strNewLog);
+        intent_Debug.putExtra(DEBUG_COMMAND, strNewLog + ".");
         MainActivity.getInstance().sendBroadcast(intent_Debug);
 
         // This debug is for log saved in file. Collect all log in logcat.
         Log.d(TAG, strNewLog);
 
         if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
-            Log.d(TAG, String.format("Received data modified: ", characteristic.getValue()));
+            Log.d(TAG, "Received data modified: " + strNewLog);
             //GlobalData gData = new GlobalData();
             int iCommand_Type = 0;
             int[] iDatas_Return = null;
@@ -404,6 +413,10 @@ public class BluetoothService extends IntentService {
                 // In this case, number of error message is not zero. Need to query and show.
                 iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes_First;
                 ActionQueryBTMessages(getBaseContext(), iExpectCommandType_ErrorMessage); // to next thread to handle.
+                //Looper.prepare();
+                //handleActionQueryBTMessages(iExpectCommandType_ErrorMessage);
+                //Looper.loop();
+                //ActivateCounter(iExpectCommandType_ErrorMessage);
                 miSendTimes --; // Query has taken one step.
             }
             bCheck = true;
@@ -428,11 +441,20 @@ public class BluetoothService extends IntentService {
             String strTem = strDate + "   " + strTime + "\n";
             strBTStatus += strTem;
 
+            // Clear pre-condition for re-read loop, max re-read 3 times.
+            GlobalData.miReReadTimes = 0;
+            GlobalData.bCommand_Waiting = null;
+            /*if (WatchDog2 != null){
+                WatchDog2.cancel();
+                WatchDog2 = null;
+                Log.d(TAG, "Get expected status message, cancel WatchDog2.");
+            }*/
+
             if ( miSendTimes >= 1){
                 // >0, still need continue to query.
-
                 iExpectCommandType_ErrorMessage ++;
                 ActionQueryBTMessages(getBaseContext(), iExpectCommandType_ErrorMessage); // to next thread to handle.
+
                 miSendTimes --;
 
                 bCheck = true;
@@ -451,6 +473,10 @@ public class BluetoothService extends IntentService {
                 bCheck = true;
             }
 
+        }
+
+        if (!bCheck){
+            Log.d(TAG, "Unexpected ID send up data, probably one ID send up data more than one time.");
         }
 
         return bCheck;
@@ -622,6 +648,7 @@ public class BluetoothService extends IntentService {
         mConnectionState = BluetoothProfile.STATE_CONNECTING;
     }
 
+
     // A special action to query BT messages, max for ten times.
     private void handleActionQueryBTMessages(int iCommandType){
 
@@ -630,34 +657,23 @@ public class BluetoothService extends IntentService {
         int iBTTem = getBTConnectStatus();
         GlobalData mGlobalData = new GlobalData();
 
-        if (iBTTem == BluetoothProfile.STATE_CONNECTED){
-            //send data to service
-            bCheck = AssignGATTService(BluetoothService.RX_SERVICE_UUID);
-            if (!bCheck){
-                Log.e(TAG, "StartSelfCheck: mBluetoothService is null.");
-                return;
-            }
-            bCheck = AssignGATTCharacteristics(BluetoothService.RX_CHAR_UUID);
-            if (!bCheck){
-                Log.e(TAG, "StartSelfCheck: Characteristics is null.");
-                return;
-            }
-
-        }else{
-            Log.e(TAG, "Bluetooth not connected yet, could not read battery info.");
-        }
-
-        byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eRequestMessageTimes);
-        int[] iValues = mGlobalData.getIntReturn(bCommand);// {0x68, 0x01, 0x41}
+        bStatusCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eRequestMessageTimes);
+        int[] iValues = mGlobalData.getIntReturn(bStatusCommand);// {0x68, 0x01, 0x41}
         // {0x68, 0x01, 0x41}...{0x68, 0x01, 0x4a}
         iValues[GlobalData.cSetMessageTimes_Index] = iCommandType;
-        bCommand = mGlobalData.Int2Byte(iValues);
+        bStatusCommand = mGlobalData.Int2Byte(iValues);
         Log.i(TAG, "Data to send: " + mGlobalData.Int2String(iValues));
-        bCheck = writeRXCharacteristic(bCommand);
+        bCheck = writeRXCharacteristic(bStatusCommand);
+
         if (!bCheck) {
-            Log.e(TAG, "DATA send failed: " + mGlobalData.Int2String(iValues));
+            Log.e(TAG, "Query BT status, DATA send failed: " + mGlobalData.Int2String(iValues));
         }
 
+        // This thread only query every ID for one time.
+        // Now record info to check for more 3 times in MainActivity WatchDog1.
+        GlobalData.bCommand_Waiting = bStatusCommand;
+        GlobalData.miReReadTimes = GlobalData.MaxReadTimes;
+        GlobalData.miIntervalSecond = Calendar.getInstance().get(Calendar.SECOND);
 
 /*
         for (int iTem = 0; iTem < iTimes; iTem++){
@@ -823,11 +839,22 @@ public class BluetoothService extends IntentService {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.e(TAG, "BluetoothAdapter not initialized");
             return false;
+        }else{
+            Log.d(TAG, "mBluetoothAdapter is: " + mBluetoothAdapter.toString());
+            Log.d(TAG, "mBluetoothGatt is: " + mBluetoothGatt.toString());
+        }
+
+        int iBTStatus = getBTConnectStatus();
+
+        if (iBTStatus != BluetoothProfile.STATE_CONNECTED){
+            Log.d(TAG, "BTConnectStatus is not connected.");
         }
 
         if (mBluetoothGattCharacteristic == null) {
             Log.e(TAG, "mBluetoothGattCharacteristic is null");
             return false;
+        }else{
+            Log.d(TAG, "mBluetoothGattCharacteristic is: " + mBluetoothGattCharacteristic.getUuid().toString());
         }
 
         mBluetoothGattCharacteristic.setValue(strValue);

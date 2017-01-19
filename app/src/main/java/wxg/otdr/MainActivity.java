@@ -163,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         mBluetoothService = new BluetoothService();
         mGlobalData = new GlobalData();
 
+        setTitle(getString(R.string.main_Title));
+
 
         // To get mListView, need to find it's container...
         //View ContainerView = findViewById(R.id.container);
@@ -800,9 +802,23 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 // WatchDog1 enter active mode. Note: need to activate WatchDog1 after command sent.
                 GlobalData.bWatchDog1_Protection = true;
-                CountDownTimer WatchDog1 = new CountDownTimer(GlobalData.iWatchDogTimer1, GlobalData.iWatchDogTimer1-50) {
+                CountDownTimer WatchDog1 = new CountDownTimer(GlobalData.iWatchDogTimer1, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
+
+                        if (GlobalData.bCommand_Waiting != null & GlobalData.miReReadTimes > 0){
+                            int iCurrentSecond = Calendar.getInstance().get(Calendar.SECOND);
+                            // Avoid when send query and then re-send query at very short time, since send query done in
+                            // BluetoothService intend and re-send in MainActivity Watchdog 1.
+                            if ((iCurrentSecond > (GlobalData.miIntervalSecond +1)) |
+                                    (iCurrentSecond < (GlobalData.miIntervalSecond + 1))){
+                                View v = null;
+                                SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, GlobalData.bCommand_Waiting);
+                                GlobalData.miReReadTimes --;
+                            }
+
+
+                        }
 
                     }
                     @Override

@@ -170,7 +170,7 @@
         android:clickable="true"
         android:onClick="onButtonReset"
         android:layout_below="@+id/id_Setting_button"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true" />
 
     <Switch
         android:layout_width="wrap_content"
@@ -178,13 +178,12 @@
         android:textOff="关"
         android:textOn="开"
         android:text="状态记录"
-
+        android:textSize="20sp"
         android:id="@+id/id_SaveLog_Switch"
         android:checked="false"
+        android:onClick="onSwitchLog"
         android:layout_alignTop="@+id/id_Reset_button"
         android:layout_alignParentEnd="true"
-        android:onClick="onSwitchLog"
-        android:layout_alignBottom="@+id/id_Reset_button"
-        />
+        android:layout_alignBottom="@+id/id_Reset_button" />
 
 </RelativeLayout>
