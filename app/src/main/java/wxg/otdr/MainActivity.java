@@ -808,10 +808,14 @@ public class MainActivity extends AppCompatActivity {
 
                         if (GlobalData.bCommand_Waiting != null & GlobalData.miReReadTimes > 0){
                             int iCurrentSecond = Calendar.getInstance().get(Calendar.SECOND);
+                            Log.d(TAG, "BT Status Query. TimeStamp in Main: " + String.format("%d", iCurrentSecond)
+                            + "; TimeStamp in Service: " + String.format("%d", GlobalData.miIntervalSecond));
+
+
                             // Avoid when send query and then re-send query at very short time, since send query done in
                             // BluetoothService intend and re-send in MainActivity Watchdog 1.
-                            if ((iCurrentSecond > (GlobalData.miIntervalSecond +1)) |
-                                    (iCurrentSecond < (GlobalData.miIntervalSecond + 1))){
+                            if ((iCurrentSecond > (GlobalData.miIntervalSecond + 1)) |
+                                    (iCurrentSecond < (GlobalData.miIntervalSecond - 1))){
                                 View v = null;
                                 SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, GlobalData.bCommand_Waiting);
                                 GlobalData.miReReadTimes --;

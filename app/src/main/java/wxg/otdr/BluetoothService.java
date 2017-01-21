@@ -674,7 +674,7 @@ public class BluetoothService extends IntentService {
         GlobalData.bCommand_Waiting = bStatusCommand;
         GlobalData.miReReadTimes = GlobalData.MaxReadTimes;
         GlobalData.miIntervalSecond = Calendar.getInstance().get(Calendar.SECOND);
-
+        Log.d(TAG, "BT Status Query. TimeStamp in Service: " + String.format("%d", GlobalData.miIntervalSecond));
 /*
         for (int iTem = 0; iTem < iTimes; iTem++){
 
