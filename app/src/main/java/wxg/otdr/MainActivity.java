@@ -520,8 +520,20 @@ public class MainActivity extends AppCompatActivity {
             if (mMessagesText != null & GlobalData.strQueryErrorMessage != ""){
                 mMessagesText.setText(GlobalData.strQueryErrorMessage);
             }
-            if (mDebugTextVew != null & GlobalData.strLog != ""){
-                mDebugTextVew.setText(GlobalData.strTitle + GlobalData.strLog);
+            if (mDebugTextVew != null){
+
+                if (GlobalData.bDebugDialog & (mDebugTextVew.getVisibility() != View.VISIBLE)){
+                    mDebugTextVew.setVisibility(View.VISIBLE);
+                    if (GlobalData.strLog != ""){
+                        mDebugTextVew.setText(GlobalData.strTitle + GlobalData.strLog);
+                    }
+                }else if(GlobalData.bDebugDialog & (mDebugTextVew.getVisibility() == View.VISIBLE)){
+                    if (GlobalData.strLog != ""){
+                        mDebugTextVew.setText(GlobalData.strTitle + GlobalData.strLog);
+                    }
+                }else if (!GlobalData.bDebugDialog & (mDebugTextVew.getVisibility() == View.VISIBLE)){
+                    mDebugTextVew.setVisibility(View.GONE);
+                }
             }
 
             mDateEdit = (EditText) rootView.findViewById(R.id.id_Edit_Date);
@@ -1077,9 +1089,13 @@ public class MainActivity extends AppCompatActivity {
                 mHandler = new MyHandler();
                 mLogRecord = new LogRecord(mHandler);
 
+                GlobalData.bDebugDialog = true;
+
                 mLogRecord.start();
             } else {
                 Log.i(TAG, "SaveLog_Switch is off.");
+                GlobalData.bDebugDialog = false;
+
                 if (mLogRecord != null) {
                     mLogRecord.interrupt();
                 }

@@ -160,6 +160,9 @@ public class GlobalData extends Application{
     public static long lLogFile_MaxVolume = 10485760; // The log file in android should be smaller than 10 Mb.
     public static boolean bLogFileMode = false; // This flag decide whether logfile create.
 
+    // This flag will be used to decided whether debug log dialog shown in "fragment_device_status"
+    public static boolean bDebugDialog = false;
+
     @Override
     public void onCreate(){
         super.onCreate();
