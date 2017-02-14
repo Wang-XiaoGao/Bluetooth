@@ -14,7 +14,8 @@ public class GlobalData extends Application{
 
     public static boolean bInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016.
     public static boolean bWatchDog1_Protection = false; // To prevent button pressed again and agian.
-    public final static int iWatchDogTimer1 = 15000; // Timeout gate for 15000 ms.
+    public static boolean bFirst_ReceiveMessageNum = true; // To avoid BT device send up more than one message number id, 0x40.
+    public final static int iWatchDogTimer1 = 20000; // Timeout gate for 20000 ms.
 
     // Those parameters are used, when refresh the page of "Device status".
     public static String StrDeviceName = "";
@@ -145,6 +146,12 @@ public class GlobalData extends Application{
     // Avoid when send query and then re-send query at very short time, since send query done in
     // BluetoothService intend and re-send in MainActivity Watchdog 1.
     public static int miIntervalSecond = 0;
+
+    // These two parameters are used for re-send count;
+    // If the counter found miReSendCount rise to be miReSendInterval, resend start.
+    // Purpose is to avoid resend at very short time.
+    public static int miReSendCount = 0;
+    public static int miReSendInterval = 2;
 
     enum eCommandIndex {eQueryBattery, eSelfCheck, eReset, eReadTime, eSetTime, eSendTimes,
         eRequestMessageTimes, eSettings};

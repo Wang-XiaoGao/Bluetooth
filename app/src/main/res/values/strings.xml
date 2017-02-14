@@ -48,8 +48,8 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2017-Feb-12</string>
-    <string name="Update_Info">更新内容：\n1，可配置隐藏Log窗口。</string>
+    <string name="Delivery_Date">更新日期：2017-Feb-14</string>
+    <string name="Update_Info">更新内容：\n1，加强错误信息查询逻辑保护。</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 

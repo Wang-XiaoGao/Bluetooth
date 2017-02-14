@@ -277,10 +277,12 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 case GlobalData.cCommand_SendMessageTimes_First:
                     GlobalData.strQueryErrorMessage = intent.getStringExtra(BluetoothService.RETURN_DATA);
-                    if (GlobalData.strQueryErrorMessage == ""){
+
+                    //May need to clear message info.
+                    /*if (GlobalData.strQueryErrorMessage == ""){
                         Log.e(TAG, "GlobalData.strQueryErrorMessage is null.");
                         return;
-                    }
+                    }*/
 
                     if (mSendTimesText != null){
                         mSendTimesText.setText(GlobalData.strQueryErrorMessage);

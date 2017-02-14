@@ -390,6 +390,17 @@ public class BluetoothService extends IntentService {
         boolean bCheck = false;
 
         if (iCommandTpye == GlobalData.cCommand_SendMessageTimes){
+
+            // To avoid BT device send more than one message number to trigger the count loop.
+            if (GlobalData.bFirst_ReceiveMessageNum){
+                GlobalData.bFirst_ReceiveMessageNum = false;
+                Log.i("TAG", "Receive SendMessageTimes for first times.");
+
+            }else{
+                Log.e("TAG", "Receive SendMessageTimes more than once, not handle.");
+                return false;
+            }
+
             iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes;
             // Receive times of message and then call to send xx times to get messages.
             miSendTimes = iValues[GlobalData.cSendTimes_Index];
@@ -418,6 +429,15 @@ public class BluetoothService extends IntentService {
                 //Looper.loop();
                 //ActivateCounter(iExpectCommandType_ErrorMessage);
                 miSendTimes --; // Query has taken one step.
+            }else{
+                // return error message number is zero. Not need to query.
+                GlobalData.bWatchDog1_Protection = false; // Query BT send messages finish, end WatchDog1.
+                MainActivity.getInstance().WatchDog1.cancel();
+                GlobalData.bFirst_ReceiveMessageNum = true;
+                BluetoothService.strBTStatus = "";
+                BluetoothService.miSendTimes = 0;
+                GlobalData.miReSendCount = 0;
+                GlobalData.bCommand_Waiting = null;
             }
             bCheck = true;
         }else if (iCommandTpye == iExpectCommandType_ErrorMessage){
@@ -463,12 +483,17 @@ public class BluetoothService extends IntentService {
                 // Two cases：1， no error message, miSendTimes = 0 and strBTStatus = "".
                 // 2, miSendTimes != 0 ; strBTStatus will be updated to UI.
                 GlobalData.bWatchDog1_Protection = false; // Query BT send messages finish, end WatchDog1.
+                GlobalData.bFirst_ReceiveMessageNum = true;
 
                 Intent intent2 = new Intent(ACTION_DATA_AVAILABLE);
                 intent2.putExtra(RETURN_COMMAND, GlobalData.cCommand_SendMessageTimes_First);
                 intent2.putExtra(RETURN_DATA, strBTStatus);
                 //sendBroadcast(intent);
                 MainActivity.getInstance().sendBroadcast(intent2);
+
+                MainActivity.getInstance().WatchDog1.cancel();
+                BluetoothService.miSendTimes = 0;
+                GlobalData.miReSendCount = 0;
                 strBTStatus = "";
                 bCheck = true;
             }
@@ -664,6 +689,10 @@ public class BluetoothService extends IntentService {
         bStatusCommand = mGlobalData.Int2Byte(iValues);
         Log.i(TAG, "Data to send: " + mGlobalData.Int2String(iValues));
         bCheck = writeRXCharacteristic(bStatusCommand);
+
+        // Reset counter for resend.
+        // Used at MainActivity, WatchDog1, ontick 1000 ms to check whether need resend.
+        GlobalData.miReSendCount = 0;
 
         if (!bCheck) {
             Log.e(TAG, "Query BT status, DATA send failed: " + mGlobalData.Int2String(iValues));

@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static SectionsPagerAdapter mSectionsPagerAdapter;
 
+    public static CountDownTimer WatchDog1 = null;
+
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
 
@@ -814,7 +816,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 // WatchDog1 enter active mode. Note: need to activate WatchDog1 after command sent.
                 GlobalData.bWatchDog1_Protection = true;
-                CountDownTimer WatchDog1 = new CountDownTimer(GlobalData.iWatchDogTimer1, 1000) {
+                WatchDog1 = new CountDownTimer(GlobalData.iWatchDogTimer1, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
 
@@ -826,11 +828,22 @@ public class MainActivity extends AppCompatActivity {
 
                             // Avoid when send query and then re-send query at very short time, since send query done in
                             // BluetoothService intend and re-send in MainActivity Watchdog 1.
-                            if ((iCurrentSecond > (GlobalData.miIntervalSecond + 1)) |
-                                    (iCurrentSecond < (GlobalData.miIntervalSecond - 1))){
-                                View v = null;
-                                SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, GlobalData.bCommand_Waiting);
-                                GlobalData.miReReadTimes --;
+                            if (iCurrentSecond != GlobalData.miIntervalSecond){
+
+                                if (GlobalData.miReSendCount != GlobalData.miReSendInterval)
+                                {
+                                    GlobalData.miReSendCount ++;
+                                    Log.d(TAG, "BT resend count: " + String.format("%d", GlobalData.miReSendCount));
+                                }else{
+                                    Log.d(TAG, "BT resend count: " + String.format("%d", GlobalData.miReSendCount)
+                                    + ". Now resend.");
+                                    GlobalData.miReSendCount = 0;
+                                    View v = null;
+                                    SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, GlobalData.bCommand_Waiting);
+                                    GlobalData.miReReadTimes --;
+
+                                }
+
                             }
 
 
@@ -843,8 +856,11 @@ public class MainActivity extends AppCompatActivity {
                         if (GlobalData.bWatchDog1_Protection){
                             Log.e(TAG, "WatchDog1: Update BT send message status timeout.");
                             GlobalData.bWatchDog1_Protection = false;
+                            GlobalData.bFirst_ReceiveMessageNum = true;
                             BluetoothService.strBTStatus = "";
+                            GlobalData.miReSendCount = 0;
                             BluetoothService.miSendTimes = 0;
+                            GlobalData.bCommand_Waiting = null;
                             MainActivity.getInstance().ShowInfo2User(
                                     getResources().getText(R.string.WatchDog_Timeout).toString(),
                                     Toast.LENGTH_SHORT);
