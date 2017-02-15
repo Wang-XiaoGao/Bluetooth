@@ -17,6 +17,9 @@ public class GlobalData extends Application{
     public static boolean bFirst_ReceiveMessageNum = true; // To avoid BT device send up more than one message number id, 0x40.
     public final static int iWatchDogTimer1 = 20000; // Timeout gate for 20000 ms.
 
+    // To avoid receive "parameter settings successfully." for more than onece.
+    public static boolean bWaiting_Settings_Successfully = false;
+
     // Those parameters are used, when refresh the page of "Device status".
     public static String StrDeviceName = "";
     public static String StrDeviceAdd = "";

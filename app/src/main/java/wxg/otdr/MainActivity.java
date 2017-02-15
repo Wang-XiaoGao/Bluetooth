@@ -1044,9 +1044,12 @@ public class MainActivity extends AppCompatActivity {
 
         bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
-        if (!bCheck) {
+        if(!bCheck){
             Log.e(TAG, "onButtonSettings: Send Command failed.");
             //ShowInfo2User("参数设置失败", Toast.LENGTH_SHORT);
+        }else{
+            Log.d(TAG, "onButtonSettings: Waiting for feedback.");
+            GlobalData.bWaiting_Settings_Successfully = true;
         }
     }
 

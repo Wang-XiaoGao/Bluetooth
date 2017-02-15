@@ -294,6 +294,15 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 case GlobalData.cCommand_Settings:
                     iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+
+                    // To avoid receive feedback more than once.
+                    if (!GlobalData.bWaiting_Settings_Successfully){
+                        Log.e(TAG, "Receive settings feedback more than once.");
+                        break;
+                    }else{
+                        GlobalData.bWaiting_Settings_Successfully = false;
+                    }
+
                     if (iReturnData[0] == 0){
                         Log.e(TAG, "cCommand_Settings, BT parameters out of range.");
                         MainActivity.getInstance().ShowInfo2User(
