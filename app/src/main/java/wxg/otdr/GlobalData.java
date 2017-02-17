@@ -19,6 +19,8 @@ public class GlobalData extends Application{
 
     // To avoid receive "parameter settings successfully." for more than onece.
     public static boolean bWaiting_Settings_Successfully = false;
+    // This parameter is used in receiving error message from BT.
+    public static int iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes;
 
     // Those parameters are used, when refresh the page of "Device status".
     public static String StrDeviceName = "";
@@ -139,6 +141,8 @@ public class GlobalData extends Application{
     public final static int cT2_Duration_Index = 5;
     public final static int cT1_Duration_Index = 6;
     public final static int cAudio_Duration_Index = 7;
+    //public final static int cAudio_Duration_Integer_Index = 7;
+    //public final static int cAudio_Duration_Decimal_Index = 8;
     public final static int cMaterial_Settings_Low_Index = 10;
     public final static int cMaterial_Settings_High_Index = 11;
 

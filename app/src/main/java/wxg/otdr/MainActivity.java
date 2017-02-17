@@ -914,7 +914,7 @@ public class MainActivity extends AppCompatActivity {
                 ShowInfo2User("压力门限值设置超出范围", Toast.LENGTH_SHORT);
                 return;
             }else{
-                if (iPressureGate[0]<1 | iPressureGate[0]>=5){
+                if (iPressureGate[0]<1 | iPressureGate[0]>6){
                     Log.e(TAG, "Pressure Gate number setting is not correct.");
                     ShowInfo2User("压力门限值设置超出范围", Toast.LENGTH_SHORT);
                     return;
@@ -1044,12 +1044,13 @@ public class MainActivity extends AppCompatActivity {
 
         bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
-        if(!bCheck){
-            Log.e(TAG, "onButtonSettings: Send Command failed.");
-            //ShowInfo2User("参数设置失败", Toast.LENGTH_SHORT);
-        }else{
+        if(bCheck){
             Log.d(TAG, "onButtonSettings: Waiting for feedback.");
             GlobalData.bWaiting_Settings_Successfully = true;
+        }else{
+            Log.e(TAG, "onButtonSettings: Send Command failed.");
+            //ShowInfo2User("参数设置失败", Toast.LENGTH_SHORT);
+
         }
     }
 

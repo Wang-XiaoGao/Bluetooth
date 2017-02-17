@@ -125,6 +125,15 @@ public class BluetoothReceiver extends BroadcastReceiver {
             Log.e(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
             //BluetoothService.startActionenableTXNotification(MainActivity.getInstance().getBaseContext());
 
+            // Reset all about Query BT status, including watch dog and protection para.
+            GlobalData.bWatchDog1_Protection = false;
+            GlobalData.bFirst_ReceiveMessageNum = true;
+            GlobalData.iExpectCommandType_ErrorMessage = 0; // Reset expected Command Type. Important for protection logic.
+            BluetoothService.strBTStatus = "";
+            GlobalData.miReSendCount = 0;
+            BluetoothService.miSendTimes = 0;
+            GlobalData.bCommand_Waiting = null;
+
         }else if (strAction.equals(BluetoothService.ACTION_FEEDBACK_AVAILABLE)) {
             Log.d(TAG, "ACTION_FEEDBACK_AVAILABLE");
             //final byte[] txValue = intent.getByteArrayExtra(BluetoothService.EXTRA_DATA);
@@ -298,7 +307,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     // To avoid receive feedback more than once.
                     if (!GlobalData.bWaiting_Settings_Successfully){
                         Log.e(TAG, "Receive settings feedback more than once.");
-                        break;
+                        return;
                     }else{
                         GlobalData.bWaiting_Settings_Successfully = false;
                     }

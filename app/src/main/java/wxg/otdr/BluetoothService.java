@@ -124,9 +124,6 @@ public class BluetoothService extends IntentService {
     // Set a pre-compile conditions.
     public static boolean bInDebug = false;
 
-    // This parameter is used in receiving error message from BT.
-    public static int iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes;
-
     // For debug.
     public static final UUID TEST_TX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
     public static final UUID TEST_TX_CHAR_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
@@ -401,7 +398,7 @@ public class BluetoothService extends IntentService {
                 return false;
             }
 
-            iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes;
+            GlobalData.iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes;
             // Receive times of message and then call to send xx times to get messages.
             miSendTimes = iValues[GlobalData.cSendTimes_Index];
 
@@ -422,8 +419,8 @@ public class BluetoothService extends IntentService {
                     miSendTimes = GlobalData.iMaxMessageNum; // Only up to 10 messages could be shown.
                 }
                 // In this case, number of error message is not zero. Need to query and show.
-                iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes_First;
-                ActionQueryBTMessages(getBaseContext(), iExpectCommandType_ErrorMessage); // to next thread to handle.
+                GlobalData.iExpectCommandType_ErrorMessage = GlobalData.cCommand_SendMessageTimes_First;
+                ActionQueryBTMessages(getBaseContext(), GlobalData.iExpectCommandType_ErrorMessage); // to next thread to handle.
                 //Looper.prepare();
                 //handleActionQueryBTMessages(iExpectCommandType_ErrorMessage);
                 //Looper.loop();
@@ -434,13 +431,14 @@ public class BluetoothService extends IntentService {
                 GlobalData.bWatchDog1_Protection = false; // Query BT send messages finish, end WatchDog1.
                 MainActivity.getInstance().WatchDog1.cancel();
                 GlobalData.bFirst_ReceiveMessageNum = true;
+                GlobalData.iExpectCommandType_ErrorMessage = 0; // Reset expected Command Tpye.
                 BluetoothService.strBTStatus = "";
                 BluetoothService.miSendTimes = 0;
                 GlobalData.miReSendCount = 0;
                 GlobalData.bCommand_Waiting = null;
             }
             bCheck = true;
-        }else if (iCommandTpye == iExpectCommandType_ErrorMessage){
+        }else if (iCommandTpye == GlobalData.iExpectCommandType_ErrorMessage){
             //[GlobalData.cCommand_SendMessageTimes_First, GlobalData.cCommand_SendMessageTimes_Last]
             //int[] iData_Return = mGlobalData.getDataReturn(iValues);
             // In Java, int could not <<8, better *100.
@@ -472,8 +470,8 @@ public class BluetoothService extends IntentService {
 
             if ( miSendTimes >= 1){
                 // >0, still need continue to query.
-                iExpectCommandType_ErrorMessage ++;
-                ActionQueryBTMessages(getBaseContext(), iExpectCommandType_ErrorMessage); // to next thread to handle.
+                GlobalData.iExpectCommandType_ErrorMessage ++;
+                ActionQueryBTMessages(getBaseContext(), GlobalData.iExpectCommandType_ErrorMessage); // to next thread to handle.
 
                 miSendTimes --;
 
@@ -492,15 +490,14 @@ public class BluetoothService extends IntentService {
                 MainActivity.getInstance().sendBroadcast(intent2);
 
                 MainActivity.getInstance().WatchDog1.cancel();
+                GlobalData.iExpectCommandType_ErrorMessage = 0; // Reset expected Command Tpye. Important for protection logic.
                 BluetoothService.miSendTimes = 0;
                 GlobalData.miReSendCount = 0;
                 strBTStatus = "";
                 bCheck = true;
             }
 
-        }
-
-        if (!bCheck){
+        }else{
             Log.d(TAG, "Unexpected ID send up data, probably one ID send up data more than one time.");
         }
 
