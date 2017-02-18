@@ -48,8 +48,8 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2017-Feb-17</string>
-    <string name="Update_Info">更新内容：\n1，加强状态查询结束时逻辑保护。\n2，参数设置多收信息强制保护措施。</string>
+    <string name="Delivery_Date">更新日期：2017-Feb-18</string>
+    <string name="Update_Info">更新内容：\n1，加强GATT服务保护。</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 

@@ -120,11 +120,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 mImageBattery.setBackgroundResource(R.drawable.battery_56px_gray);
             }
 
-        }else if (strAction.equals(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED)) {
-
-            Log.e(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
-            //BluetoothService.startActionenableTXNotification(MainActivity.getInstance().getBaseContext());
-
             // Reset all about Query BT status, including watch dog and protection para.
             GlobalData.bWatchDog1_Protection = false;
             GlobalData.bFirst_ReceiveMessageNum = true;
@@ -133,6 +128,11 @@ public class BluetoothReceiver extends BroadcastReceiver {
             GlobalData.miReSendCount = 0;
             BluetoothService.miSendTimes = 0;
             GlobalData.bCommand_Waiting = null;
+
+        }else if (strAction.equals(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED)) {
+
+            Log.e(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
+            //BluetoothService.startActionenableTXNotification(MainActivity.getInstance().getBaseContext());
 
         }else if (strAction.equals(BluetoothService.ACTION_FEEDBACK_AVAILABLE)) {
             Log.d(TAG, "ACTION_FEEDBACK_AVAILABLE");

@@ -432,7 +432,7 @@ public class BluetoothService extends IntentService {
                 MainActivity.getInstance().WatchDog1.cancel();
                 GlobalData.bFirst_ReceiveMessageNum = true;
                 GlobalData.iExpectCommandType_ErrorMessage = 0; // Reset expected Command Tpye.
-                BluetoothService.strBTStatus = "";
+                strBTStatus = "";
                 BluetoothService.miSendTimes = 0;
                 GlobalData.miReSendCount = 0;
                 GlobalData.bCommand_Waiting = null;
@@ -458,6 +458,7 @@ public class BluetoothService extends IntentService {
 
             String strTem = strDate + "   " + strTime + "\n";
             strBTStatus += strTem;
+            strTem = "";
 
             // Clear pre-condition for re-read loop, max re-read 3 times.
             GlobalData.miReReadTimes = 0;
@@ -623,8 +624,15 @@ public class BluetoothService extends IntentService {
             return;
         }
 
-        mBluetoothGatt.disconnect();
-        // mBluetoothGatt.close();
+        // Important, to avoid multiple Gatt.
+        //mBluetoothGatt.disconnect();
+        mBluetoothGatt.close();
+
+        mConnectionState = BluetoothProfile.STATE_DISCONNECTED;
+        Log.i(TAG, "Close GATT server.");
+        Intent intent = new Intent(ACTION_GATT_DISCONNECTED);
+        MainActivity.getInstance().sendBroadcast(intent);
+
 
         mBluetoothDeviceAddress = "";
         mBluetoothDevice = null;
