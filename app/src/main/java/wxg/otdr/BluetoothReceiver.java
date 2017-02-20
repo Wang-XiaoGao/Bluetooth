@@ -240,7 +240,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     break;
 
                 case GlobalData.cCommand_ReadTime:
-                    iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+                    // Be careful, every return except for BT status query, should use int[].
+                    iReturnData = intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
                     if (iReturnData == null){
                         Log.e(TAG, "iReturnData is null.");
                         MainActivity.getInstance().ShowInfo2User(
@@ -265,7 +266,25 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                     break;
 
+                case GlobalData.cCommand_SetTime:
+                    // Be careful, every return except for BT status query, should use int[].
+                    iReturnData = intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+
+                    if (iReturnData != null){
+                        if (iReturnData[0] == 0x01) {
+                            Log.e(TAG, "Set time to BT device successfully.");
+                            MainActivity.getInstance().ShowInfo2User(
+                                    "设置时间成功", Toast.LENGTH_SHORT);
+                        }else{
+                            Log.e(TAG, "Set time to BT, return unexpected feedback.");
+                            MainActivity.getInstance().ShowInfo2User(
+                                    "设置时间返回未知参数", Toast.LENGTH_SHORT);
+                        }
+                    }
+                    break;
+
                 case GlobalData.cCommand_SendMessageTimes:
+                    // Be careful, every return except for BT status query, should use int[].
                     int iTimes = intent.getIntExtra(BluetoothService.RETURN_DATA, 0);
                     if (iTimes < 0){
                         Log.e(TAG, "strReturnData is null.");
@@ -302,7 +321,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     break;
 
                 case GlobalData.cCommand_Settings:
-                    iReturnData= intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
+                    iReturnData = intent.getIntArrayExtra(BluetoothService.RETURN_DATA);
 
                     // To avoid receive feedback more than once.
                     if (!GlobalData.bWaiting_Settings_Successfully){

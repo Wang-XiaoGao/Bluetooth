@@ -276,11 +276,13 @@ public class BluetoothService extends IntentService {
             int iCommand_Type = 0;
             int[] iDatas_Return = null;
             byte[] bValues = characteristic.getValue();
+
             if (bValues != null){
                 int[] iValues = gData.Byte2Int(bValues);
 
                 if (iValues != null){
                     iCommand_Type = gData.getCommandTypeReturn(iValues);
+                    // Be careful, every return except for BT status query, should use int[].
                     iDatas_Return = gData.getDataReturn(iValues);
 
                     if (iCommand_Type >= GlobalData.cCommand_SendMessageTimes &&
@@ -295,7 +297,6 @@ public class BluetoothService extends IntentService {
                         // This is normal cases to send UI update to BluetoothReceiver.
                         intent.putExtra(RETURN_COMMAND, iCommand_Type);
 
-                        gData.getDataReturn(iValues);
                         if (iDatas_Return == null){
                             Log.d(TAG, "iData_Return is null.");
                             return;

@@ -1003,7 +1003,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            iCommand[GlobalData.cAudio_Duration_Index] = iAudioGate[0];
+            iCommand[GlobalData.cAudio_Duration_Integer_Index] = iAudioGate[0];
+            iCommand[GlobalData.cAudio_Duration_Decimal_Index] = iAudioGate[1];
 
         }else{
             Log.e(TAG, "AudioGate is null.");

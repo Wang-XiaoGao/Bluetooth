@@ -76,6 +76,7 @@ public class GlobalData extends Application{
     public final static int cCommand_SendMessageTimes_Ninth = 0x49;
     public final static int cCommand_SendMessageTimes_Last = 0x4a;
     public final static int cCommand_Settings = 0xE1;
+    public final static int cCommand_SetTime = 0xC8;
     public final static int cCommand_ReadTime = 0xD7;
 
 
@@ -140,9 +141,9 @@ public class GlobalData extends Application{
     public final static int cPressureGate_Decimal_Index= 4;
     public final static int cT2_Duration_Index = 5;
     public final static int cT1_Duration_Index = 6;
-    public final static int cAudio_Duration_Index = 7;
-    //public final static int cAudio_Duration_Integer_Index = 7;
-    //public final static int cAudio_Duration_Decimal_Index = 8;
+    //public final static int cAudio_Duration_Index = 7;
+    public final static int cAudio_Duration_Integer_Index = 7;
+    public final static int cAudio_Duration_Decimal_Index = 8;
     public final static int cMaterial_Settings_Low_Index = 10;
     public final static int cMaterial_Settings_High_Index = 11;
 
