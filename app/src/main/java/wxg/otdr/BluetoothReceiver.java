@@ -76,30 +76,10 @@ public class BluetoothReceiver extends BroadcastReceiver {
         if (strAction.equals(BluetoothService.ACTION_GATT_CONNECTED)) {
             Log.d(TAG, "ACTION_GATT_CONNECTED");
 
-            // if it's not for connection action, the below two string may not be initiated.
-            GlobalData.StrDeviceName = intent.getStringExtra(BluetoothService.mStrDeviceName);
-            GlobalData.StrDeviceAdd = intent.getStringExtra(BluetoothService.mStrDeviceAdd);
-            String StrShowText = GlobalData.StrDeviceName + "\n" + GlobalData.StrDeviceAdd;
+            // This connected is only bt device connected, not GATT service created.
+            // At this time, if you call GATT service, it would be failed.
+            // Still need to waiting for getService after discover.
 
-            Log.i(TAG, StrShowText);
-
-
-            GlobalData.strLog = "BT Connected.";
-            String strTemp = GlobalData.strTitle + GlobalData.strLog;
-
-            // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
-            if (iTabSelection == 0){
-                mTextVew.setText(StrShowText);
-                mImageBT.setBackgroundResource(R.drawable.bluetooth56);
-                mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
-                mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
-
-                mDebugTextVew.setText(strTemp);
-            }
-
-
-
-            //mTextVew.notify();
         }else if (strAction.equals(BluetoothService.ACTION_GATT_DISCONNECTED)){
 
             Log.d(TAG, "Bluetooth Disconnected");
@@ -131,7 +111,28 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
         }else if (strAction.equals(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED)) {
 
-            Log.e(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
+            Log.i(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
+            // if it's not for connection action, the below two string may not be initiated.
+            GlobalData.StrDeviceName = intent.getStringExtra(BluetoothService.mStrDeviceName);
+            GlobalData.StrDeviceAdd = intent.getStringExtra(BluetoothService.mStrDeviceAdd);
+            String StrShowText = GlobalData.StrDeviceName + "\n" + GlobalData.StrDeviceAdd;
+
+            Log.i(TAG, StrShowText);
+
+
+            GlobalData.strLog = "BT Connected.";
+            String strTemp = GlobalData.strTitle + GlobalData.strLog;
+
+            // Just for debug, since debug textview in Tab0, if you change to Tab2, setText will collapse.
+            if (iTabSelection == 0){
+                mTextVew.setText(StrShowText);
+                mImageBT.setBackgroundResource(R.drawable.bluetooth56);
+                mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
+                mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
+
+                mDebugTextVew.setText(strTemp);
+            }
+
             //BluetoothService.startActionenableTXNotification(MainActivity.getInstance().getBaseContext());
 
         }else if (strAction.equals(BluetoothService.ACTION_FEEDBACK_AVAILABLE)) {
@@ -349,7 +350,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 case GlobalData.cCommand_Reset:
                     MainActivity.getInstance().ShowInfo2User(
-                            "复位成功", Toast.LENGTH_SHORT);
+                            "状态清零成功", Toast.LENGTH_SHORT);
 
                     break;
                 default:

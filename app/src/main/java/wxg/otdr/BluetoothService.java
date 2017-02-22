@@ -146,8 +146,6 @@ public class BluetoothService extends IntentService {
     //enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
    // private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
 
-
-
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -157,28 +155,34 @@ public class BluetoothService extends IntentService {
 
             mGlobalData = new GlobalData();
 
+            Log.i(TAG, "onConnectionStateChange newState is :" + String.valueOf(newState));
+
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
 
                 // Update Global stauts.
                 //final GlobalData Data = (GlobalData) getApplication();
                 //Data.setBTStatus(GlobalData.BTStatus.BT_Connected);
-                String StrDeviceName = gatt.getDevice().getName();
-                String StrDeviceAdd = gatt.getDevice().getAddress();
+                //String StrDeviceName = gatt.getDevice().getName();
+                //String StrDeviceAdd = gatt.getDevice().getAddress();
 
                 mConnectionState = BluetoothProfile.STATE_CONNECTED;
-                broadcastUpdate(intentAction, StrDeviceName, StrDeviceAdd);
+                broadcastUpdate(intentAction);
                 //broadcastUpdate(intentAction);
                 Log.i(TAG, "Connected to GATT server.");
+
+                if (mBluetoothGatt == null){
+                    Log.e(TAG, "mBluetoothGatt is null.");
+                    return;
+                }
+
                 // Attempts to discover services after successful connection.
                 if (mBluetoothGatt.discoverServices()){
                     Log.d(TAG, "Attempting to start service discovery:");
                 }else{
                     Log.e(TAG, "Failed to start service discovery.");
                 }
-                if (mBluetoothGatt == null){
-                    Log.e(TAG, "mBluetoothGatt is null.");
-                }
+
                 Log.i(TAG, "Attempting to start service discovery:");
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
@@ -192,16 +196,31 @@ public class BluetoothService extends IntentService {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            Log.i(TAG, "onServicesDiscovered State is :" + String.valueOf(status));
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.w(TAG, "onServicesDiscovered::mBluetoothGatt = " + mBluetoothGatt);
+                Log.i(TAG, "onServicesDiscovered::mBluetoothGatt = " + mBluetoothGatt);
 
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                boolean bCheck = false;
+
+                // First GATT connected; then Discover Service; if service discovered, assign service and Char.
+                bCheck = AssignGATTService(RX_SERVICE_UUID);
+                if (!bCheck){
+                    Log.e(TAG, "AssignGATTService failed.");
+                }
+                bCheck = AssignGATTCharacteristics(RX_CHAR_UUID);
+                if (!bCheck){
+                    Log.e(TAG, "AssignGATTCharacteristics failed.");
+                }
 
                 // Todo should be open.
                 enableTXNotification();
 
+                // At this time, GATT/BT could be used now.
+                String StrDeviceName = gatt.getDevice().getName();
+                String StrDeviceAdd = gatt.getDevice().getAddress();
+                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, StrDeviceName, StrDeviceAdd);
             } else {
-                Log.w(TAG, "onServicesDiscovered received: " + status);
+                Log.w(TAG, "onServicesDiscovered received: " + String.valueOf(status));
             }
         }
 
@@ -674,6 +693,9 @@ public class BluetoothService extends IntentService {
         // parameter to false.
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothGatt = mBluetoothDevice.connectGatt(this, false, mGattCallback);
+        if(mBluetoothGatt == null){
+            Log.e(TAG, "Create Gatt failed.");
+        }
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = Address;
         mConnectionState = BluetoothProfile.STATE_CONNECTING;
@@ -709,7 +731,7 @@ public class BluetoothService extends IntentService {
         GlobalData.bCommand_Waiting = bStatusCommand;
         GlobalData.miReReadTimes = GlobalData.MaxReadTimes;
         GlobalData.miIntervalSecond = Calendar.getInstance().get(Calendar.SECOND);
-        Log.d(TAG, "BT Status Query. TimeStamp in Service: " + String.format("%d", GlobalData.miIntervalSecond));
+        Log.d(TAG, "BT Status Query. TimeStamp in Service: " + String.valueOf(GlobalData.miIntervalSecond));
 /*
         for (int iTem = 0; iTem < iTimes; iTem++){
 
@@ -740,14 +762,21 @@ public class BluetoothService extends IntentService {
         Log.d(TAG, "call AssignGATTService.");
         boolean bReturn = false;
 
+        if (mBluetoothGattService != null) {
+            if (mBluetoothGattService.getUuid().compareTo(UID) == 0) {
+                Log.i(TAG, "GATT service already created.");
+                return true;
+            }
+        }
+
         if (mBluetoothGatt != null) {
             mBluetoothGattService = mBluetoothGatt.getService(UID);
             if (mBluetoothGattService != null) {
-                Log.d(TAG, "AssignGATTService::service found: " + UID.toString());
+                Log.d(TAG, "AssignGATTService::service found.");
                 //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
                 bReturn = true;
             }else{
-                Log.d(TAG, "AssignGATTService::service found: " + UID.toString());
+                Log.d(TAG, "AssignGATTService::service not found: ");
                 bReturn = false;
             }
         }else{
@@ -762,6 +791,13 @@ public class BluetoothService extends IntentService {
     public boolean AssignGATTCharacteristics(UUID UID){
         Log.d(TAG, "call AssignGATTCharacteristics.");
         boolean bReturn = false;
+
+        if (mBluetoothGattCharacteristic != null) {
+            if (mBluetoothGattCharacteristic.getUuid().compareTo(UID) == 0) {
+                Log.i(TAG, "Characteristic already created.");
+                return true;
+            }
+        }
 
         if (mBluetoothGattService != null) {
             mBluetoothGattCharacteristic = mBluetoothGattService.getCharacteristic(UID);

@@ -1217,7 +1217,6 @@ public class MainActivity extends AppCompatActivity {
         int iBTTem = BluetoothService.getBTConnectStatus();
         boolean bCheck = false;
 
-
         if (iBTTem == BluetoothProfile.STATE_CONNECTED){
             //eSelfCheck, eQueryBatter
             int[] iValues = mGlobalData.getIntReturn(bCommand);

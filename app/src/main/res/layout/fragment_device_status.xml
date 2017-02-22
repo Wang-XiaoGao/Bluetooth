@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:weightSum="1"
         android:id="@+id/id_Battery_Frame"
-        android:layout_below="@+id/ConfigBTLayout"
+        android:layout_below="@id/ConfigBTLayout"
         android:layout_marginTop="3dp"
         android:layout_centerHorizontal="true"
         android:background="@color/GrayWhite"
