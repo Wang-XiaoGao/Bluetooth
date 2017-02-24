@@ -779,8 +779,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Call QueryBattery.");
         boolean bCheck = false;
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBattery);
-//TEST_TX_SERVICE_UUID,RX_SERVICE_UUID //TEST_TX_CHAR_UUID, RX_CHAR_UUID
-        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+        //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID //TEST_TX_CHAR_UUID, RX_CHAR_UUID
+        bCheck = SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
         if (!bCheck){
             Log.e(TAG, "QueryBattery: Send Command failed.");
@@ -794,7 +794,7 @@ public class MainActivity extends AppCompatActivity {
 
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSelfCheck);
 
-        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+        bCheck = SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
         if (!bCheck){
             Log.e(TAG, "StartSelfCheck: Send Command failed.");
@@ -809,7 +809,7 @@ public class MainActivity extends AppCompatActivity {
         // Check whether previous query on-going. There is a watch dog 1 to monitor, timeout gate is 3000ms.
         if (!GlobalData.bWatchDog1_Protection){
             byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSendTimes);
-            bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+            bCheck = SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
             if (!bCheck){
                 Log.e(TAG, "onButtonRequestStatus: Send Command failed.");
@@ -839,7 +839,7 @@ public class MainActivity extends AppCompatActivity {
                                     + ". Now resend.");
                                     GlobalData.miReSendCount = 0;
                                     View v = null;
-                                    SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, GlobalData.bCommand_Waiting);
+                                    SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, GlobalData.bCommand_Waiting);
                                     GlobalData.miReReadTimes --;
 
                                 }
@@ -885,7 +885,7 @@ public class MainActivity extends AppCompatActivity {
 
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eReset);
 
-        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+        bCheck = SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
         if (!bCheck) {
             Log.e(TAG, "onButtonReset: Send Command failed.");
@@ -1043,7 +1043,7 @@ public class MainActivity extends AppCompatActivity {
 
         bCommand = mGlobalData.Int2Byte(iCommand);
 
-        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+        bCheck = SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
         if(bCheck){
             Log.d(TAG, "onButtonSettings: Waiting for feedback.");
@@ -1062,7 +1062,7 @@ public class MainActivity extends AppCompatActivity {
         boolean bCheck = false;
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eReadTime);
 
-        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+        bCheck = SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
         if (!bCheck) {
             Log.e(TAG, "onButtonReadTime: Send Command failed.");
@@ -1085,7 +1085,7 @@ public class MainActivity extends AppCompatActivity {
 
         byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSetTime);
 
-        bCheck = SendCommand(v, BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
+        bCheck = SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, bCommand);
 
         if (!bCheck){
             Log.e(TAG, "onButtonSetTime: Send Command failed.");
@@ -1213,7 +1213,7 @@ public class MainActivity extends AppCompatActivity {
                 iShowTime).show();
     }
 
-    public boolean SendCommand(View v, UUID ServiceUUID, UUID CharUUID, byte[] bCommand){
+    public boolean SendCommand(UUID ServiceUUID, UUID CharUUID, byte[] bCommand){
         int iBTTem = BluetoothService.getBTConnectStatus();
         boolean bCheck = false;
 

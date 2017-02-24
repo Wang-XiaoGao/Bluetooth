@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -132,6 +134,43 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 mDebugTextVew.setText(strTemp);
             }
+
+            //Query Battery and selfCheck info after first connection.
+            GlobalData mGlobalData = new GlobalData();
+            BluetoothService mBluetoothService = new BluetoothService();
+            if(mGlobalData != null) {
+
+                boolean bCheck = false;
+                byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBattery);
+                int[] iValues = mGlobalData.getIntReturn(bCommand);
+                Log.d(TAG, "QueryBattery send after BT connection: " + mGlobalData.Int2HexString(iValues));
+                //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID //TEST_TX_CHAR_UUID, RX_CHAR_UUID
+                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
+                if (!bCheck) {
+                    Log.e(TAG, "QueryBattery after BT connection: Send Command failed.");
+                }
+
+            }
+            else{
+                Log.d(TAG, "mGlobalData is null.");
+            }
+
+            TimerTask task = new TimerTask(){
+                public void run(){
+                    GlobalData mGlobalData = new GlobalData();
+                    BluetoothService mBluetoothService = new BluetoothService();
+                    boolean bCheck = false;
+                    byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eSelfCheck);
+                    int[] iValues = mGlobalData.getIntReturn(bCommand);
+                    Log.d(TAG, "StartSelfCheck after BT connection: " + mGlobalData.Int2HexString(iValues));
+                    bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
+                    if (!bCheck) {
+                        Log.e(TAG, "StartSelfCheck after BT connection: Send Command failed.");
+                    }
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(task, 500);// Start the second query after 500ms.
 
             //BluetoothService.startActionenableTXNotification(MainActivity.getInstance().getBaseContext());
 

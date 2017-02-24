@@ -122,7 +122,7 @@ public class BluetoothService extends IntentService {
     public static UUID TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
 
     // Set a pre-compile conditions.
-    public static boolean bInDebug = false;
+    public static boolean bInDebug = true;
 
     // For debug.
     public static final UUID TEST_TX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
@@ -146,14 +146,37 @@ public class BluetoothService extends IntentService {
     //enum BTStatus {BT_Connecting, BT_Connected, BT_Disconnected};
    // private static BTStatus eBTStatus = BTStatus.BT_Disconnected;
 
+    public BluetoothService() {
+        super("BluetoothService");
+
+        if (!initialize()){
+            Log.e(TAG, "Unable to initialize Bluetooth.");
+        }
+
+        if(!bInDebug){
+            RX_SERVICE_UUID = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb");
+            RX_CHAR_UUID = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb");
+            TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
+        }else{
+            RX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
+            RX_CHAR_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
+            TX_CHAR_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
+        };
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        mGlobalData = new GlobalData();
+    }
+
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
-
-            mGlobalData = new GlobalData();
 
             Log.i(TAG, "onConnectionStateChange newState is :" + String.valueOf(newState));
 
@@ -222,6 +245,7 @@ public class BluetoothService extends IntentService {
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + String.valueOf(status));
             }
+
         }
 
         @Override
@@ -384,23 +408,7 @@ public class BluetoothService extends IntentService {
         return mConnectionState;
     }
 
-    public BluetoothService() {
-        super("BluetoothService");
 
-        if (!initialize()){
-            Log.e(TAG, "Unable to initialize Bluetooth.");
-        }
-
-        if(!bInDebug){
-            RX_SERVICE_UUID = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb");
-            RX_CHAR_UUID = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb");
-            TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
-        }else{
-            RX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
-            RX_CHAR_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
-            TX_CHAR_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
-        };
-    }
 
     // int[] iValues only contain data, not include head0x68, length and command type.
     public boolean BTMessage_CommandType(int iCommandTpye, int[] iValues){
