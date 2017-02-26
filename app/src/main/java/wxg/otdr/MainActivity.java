@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Environment;
@@ -37,10 +38,13 @@ import android.os.Bundle;
 import android.text.format.Time;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ActionProvider;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -156,6 +160,213 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothDevice mDevice = null;
     private BluetoothAdapter mBtAdapter = null;
+
+    public MenuItem mEngineeringItem = new MenuItem() {
+        @Override
+        public int getItemId() {
+            return R.id.Engineering_Mode;
+        }
+
+        @Override
+        public int getGroupId() {
+            return 0;
+        }
+
+        @Override
+        public int getOrder() {
+            return 0;
+        }
+
+        @Override
+        public MenuItem setTitle(CharSequence title) {
+            return null;
+        }
+
+        @Override
+        public MenuItem setTitle(int title) {
+            return null;
+        }
+
+        @Override
+        public CharSequence getTitle() {
+            return null;
+        }
+
+        @Override
+        public MenuItem setTitleCondensed(CharSequence title) {
+            return null;
+        }
+
+        @Override
+        public CharSequence getTitleCondensed() {
+            return null;
+        }
+
+        @Override
+        public MenuItem setIcon(Drawable icon) {
+            return null;
+        }
+
+        @Override
+        public MenuItem setIcon(int iconRes) {
+            return null;
+        }
+
+        @Override
+        public Drawable getIcon() {
+            return null;
+        }
+
+        @Override
+        public MenuItem setIntent(Intent intent) {
+            return null;
+        }
+
+        @Override
+        public Intent getIntent() {
+            return null;
+        }
+
+        @Override
+        public MenuItem setShortcut(char numericChar, char alphaChar) {
+            return null;
+        }
+
+        @Override
+        public MenuItem setNumericShortcut(char numericChar) {
+            return null;
+        }
+
+        @Override
+        public char getNumericShortcut() {
+            return 0;
+        }
+
+        @Override
+        public MenuItem setAlphabeticShortcut(char alphaChar) {
+            return null;
+        }
+
+        @Override
+        public char getAlphabeticShortcut() {
+            return 0;
+        }
+
+        @Override
+        public MenuItem setCheckable(boolean checkable) {
+            return null;
+        }
+
+        @Override
+        public boolean isCheckable() {
+            return false;
+        }
+
+        @Override
+        public MenuItem setChecked(boolean checked) {
+            return null;
+        }
+
+        @Override
+        public boolean isChecked() {
+            return false;
+        }
+
+        @Override
+        public MenuItem setVisible(boolean visible) {
+            return null;
+        }
+
+        @Override
+        public boolean isVisible() {
+            return false;
+        }
+
+        @Override
+        public MenuItem setEnabled(boolean enabled) {
+            return null;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean hasSubMenu() {
+            return false;
+        }
+
+        @Override
+        public SubMenu getSubMenu() {
+            return null;
+        }
+
+        @Override
+        public MenuItem setOnMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
+            return null;
+        }
+
+        @Override
+        public ContextMenu.ContextMenuInfo getMenuInfo() {
+            return null;
+        }
+
+        @Override
+        public void setShowAsAction(int actionEnum) {
+
+        }
+
+        @Override
+        public MenuItem setShowAsActionFlags(int actionEnum) {
+            return null;
+        }
+
+        @Override
+        public MenuItem setActionView(View view) {
+            return null;
+        }
+
+        @Override
+        public MenuItem setActionView(int resId) {
+            return null;
+        }
+
+        @Override
+        public View getActionView() {
+            return null;
+        }
+
+        @Override
+        public MenuItem setActionProvider(ActionProvider actionProvider) {
+            return null;
+        }
+
+        @Override
+        public ActionProvider getActionProvider() {
+            return null;
+        }
+
+        @Override
+        public boolean expandActionView() {
+            return false;
+        }
+
+        @Override
+        public boolean collapseActionView() {
+            return false;
+        }
+
+        @Override
+        public boolean isActionViewExpanded() {
+            return false;
+        }
+
+        @Override
+        public MenuItem setOnActionExpandListener(OnActionExpandListener listener) {
+            return null;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -331,13 +542,15 @@ public class MainActivity extends AppCompatActivity {
                 //// TODO: 2016/10/7
 
             }
+            GlobalData.bPassword_Correct = false;
 // & !bInEngineeringMode
         } else if (id == R.id.Engineering_Mode & !bIsInEngineeringMode) {
-            inputPassword();
-
-            Log.i (TAG, "Thread run here.");
+            if (!GlobalData.bPassword_Correct){
+                inputPassword();
+            }
 
             if (GlobalData.bPassword_Correct) {
+                Log.i(TAG, "Password is correct.");
                 // For debug, don't know why this have to be true, or else tab view could not be scrolled.
                 mGlobalData.setEngineeringMode(true);
                 bIsInEngineeringMode = true;
@@ -347,7 +560,11 @@ public class MainActivity extends AppCompatActivity {
                 mSectionsPagerAdapter.notifyDataSetChanged();
                 //mtabLayout.setVisibility(View.VISIBLE);
                 iTemCount = mSectionsPagerAdapter.getCount();
+
+            }else{
+                Log.i (TAG, "Password is wrong.");
             }
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -367,6 +584,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "Password input is : " + SPassword_Input);
                         if (SPassword_Input.compareTo(String.valueOf(GlobalData.iEngineer_Password)) == 0) {
                             GlobalData.bPassword_Correct = true;
+                            onOptionsItemSelected(mEngineeringItem);
                         } else {
                             GlobalData.bPassword_Correct = false;
                             ShowInfo2User(getString(R.string.Password_Wrong), Toast.LENGTH_SHORT);

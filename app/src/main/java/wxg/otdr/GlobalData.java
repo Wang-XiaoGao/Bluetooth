@@ -13,7 +13,7 @@ public class GlobalData extends Application{
     public static final String TAG = GlobalData.class.getSimpleName();
 
     public static final int iEngineer_Password = 26480;
-    public static boolean bPassword_Correct = true;
+    public static boolean bPassword_Correct = false;
 
     public static boolean bInEngineeringMode = false; // X // As default to be standard mode. 28-Sep-2016.
     public static boolean bWatchDog1_Protection = false; // To prevent button pressed again and agian.
