@@ -48,12 +48,16 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2017-Feb-25</string>
-    <string name="Update_Info">更新内容：\n1，连接蓝牙后自动读取电池电量和状态自检。</string>
+    <string name="Delivery_Date">更新日期：2017-Feb-26</string>
+    <string name="Update_Info">更新内容：\n1，增加工程模式的密码保护</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 
     <string name="device">Device:</string>
+    <string name="Password_Input">密码输入框</string>
+    <string name="Password_OK">确认</string>
+    <string name="Password_Cancel">取消</string>
+    <string name="Password_Wrong">密码输入错误</string>
     <string name="no_device">&lt;Select a device&gt;</string>
     <string name="select_device">选 择 连 接 设 备</string>
     <string name="status">Status</string>

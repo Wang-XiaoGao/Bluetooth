@@ -122,7 +122,7 @@ public class BluetoothService extends IntentService {
     public static UUID TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
 
     // Set a pre-compile conditions.
-    public static boolean bInDebug = true;
+    public static boolean bInDebug = false;
 
     // For debug.
     public static final UUID TEST_TX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");

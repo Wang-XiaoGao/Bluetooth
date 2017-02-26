@@ -12,7 +12,10 @@ import java.io.InputStream;
 public class GlobalData extends Application{
     public static final String TAG = GlobalData.class.getSimpleName();
 
-    public static boolean bInEngineeringMode = true; // X // As default to be standard mode. 28-Sep-2016.
+    public static final int iEngineer_Password = 26480;
+    public static boolean bPassword_Correct = true;
+
+    public static boolean bInEngineeringMode = false; // X // As default to be standard mode. 28-Sep-2016.
     public static boolean bWatchDog1_Protection = false; // To prevent button pressed again and agian.
     public static boolean bFirst_ReceiveMessageNum = true; // To avoid BT device send up more than one message number id, 0x40.
     public final static int iWatchDogTimer1 = 20000; // Timeout gate for 20000 ms.

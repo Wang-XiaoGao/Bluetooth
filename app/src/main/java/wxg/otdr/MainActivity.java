@@ -1,6 +1,7 @@
 package wxg.otdr;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     public String TabTitle_Engineering_Mode;
 
     public int iTabCount = 3;
+    // The keypoint whether the engineer mode is as default.
     public static boolean bIsInEngineeringMode = false;
 
     public static final int iDeviceStatus = 0;
@@ -218,11 +220,12 @@ public class MainActivity extends AppCompatActivity {
         mEngineeringTab = mtabLayout.getTabAt(iEngineeringMode);
 
         // For development, default mode change to be engineering mode.
-        //mtabLayout.removeTabAt(iEngineeringMode);
-        //iTabCount--;
-        //mSectionsPagerAdapter.notifyDataSetChanged();
-        //bIsInEngineeringMode = false;
-        bIsInEngineeringMode = true;
+        mtabLayout.removeTabAt(iEngineeringMode);
+        iTabCount--;
+        mSectionsPagerAdapter.notifyDataSetChanged();
+        // The keypoint whether the engineer mode is as default.
+        bIsInEngineeringMode = false;
+
         // For debug, don't know why this have to be true, or else tab view could not be scrolled.
         mGlobalData.setEngineeringMode(true);
 
@@ -323,24 +326,54 @@ public class MainActivity extends AppCompatActivity {
                 iTemCount = mSectionsPagerAdapter.getCount();
                 //mtabLayout.getTabCount();
             } else {
-                Log.e("onOptionsItemSelected", "Wrong Tab number.");
+                Log.e("onOptionsItemSelected", "Wrong Tab number: " + String.valueOf(iTabCount) +
+                "; expected tab number: " + mtabLayout.getTabCount());
                 //// TODO: 2016/10/7
 
             }
 // & !bInEngineeringMode
         } else if (id == R.id.Engineering_Mode & !bIsInEngineeringMode) {
-            // For debug, don't know why this have to be true, or else tab view could not be scrolled.
-            mGlobalData.setEngineeringMode(true);
-            bIsInEngineeringMode = true;
+            inputPassword();
 
-            mtabLayout.addTab(mEngineeringTab, iEngineeringMode);
-            iTabCount++;
-            mSectionsPagerAdapter.notifyDataSetChanged();
-            //mtabLayout.setVisibility(View.VISIBLE);
-            iTemCount = mSectionsPagerAdapter.getCount();
+            Log.i (TAG, "Thread run here.");
+
+            if (GlobalData.bPassword_Correct) {
+                // For debug, don't know why this have to be true, or else tab view could not be scrolled.
+                mGlobalData.setEngineeringMode(true);
+                bIsInEngineeringMode = true;
+
+                mtabLayout.addTab(mEngineeringTab, iEngineeringMode);
+                iTabCount++;
+                mSectionsPagerAdapter.notifyDataSetChanged();
+                //mtabLayout.setVisibility(View.VISIBLE);
+                iTemCount = mSectionsPagerAdapter.getCount();
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void inputPassword(){
+        final EditText inputServer = new EditText(this);
+        inputServer.setFocusable(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.Password_Input)).setView(inputServer).setNegativeButton(
+                getString(R.string.Password_Cancel), null);
+        builder.setPositiveButton(getString(R.string.Password_OK),
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        String SPassword_Input = inputServer.getText().toString();
+                        Log.i(TAG, "Password input is : " + SPassword_Input);
+                        if (SPassword_Input.compareTo(String.valueOf(GlobalData.iEngineer_Password)) == 0) {
+                            GlobalData.bPassword_Correct = true;
+                        } else {
+                            GlobalData.bPassword_Correct = false;
+                            ShowInfo2User(getString(R.string.Password_Wrong), Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
+        builder.show();
     }
 
     @Override
@@ -825,7 +858,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "BT Status Query. TimeStamp in Main: " + String.format("%d", iCurrentSecond)
                             + "; TimeStamp in Service: " + String.format("%d", GlobalData.miIntervalSecond));
 
-
                             // Avoid when send query and then re-send query at very short time, since send query done in
                             // BluetoothService intend and re-send in MainActivity Watchdog 1.
                             if (iCurrentSecond != GlobalData.miIntervalSecond){
@@ -841,14 +873,9 @@ public class MainActivity extends AppCompatActivity {
                                     View v = null;
                                     SendCommand(BluetoothService.RX_SERVICE_UUID, BluetoothService.RX_CHAR_UUID, GlobalData.bCommand_Waiting);
                                     GlobalData.miReReadTimes --;
-
                                 }
-
                             }
-
-
                         }
-
                     }
                     @Override
                     public void onFinish() {
