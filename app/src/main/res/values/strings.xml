@@ -41,15 +41,15 @@
     <string name="Select_Send_Times">选择读取的次数</string>
     <string name="WatchDog_Ongoing">正在读取系统状态，请稍后...</string>
     <string name="WatchDog_Timeout">读取系统状态操作超时！</string>
-    <string name="Device_Time_Settings">时间信息</string>
+    <string name="Device_Time_Settings">时间</string>
     <string name="Device_Year_Up">20</string>
     <string name="Separator_1"> : </string>
     <string name="Separator_2"> / </string>
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2017-Feb-26</string>
-    <string name="Update_Info">更新内容：\n1，增加工程模式的密码保护</string>
+    <string name="Delivery_Date">更新日期：2017-Feb-28</string>
+    <string name="Update_Info">更新内容：\n1，调整显示框</string>
     <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
 
 

@@ -390,7 +390,7 @@
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical"
                 android:layout_below="@id/id_Continuous_T2_Chinese"
-                android:layout_alignStart="@id/id_MaterialNum_Chinese" />
+                android:layout_alignStart="@id/id_Continuous_T2_Chinese" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -450,7 +450,7 @@
             android:textSize="16sp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="25dp" />
+            android:layout_marginStart="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -471,9 +471,9 @@
             android:text="状态信息条数："
             android:id="@+id/id_MessageNumberText_View"
             android:textSize="16sp"
-            android:layout_alignBottom="@+id/id_MessageNumberText_Value"
-            android:layout_toStartOf="@+id/id_MessageNumberText_Value"
-            android:layout_alignTop="@+id/id_MessageNumberText_Value" />
+            android:layout_alignBottom="@id/id_MessageNumberText_Value"
+            android:layout_toStartOf="@id/id_MessageNumberText_Value"
+            android:layout_alignTop="@id/id_MessageNumberText_Value" />
 
 
 
@@ -489,7 +489,7 @@
             android:focusable="false"
             android:layout_alignParentEnd="true"
 
-            android:layout_below="@+id/id_MessageNumberText_Value"
+            android:layout_below="@id/id_MessageNumberText_Value"
             android:layout_alignParentStart="true" />
         <!--android:background="@android:drawable/edit_text"-->
 
@@ -506,44 +506,6 @@
         android:textSize="16sp"
         android:background="@color/GrayWhite">
 
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/id_Time_TextView"
-            android:textSize="16sp"
-            android:text="@string/Device_Time_Settings"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/id_Set_Button" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Edit_Date"
-                android:textSize="16sp"
-                android:text="2000-11-05"
-                android:maxLength="10"
-                android:focusable="false"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/id_Time_TextView" />
-
-
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/id_Edit_Time"
-                android:textSize="16sp"
-                android:maxLength="8"
-                android:text="22:00:00"
-                android:focusable="false"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/id_Edit_Date" />
-
-
-
-
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
@@ -551,7 +513,6 @@
             android:text="读取"
             android:id="@+id/id_Read_Button"
             android:onClick="onButtonReadTime"
-            android:layout_centerVertical="true"
             android:layout_alignParentStart="true" />
 
         <Button
@@ -561,8 +522,43 @@
             android:text="设置"
             android:id="@+id/id_Set_Button"
             android:onClick="onButtonSetTime"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/id_Read_Button" />
+            android:layout_alignTop="@id/id_Read_Button"
+            android:layout_toEndOf="@id/id_Read_Button" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_Time_TextView"
+            android:textSize="16sp"
+            android:text="@string/Device_Time_Settings"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/id_Set_Button" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Edit_Date"
+                android:inputType="date"
+                android:textSize="16sp"
+                android:text="2017-02-05"
+                android:maxLength="10"
+                android:focusable="false"
+                android:layout_alignTop="@id/id_Read_Button"
+                android:layout_toEndOf="@id/id_Time_TextView" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_Edit_Time"
+                android:inputType="time"
+                android:textSize="16sp"
+                android:maxLength="8"
+                android:text="22:00:00"
+                android:focusable="false"
+                android:layout_alignTop="@id/id_Read_Button"
+                android:layout_toEndOf="@id/id_Edit_Date" />
+
+
 
     </RelativeLayout>
 

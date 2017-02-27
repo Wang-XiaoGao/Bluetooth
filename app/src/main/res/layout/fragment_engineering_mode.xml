@@ -19,16 +19,16 @@
             android:id="@+id/id_Pressure_Gate_Description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="压力门限(M)："
+            android:text="压力门限(M):"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="18dp"
             android:layout_marginStart="10dp"
             android:layout_alignParentTop="true"
         />
 
         <EditText
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_Pressure_Gate_Value"
             android:maxLength="4"
@@ -45,15 +45,15 @@
             android:id="@+id/id_MaterialNum_Setting_Description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="手环编号："
+            android:text="手环编号:"
             android:textStyle="bold"
             android:textSize="16sp"
+            android:layout_marginStart="2dp"
             android:layout_toEndOf="@id/id_Pressure_Gate_Value"
-            android:layout_marginStart="10dp"
             android:layout_alignBottom="@id/id_Pressure_Gate_Description"/>
 
         <EditText
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_MaterialNum_Setting_Value"
             android:maxLength="5"
@@ -61,7 +61,6 @@
             android:inputType="number"
             android:hint="0~65535"
             android:textSize="16sp"
-            android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/id_MaterialNum_Setting_Description"
             android:layout_alignBottom="@id/id_MaterialNum_Setting_Description"
             />
@@ -70,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_T1_Gate_Description"
-            android:text="时间门限T1(min): "
+            android:text="时间门限T1(min):"
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_marginTop="16dp"
@@ -80,7 +79,7 @@
 
         <EditText
             android:id="@+id/id_T1_Gate_Value"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -94,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_T2_Gate_Description"
-            android:text="持续时间门限T2(S): "
+            android:text="持续时间门限T2(S):"
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_marginTop="16dp"
@@ -105,7 +104,7 @@
 
         <EditText
             android:id="@+id/id_T2_Gate_Value"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -120,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_Audio_Duration_Description"
-            android:text="音频信号持续时间(min)："
+            android:text="音频信号持续时间(min):"
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
@@ -129,7 +128,7 @@
             />
 
         <EditText
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/id_Audio_Duration_Value"
             android:maxLength="7"
