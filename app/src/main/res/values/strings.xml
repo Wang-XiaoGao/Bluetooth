@@ -48,9 +48,10 @@
 
 
     <string name="App_Info">版本：0.1.1</string>
-    <string name="Delivery_Date">更新日期：2017-Feb-28</string>
-    <string name="Update_Info">更新内容：\n1，调整显示框</string>
-    <string name="Help_Info">帮助信息：\n1, 点击电池框图为发送读取电量；\n2,点击文件夹框图为发送自检命令。</string>
+    <string name="Delivery_Date">更新日期：2017-Mar-03</string>
+    <string name="Update_Info">更新内容：\n1，调整连接后自动读取电量和自检功能。</string>
+    <string name="Help_Info">帮助信息：\n1, 当蓝牙等图标为灰色时表示当前蓝牙未经连接；\n2,点击蓝牙框图即可扫描可用蓝牙设备以供链接；
+    \n3，当蓝牙成功链接，图标会被点亮，而且自动读取电量和发送自检指令。</string>
 
 
     <string name="device">Device:</string>

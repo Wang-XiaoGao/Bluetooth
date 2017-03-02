@@ -131,31 +131,32 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 mImageBT.setBackgroundResource(R.drawable.bluetooth56);
                 mImageDeviceCheck.setBackgroundResource(R.drawable.devicecheck56);
                 mImageBattery.setBackgroundResource(R.drawable.battery_56px_green);
-
                 mDebugTextVew.setText(strTemp);
             }
 
             //Query Battery and selfCheck info after first connection.
-            GlobalData mGlobalData = new GlobalData();
-            BluetoothService mBluetoothService = new BluetoothService();
-            if(mGlobalData != null) {
-
-                boolean bCheck = false;
-                byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBattery);
-                int[] iValues = mGlobalData.getIntReturn(bCommand);
-                Log.d(TAG, "QueryBattery send after BT connection: " + mGlobalData.Int2HexString(iValues));
-                //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID //TEST_TX_CHAR_UUID, RX_CHAR_UUID
-                bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
-                if (!bCheck) {
-                    Log.e(TAG, "QueryBattery after BT connection: Send Command failed.");
-                }
-
-            }
-            else{
-                Log.d(TAG, "mGlobalData is null.");
-            }
-
+            // To avoid query failed after re-connection in MeiZu phone, hold some time to send command.
             TimerTask task = new TimerTask(){
+                public void run(){
+                    boolean bCheck = false;
+                    GlobalData mGlobalData = new GlobalData();
+                    BluetoothService mBluetoothService = new BluetoothService();
+                    byte[] bCommand = mGlobalData.getCommand(GlobalData.eCommandIndex.eQueryBattery);
+                    int[] iValues = mGlobalData.getIntReturn(bCommand);
+                    Log.d(TAG, "QueryBattery send after BT connection: " + mGlobalData.Int2HexString(iValues));
+                    //TEST_TX_SERVICE_UUID,RX_SERVICE_UUID //TEST_TX_CHAR_UUID, RX_CHAR_UUID
+                    bCheck = mBluetoothService.writeRXCharacteristic(bCommand);
+                    if (!bCheck) {
+                        Log.e(TAG, "QueryBattery after BT connection: Send Command failed.");
+                    }
+                }
+            };
+            Timer timer = new Timer();
+            // Start the second query after 200ms.
+            // Normally, one command may take 200ms to get feedback.
+            timer.schedule(task, 200);
+
+            TimerTask task1 = new TimerTask(){
                 public void run(){
                     GlobalData mGlobalData = new GlobalData();
                     BluetoothService mBluetoothService = new BluetoothService();
@@ -169,8 +170,10 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     }
                 }
             };
-            Timer timer = new Timer();
-            timer.schedule(task, 500);// Start the second query after 500ms.
+
+            // Start the second query after 500ms.
+            // Normally, one command may take 200ms to get feedback.
+            timer.schedule(task1, 500);
 
             //BluetoothService.startActionenableTXNotification(MainActivity.getInstance().getBaseContext());
 
